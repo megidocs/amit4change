@@ -12,9 +12,18 @@
     {% include nav.html %}
   </header>
 
-  <main class="site-content">
-    {{ content }}
-  </main>
+  <div class="page-body">
+    <main class="site-content">
+      {{ content }}
+    </main>
+
+    <aside class="profile-sidebar">
+      <img src="{{ '/assets/images/profile-sidebar.jpg' | relative_url }}" alt="עמית פלטי">
+      <p class="profile-name"><a href="https://amit4changedotcom.wordpress.com/">עמית פלטי</a></p>
+      <p class="profile-contact">0543339618<br>amit.palti@gmail.com</p>
+      <p class="profile-quote">"אי אפשר ללמד אדם דבר, ניתן רק לעזור לו לגלות זאת בעצמו" – גלילאו.</p>
+    </aside>
+  </div>
 
   <footer class="site-footer">
     <p>{{ site.title }}</p>
