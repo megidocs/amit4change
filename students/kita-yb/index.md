@@ -9,5 +9,5 @@ permalink: /students/kita-yb/
 - [מצגות](presentations/)
 - [תוכנית לימודים](syllabus/)
 - [מטלות](assignments/)
-- [כניסה ל-Classroom]({{ https://classroom.google.com/c/ODg0NzE3MjQwMzE3?cjc=ywpo7ekm }})
+- [כניסה ל-Classroom]({{ site.data.classroom.kita_yb }})
 - [פרויקט גמר — מדריכים](project/)
