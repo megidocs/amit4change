@@ -19,10 +19,66 @@ body {
   color: #1a4d8f;
 }
 
-.site-content {
-  max-width: 760px;
+.page-body {
+  display: flex;
+  max-width: 940px;
   margin: 0 auto;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.profile-sidebar {
+  flex: 0 0 180px;
+  padding: 1.5rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.profile-sidebar img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.profile-name {
+  font-weight: bold;
+  margin: 0.75rem 0 0.25rem;
+}
+
+.profile-name a {
+  color: #1a4d8f;
+  text-decoration: none;
+}
+
+.profile-contact {
+  margin: 0 0 0.5rem;
+  color: #555;
+}
+
+.profile-quote {
+  font-style: italic;
+  color: #666;
+}
+
+.site-content {
+  flex: 1;
+  min-width: 0;
   padding: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .page-body {
+    flex-direction: column;
+  }
+  .profile-sidebar {
+    flex: none;
+    width: 100%;
+    padding: 1rem;
+  }
+  .profile-sidebar img {
+    max-width: 160px;
+    margin: 0 auto;
+  }
 }
 
 .site-footer {
