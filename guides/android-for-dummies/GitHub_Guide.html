@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מדריך צעד-צעד לשימוש ב-GitHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&family=Assistant:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --yellow:#FFC83D; --yellow-soft:#FFF3D6;
+  --ink:#1A1A1A; --navy:#20304D;
+  --teal:#1B8A75; --teal-soft:#DCF3EC;
+  --coral:#E85B3A; --coral-soft:#FCE4DC;
+  --blue:#2F6FDB; --blue-soft:#E2EBFB;
+  --purple:#7B4FE0; --purple-soft:#EDE5FC;
+  --paper:#FFFDF7;
+  --panel:#fff; --soft:#5A6477; --line:#E4DFD0;
+  --ball-soft:var(--coral-soft); --wood:var(--yellow-soft);
+  --head:'Rubik',sans-serif; --mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Assistant',sans-serif;font-size:16px;line-height:1.75}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px 90px}
+p{margin:0 0 12px}
+a{color:var(--blue)}
+ul,ol{padding-inline-start:22px;margin:0 0 12px}
+li{margin-bottom:6px}
+
+.hero{background:var(--yellow);border-bottom:5px solid var(--ink);padding:52px 20px 40px;margin:0 0 32px}
+.hero-inner{max-width:800px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:28px;align-items:center}
+.badge{display:inline-block;background:var(--ink);color:var(--yellow);font-family:var(--head);font-weight:700;font-size:13px;padding:5px 14px;border-radius:100px;margin-bottom:16px}
+h1{font-family:var(--head);font-weight:900;font-size:34px;line-height:1.18;margin:0 0 12px}
+.hero p{font-size:17px;font-weight:500;max-width:58ch;margin:0}
+.phone{border:3px solid var(--ink);border-radius:22px;background:#fff;padding:12px 10px;font-size:12px;text-align:center;box-shadow:6px 6px 0 var(--ink)}
+.phone .t{font-family:var(--head);font-weight:700;font-size:17px;line-height:1.2}
+.phone .cols{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.phone .col{border-radius:8px;padding:8px 6px}
+.phone .a{background:#FFE0B2}.phone .b{background:#B2DFDB}
+.phone .n{font-family:var(--head);font-weight:900;font-size:38px;line-height:1.1}
+.phone .bt{background:var(--navy);color:#fff;border-radius:14px;padding:3px 0;margin-top:4px;font-size:11px}
+.phone .pill{display:inline-block;background:#C62828;color:#fff;border-radius:14px;padding:3px 16px;font-size:11px}
+.phone .wh{display:inline-block;border:1.5px solid var(--ink);border-radius:14px;padding:2px 12px;margin-top:6px;font-size:11px}
+
+.intro-note{background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:16px 20px;margin:-16px 0 32px;font-size:14px;box-shadow:6px 6px 0 var(--ink)}
+.intro-note b{font-weight:700}
+
+.toc-title{font-family:var(--head);font-weight:700;font-size:18px;margin:0 0 10px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.toc li{margin:0}
+.toc a{display:block;text-decoration:none;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:100px;padding:4px 14px;font-family:var(--head);font-weight:500;font-size:14px}
+.toc a:hover,.toc a:focus-visible{background:var(--yellow);outline:none}
+
+.section-tag{display:inline-block;font-family:var(--mono);font-size:12.5px;color:var(--purple);background:var(--purple-soft);padding:3px 10px;border-radius:100px;margin:44px 0 10px}
+h2.section-title{font-family:var(--head);font-weight:900;font-size:26px;line-height:1.25;margin:0 0 14px}
+h3{font-family:var(--head);font-weight:700;font-size:18px;margin:26px 0 8px}
+
+code{font-family:var(--mono);font-size:.86em;direction:ltr;unicode-bidi:isolate;background:var(--yellow-soft);padding:1px 6px;border-radius:5px}
+
+table{width:100%;border-collapse:collapse;margin:8px 0 18px;font-size:15px;background:#fff}
+.scroll{overflow-x:auto;border:3px solid var(--ink);border-radius:14px;margin:12px 0 20px;box-shadow:6px 6px 0 var(--ink);background:#fff}
+.scroll table{margin:0}
+th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--head);font-weight:700;background:var(--yellow-soft);border-bottom:2px solid var(--ink)}
+td.pts,th.pts{text-align:center;white-space:nowrap;font-weight:700}
+
+.step{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:24px 24px 22px;margin:0 0 28px;box-shadow:6px 6px 0 var(--ink);display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px}
+.step .num{width:44px;height:44px;border-radius:50%;background:var(--yellow);border:3px solid var(--ink);font-family:var(--head);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center}
+.step h3{font-size:20px;margin:6px 0 12px}
+.step h3 ~ h3{margin-top:24px}
+
+pre{direction:ltr;text-align:left;background:var(--navy);color:#EAEDF3;font-family:var(--mono);font-size:13px;line-height:1.6;padding:14px 16px;overflow-x:auto;margin:0;tab-size:4}
+.codebox{margin:14px 0;border-radius:10px;overflow:hidden;background:var(--navy)}
+.codebox.shut pre{max-height:9.6em;overflow:hidden}
+.bar{display:flex;gap:8px;align-items:center;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.2)}
+.bar .lines{color:#8FA3C8;font-family:var(--mono);font-size:12px;margin-inline-end:auto}
+.bar button,.more{font-family:var(--head);font-size:13px;font-weight:500;background:transparent;color:#EAEDF3;border:1.5px solid #EAEDF3;border-radius:100px;padding:1px 12px;cursor:pointer}
+.bar button:hover,.bar button:focus-visible,.more:hover,.more:focus-visible{background:var(--yellow);border-color:var(--yellow);color:var(--ink);outline:none}
+.more{display:none;width:100%;border:0;border-top:1px solid rgba(255,255,255,.2);border-radius:0;padding:7px}
+.codebox.shut .more{display:block}
+.file{direction:ltr;text-align:left;font-family:var(--mono);font-size:12.5px;color:var(--soft);margin:12px 0 -8px}
+
+.note{margin:14px 0;border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:26px minmax(0,1fr);column-gap:10px;font-size:14px;color:var(--navy)}
+.note::before{grid-column:1;grid-row:1 / span 30;width:26px;height:26px;border-radius:50%;color:#fff;font-family:var(--head);font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center}
+.note>*{grid-column:2;min-width:0}
+.note>b:first-child{font-family:var(--head);font-weight:700;font-size:13px;display:block;margin-bottom:2px}
+.note p{margin:0 0 8px}.note p:last-child,.note ul:last-child{margin-bottom:0}
+.note.why{background:var(--teal-soft)}.note.why::before{content:"?";background:var(--teal)}.note.why>b:first-child{color:var(--teal)}
+.note.run{background:var(--blue-soft)}.note.run::before{content:"\2713";background:var(--blue)}.note.run>b:first-child{color:var(--blue)}
+.note.warn{background:var(--coral-soft)}.note.warn::before{content:"!";background:var(--coral)}.note.warn>b:first-child{color:var(--coral)}
+
+details{background:var(--yellow-soft);border:2px dashed var(--ink);border-radius:14px;padding:10px 18px;margin:12px 0;font-size:14px}
+summary{cursor:pointer;font-family:var(--head);font-weight:700;font-size:15px}
+details[open] summary{margin-bottom:8px}
+
+.dia{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:18px 0}
+.dia figure{margin:0;background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:16px}
+.dia figcaption{font-size:12.5px;color:var(--navy);margin-top:10px;text-align:center}
+.box{border:2px solid var(--ink);border-radius:6px;padding:6px;font-size:13px;text-align:center;font-weight:600}
+.v{display:flex;flex-direction:column;gap:6px}.h{display:flex;gap:6px;direction:ltr}
+.fa{background:var(--coral-soft)}.fb{background:var(--teal-soft)}.fw{background:var(--yellow-soft)}
+
+.goal{display:flex;gap:18px;align-items:center;background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:14px 16px;margin:0 0 14px}
+.goal .phone{width:150px;flex:none;box-shadow:none;border-radius:16px;padding:8px 7px;font-size:10px}
+.goal .phone .t{font-size:12px}
+.goal .phone .wh{font-size:9px;padding:1px 8px;margin-top:4px}
+.goal .phone .cols{direction:ltr;margin:6px 0 0;gap:0}
+.goal .phone .col{min-height:170px;border-radius:0;padding:6px 5px}
+.goal .phone .n{font-size:28px}
+.goal .phone .bt{font-size:9px;padding:2px 0}
+.goal-cap{font-size:13.5px;color:var(--navy)}
+.goal-cap b{display:block;font-family:var(--head);font-weight:700;color:var(--ink);font-size:14px;margin-bottom:2px}
+@media (max-width:520px){.goal{flex-direction:column;align-items:flex-start}}
+.task{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:22px 24px;margin:0 0 28px;box-shadow:6px 6px 0 var(--ink)}
+.task h3{font-size:20px;margin:0 0 10px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.pts-badge{background:var(--ink);color:var(--yellow);font-family:var(--head);font-weight:700;font-size:13px;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.task.adv{background:var(--purple-soft)}
+.task.adv .pts-badge{background:var(--purple);color:#fff}
+.success{font-weight:700;color:var(--teal);margin-top:8px}
+
+.score{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:10px 22px;box-shadow:6px 6px 0 var(--ink)}
+.score label{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.score label:last-child{border-bottom:0}
+.score input{width:20px;height:20px;accent-color:var(--teal)}
+.score .p{margin-inline-start:auto;font-family:var(--head);font-weight:700}
+.total{font-family:var(--head);font-weight:900;font-size:44px;line-height:1;margin-top:22px}
+.total small{font-family:'Assistant',sans-serif;font-size:15px;color:var(--soft);font-weight:400}
+
+.done{margin-top:44px;background:var(--navy);border-radius:16px;padding:32px 28px;text-align:center}
+.done .done-title{font-family:var(--head);color:var(--yellow);font-size:24px;font-weight:900;margin:0 0 8px}
+.done p{color:#EAEDF3;font-size:15px;margin:0}
+footer{text-align:center;font-size:13px;color:#8B8F87;margin-top:32px}
+
+@media (max-width:620px){
+  h1{font-size:26px}.hero{padding:40px 16px 32px}
+  .hero-inner{grid-template-columns:minmax(0,1fr)}.phone{max-width:210px}
+  .step{padding:20px 18px 18px;box-shadow:4px 4px 0 var(--ink);grid-template-columns:minmax(0,1fr)}
+  .step h3{font-size:17px}.task{padding:18px;box-shadow:4px 4px 0 var(--ink)}
+}
+
+.hero-inner{grid-template-columns:minmax(0,1fr) 300px}
+.duo{display:flex;gap:8px;align-items:center;justify-content:center}
+.duo .phone{width:128px;flex:none;padding:10px 8px;font-size:10px;min-height:190px;display:flex;flex-direction:column;justify-content:center;gap:8px;border-radius:18px}
+.duo .arrow{font-family:var(--head);font-weight:900;font-size:26px}
+.phone .q{font-family:var(--head);font-weight:700;font-size:12px;line-height:1.3}
+.phone .row{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.phone .row .bt{margin-top:0}
+.phone .big{font-family:var(--head);font-weight:900;font-size:24px}
+.phone.good{background:#DCF3EC}
+.phone .wh{align-self:center}
+.goal .phone{min-height:200px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.goal .phone .bt{padding:3px 10px;align-self:center}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;font-size:13px;direction:ltr}
+.kv .k{font-family:var(--mono);background:var(--yellow-soft);border:2px solid var(--ink);border-radius:6px;padding:3px 8px}
+.kv .val{font-family:var(--mono);background:var(--teal-soft);border:2px solid var(--ink);border-radius:6px;padding:3px 8px;text-align:center}
+.stackd{display:flex;flex-direction:column;gap:4px}
+@media (max-width:620px){.hero-inner{grid-template-columns:minmax(0,1fr)}}
+
+.ai{display:inline-flex;align-items:center;gap:6px;font-family:var(--head);font-weight:700;font-size:12.5px;padding:3px 12px 3px 10px;border-radius:100px;border:2px solid var(--ink);vertical-align:middle;white-space:nowrap}
+.ai::before{width:18px;height:18px;border-radius:50%;color:#fff;font-size:12px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.ai.no{background:var(--coral-soft)}.ai.no::before{content:"\2715";background:var(--coral)}
+.ai.ok{background:var(--teal-soft)}.ai.ok::before{content:"\2713";background:var(--teal)}
+.ai.must{background:var(--purple-soft)}.ai.must::before{content:"\2605";background:var(--purple)}
+.step .ai,.task>.ai{margin-bottom:6px}
+.legend{background:#fff;border:3px solid var(--ink);border-radius:14px;box-shadow:6px 6px 0 var(--ink);padding:6px 18px;margin:12px 0 20px}
+.legend>div{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px}
+.legend>div:last-child{border-bottom:0}
+.codebox.prompt{background:var(--purple-soft);border:2px solid var(--purple)}
+.codebox.prompt pre{direction:rtl;text-align:right;white-space:pre-wrap;overflow-wrap:anywhere;font-family:'Assistant',sans-serif;font-size:14.5px;line-height:1.7;background:transparent;color:var(--ink)}
+.codebox.prompt .bar{border-bottom:1px solid var(--purple)}
+.codebox.prompt .bar .lines{color:var(--purple);font-family:var(--head);font-weight:700}
+.codebox.prompt .bar button{color:var(--ink);border-color:var(--ink)}
+.rbs{display:flex;flex-direction:column;gap:4px;text-align:right;font-size:10.5px}
+.rb{display:flex;align-items:center;gap:6px;text-align:right}
+.rb::before{content:"";width:11px;height:11px;border-radius:50%;border:2px solid var(--ink);background:#fff;flex:none;box-sizing:border-box}
+.rb.on::before{background:radial-gradient(circle,var(--ink) 0 38%,#fff 42%)}
+.dia .rb{font-weight:500;font-size:13px}
+.goal .phone .rbs{align-self:stretch;padding:0 6px}
+
+.et{border-bottom:2px solid var(--ink);text-align:right;padding:1px 3px;font-size:10.5px;align-self:stretch;margin:0 4px}
+.et.hint{color:#8B8F87}
+.et.big-et{font-size:16px;padding:6px 8px;margin:6px 0;background:#fff}
+.phone.dim{background:#8C929C;display:flex;align-items:center;justify-content:center}
+.dlg{background:#fff;border-radius:8px;padding:9px 9px 7px;text-align:right;font-size:10px;line-height:1.45;border:2px solid var(--ink)}
+.dlg .dt{font-family:var(--head);font-weight:700;font-size:11.5px;margin-bottom:3px}
+.dlg .db{display:flex;gap:12px;justify-content:flex-end;font-family:var(--head);font-weight:700;color:var(--teal);margin-top:7px}
+.dia-phone{width:440px;max-width:100%;margin:0 auto;min-height:170px;box-shadow:none;padding:14px}
+.dia-phone .dlg{font-size:13px;padding:12px}
+.dia-phone .dlg .dt{font-size:15px}
+.dia-phone .db{gap:18px}
+.lbl{display:inline-block;font-family:var(--mono);font-weight:400;font-size:10.5px;color:var(--purple);background:var(--purple-soft);border-radius:4px;padding:0 5px;direction:ltr;vertical-align:middle}
+
+.verify{background:var(--yellow-soft);border:3px solid var(--ink);border-radius:18px;padding:18px 22px 16px;margin:0 0 28px;box-shadow:6px 6px 0 var(--yellow)}
+.verify .v-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.verify .v-title{display:inline-flex;align-items:center;gap:8px;font-family:var(--head);font-weight:700;font-size:18px}
+.verify .v-title::before{content:"\1F5E3";content:"";width:26px;height:26px;border-radius:50%;background:var(--ink);flex:none;
+  -webkit-mask:none;display:inline-block;background-image:radial-gradient(circle at 50% 38%,var(--yellow) 0 22%,transparent 23%),radial-gradient(ellipse at 50% 92%,var(--yellow) 0 38%,transparent 39%)}
+.verify p{font-size:15px}
+.verify .v-foot{color:var(--navy);font-size:14px;margin-bottom:0}
+.verify ul{font-size:15px;margin-bottom:0}
+.verify.inner{margin:16px 0 0;box-shadow:none;border-width:2px;padding:14px 16px 10px}
+.verify.inner .v-title{font-size:16px}
+.dialpad{direction:ltr;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;font-family:var(--head);font-weight:700;font-size:11px;padding:0 8px}
+.dialpad span{background:var(--yellow-soft);border-radius:50%;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.callbtn{align-self:center;background:#2B8A3E;color:#fff;border-radius:14px;padding:3px 16px;font-size:10px;font-weight:700}
+.imp{background:#fff;border:1.5px solid var(--line);border-radius:8px;margin:8px 0 10px;font-size:13px;overflow:hidden;text-align:left}
+.imp-h{font-weight:700;text-align:center;padding:6px;border-bottom:1px solid var(--line);color:var(--ink)}
+.imp-r{display:flex;justify-content:space-between;gap:10px;padding:6px 10px;color:var(--ink)}
+.imp-r i{color:var(--soft);font-style:normal}
+.imp-r b{font-family:var(--head);font-weight:700;color:var(--coral)}
+.imp-r.ok{background:var(--teal-soft);outline:2px solid var(--teal);outline-offset:-2px}
+.imp-r.ok b{color:var(--teal)}
+
+.hero-inner{grid-template-columns:minmax(0,1fr) 320px}
+.sync{display:flex;align-items:center;justify-content:center;gap:6px;direction:rtl}
+.sync .dev{background:#fff;border:3px solid var(--ink);border-radius:10px;padding:14px 8px;font-family:var(--head);font-weight:700;font-size:13px;text-align:center;box-shadow:4px 4px 0 var(--ink);line-height:1.3}
+.sync .cloud{background:var(--navy);color:var(--yellow);border-radius:40px;padding:18px 14px;font-family:var(--head);font-weight:900;font-size:15px;border:3px solid var(--ink)}
+.sync .arr{font-family:var(--mono);font-size:10.5px;text-align:center;line-height:1.5;direction:ltr}
+.flow{display:flex;align-items:center;justify-content:center;gap:8px;direction:rtl;flex-wrap:wrap}
+.flow .box{padding:12px 10px;min-width:96px}
+.flow .fl{font-family:var(--mono);font-size:12px;text-align:center;font-weight:600}
+.flow.back{margin-top:10px}
+.blue-t{color:var(--blue);font-weight:700}
+.branch-d{display:flex;flex-direction:column;gap:14px;padding:6px 10px;max-width:460px;margin:0 auto}
+.lane{display:flex;align-items:center;gap:0}
+.lane .lbl-l{font-family:var(--mono);font-size:12px;width:76px;flex:none}
+.lane .dot{width:16px;height:16px;border-radius:50%;background:var(--ink);flex:none}
+.lane .dot.b{background:var(--coral)}
+.lane .dot.merge{background:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+.lane .line{height:3px;background:var(--ink);width:60px}
+.lane .line.long{width:150px}
+.lane .line.b{background:var(--coral);width:60px}
+.lane .sp{width:92px;flex:none}
+.routine{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:12px 0 24px}
+.r-col{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:16px 20px;box-shadow:6px 6px 0 var(--ink)}
+.r-h{font-family:var(--head);font-weight:900;font-size:18px;margin-bottom:8px}
+.r-col ol{font-size:15px;margin:0}
+@media (max-width:620px){.hero-inner{grid-template-columns:minmax(0,1fr)}}
+.gitpath{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;margin:8px 0 10px;font-size:12.5px;text-align:left;color:var(--ink)}
+.gp-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.gp-l{font-weight:600}
+.gp-f{flex:1;min-width:200px;border:1px solid var(--line);border-radius:5px;padding:4px 8px;color:#8B8F87;background:#fafafa}
+.gp-b{border:1px solid var(--line);border-radius:5px;padding:4px 12px}
+.gp-ok{margin:6px 0 0 4px;padding:2px 6px;display:inline-block;background:var(--teal-soft);border:2px solid var(--teal);border-radius:5px;font-weight:600}
+.where{display:inline-block;font-family:var(--head);font-weight:700;font-size:12.5px;padding:2px 12px;border-radius:100px;border:2px solid var(--ink);margin:2px 0 8px}
+.where.as{background:#E3F4E6;color:#1B5E20}
+.where.web{background:var(--blue-soft);color:#1A4FA8}
+.credit{max-width:800px;margin:28px auto 0;padding-top:14px;border-top:2px solid var(--ink);display:flex;flex-direction:column;gap:2px}
+.cr-ver{font-size:13px;color:var(--navy)}
+.cr-name{font-family:var(--head);font-weight:700;font-size:20px;color:var(--ink);line-height:1.3}
+.cr-mail{font-size:16px;font-weight:600;color:var(--ink);text-decoration:none;align-self:flex-start}
+.cr-mail:hover,.cr-mail:focus-visible{text-decoration:underline}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="badge">מדריך למתחילים · Git · GitHub · Android Studio</span>
+      <h1>מדריך צעד-צעד<br>לשימוש ב-GitHub</h1>
+      <p>הפרויקט שלכם לא יגור יותר רק במחשב אחד. בונים אפליקציה קטנטנה, ולומדים לשמור אותה בענן, להמשיך לעבוד עליה מכל מחשב, ולחזור לכל גרסה ישנה שלה.</p>
+    </div>
+    <div class="sync" role="img" aria-label="איור: מחשב בכיתה ומחשב בבית, ושניהם מסתנכרנים דרך GitHub באמצע">
+      <div class="dev">מחשב<br>בכיתה</div>
+      <div class="arr">push ←<br>→ pull</div>
+      <div class="cloud">GitHub</div>
+      <div class="arr">push →<br>← pull</div>
+      <div class="dev">מחשב<br>בבית</div>
+    </div>
+  </div>
+  <div class="credit">
+    <div class="cr-ver">המדריך נכתב לגרסת AS Quail</div>
+    <div class="cr-name">עמית פלטי</div>
+    <a class="cr-mail" href="mailto:amit.palti@gmail.com" dir="ltr">amit.palti@gmail.com</a>
+  </div>
+
+</header>
+
+<div class="wrap">
+
+  <div class="intro-note">
+    <b>מה בונים היום:</b> אפליקציה בשם HelloGit, עם משפט אחד על המסך. האפליקציה עצמה פשוטה בכוונה: כל הלמידה כאן היא על GitHub. בסוף המדריך הפרויקט שלכם יהיה שמור בענן, תדעו להוריד אותו לכל מחשב, לעדכן אותו ולהעלות אותו חזרה, ולצאת מהחשבון כך שהבא בתור במחשב לא יוכל לגעת בעבודה שלכם. מעכשיו ההגשה של כל פרויקט היא קישור ל-GitHub, ולא קובץ ZIP.
+  </div>
+
+<nav aria-labelledby="toc-title">
+  <div class="toc-title" id="toc-title">חלקי המסמך</div>
+  <ul class="toc">
+    <li><a href="#theory">הסבר</a></li>
+    <li><a href="#s1">1 - חשבון</a></li>
+    <li><a href="#s2">2 - הכנה</a></li>
+    <li><a href="#s3">3 - העלאה ראשונה</a></li>
+    <li><a href="#s4">4 - commit ו-push</a></li>
+    <li><a href="#s5">5 - pull</a></li>
+    <li><a href="#s6">6 - clone</a></li>
+    <li><a href="#s7">7 - ענף זמני</a></li>
+    <li><a href="#s8">8 - יציאה מהחשבון</a></li>
+    <li><a href="#s9">9 - הגשה</a></li>
+    <li><a href="#routine">השגרה שלי</a></li>
+    <li><a href="#score">הניקוד שלי</a></li>
+  </ul>
+</nav>
+
+<span class="section-tag">ניקוד</span>
+<h2 class="section-title" id="points">איך צוברים נקודות</h2>
+<p>תשעה שלבים. כל שלב נבנה על הקודם, ולכן עובדים לפי הסדר. אחרי שלבים 4, 5 ו-7 יש עצירת אימות הבנה מול המורה, והניקוד של השלב נרשם רק אחריה.</p>
+<div class="scroll"><table>
+<tr><th>שלב</th><th>מה עושים</th><th class="pts">נקודות</th></tr>
+<tr><td>1</td><td>פותחים חשבון GitHub</td><td class="pts">10</td></tr>
+<tr><td>2</td><td>פרויקט HelloGit והכנת Android Studio</td><td class="pts">10</td></tr>
+<tr><td>3</td><td>העלאה ראשונה של הפרויקט ל-GitHub</td><td class="pts">15</td></tr>
+<tr><td>4</td><td>שינוי, commit ו-push, ואימות הבנה</td><td class="pts">15</td></tr>
+<tr><td>5</td><td>שינוי באתר ו-pull למחשב, ואימות הבנה</td><td class="pts">15</td></tr>
+<tr><td>6</td><td>clone: הפרויקט "במחשב אחר"</td><td class="pts">10</td></tr>
+<tr><td>7</td><td>ענף זמני לשינוי זהיר, ואימות הבנה</td><td class="pts">10</td></tr>
+<tr><td>8</td><td>יציאה מהחשבון וניקוי המחשב</td><td class="pts">10</td></tr>
+<tr><td>9</td><td>הגשת הקישור ב-Classroom</td><td class="pts">5</td></tr>
+</table></div>
+
+<span class="section-tag">הסבר</span>
+<h2 class="section-title" id="theory">מה זה Git, ומה זה GitHub</h2>
+<p>עד היום הפרויקט שלכם היה תיקייה במחשב אחד. אם המחשב התקלקל, הפרויקט נעלם. אם עבדתם בבית, הייתם צריכים להעביר קבצים בדיסק-און-קי או במייל. ואם שברתם משהו שעבד אתמול, לא הייתה דרך לחזור לגרסה של אתמול.</p>
+<p>שני כלים פותרים את זה:</p>
+
+<h3>Git: נקודות שמירה, כמו במשחק</h3>
+<p>במשחק מחשב אתם שומרים לפני קרב קשה. אם הפסדתם, חוזרים לנקודת השמירה. <b>Git</b> עושה את זה לקוד. כל נקודת שמירה נקראת <b>commit</b>, ולכל אחת מצרפים משפט קצר שמתאר מה השתנה, כמו שם לשמירה במשחק. Git זוכר את כל השמירות, ואפשר לחזור לכל אחת מהן.</p>
+<p>תיקיית פרויקט ש-Git שומר עליה נקראת <b>repository</b>, או בקיצור repo. בעברית: מאגר. זו תיקייה רגילה, שיש לה גם "מכונת זמן".</p>
+
+<h3>GitHub: הענן של נקודות השמירה</h3>
+<p><b>GitHub</b> הוא אתר שמחזיק עותק של המאגר שלכם בענן, כמו Google Drive, אבל עם כל ההיסטוריה. אתם עובדים במחשב, ומדי פעם מסנכרנים עם הענן בשני כיוונים:</p>
+<div class="dia">
+  <figure style="grid-column:1/-1">
+    <div class="flow">
+      <div class="box fa">התיקייה<br>במחשב</div>
+      <div class="fl">commit<br>←</div>
+      <div class="box fw">נקודות השמירה<br>במחשב</div>
+      <div class="fl">push<br>←</div>
+      <div class="box fb">GitHub<br>בענן</div>
+    </div>
+    <div class="flow back"><div class="fl">→ pull: מורידים מהענן שינויים שעוד אין במחשב</div></div>
+    <figcaption>commit שומר נקודה במחשב. push מעלה את הנקודות לענן. pull מוריד מהענן את מה שחסר במחשב.</figcaption>
+  </figure>
+</div>
+
+<div class="scroll"><table>
+<tr><th>מילה</th><th>מה זה</th><th>מהחיים</th></tr>
+<tr><td><code>repository</code></td><td>תיקיית הפרויקט, עם כל ההיסטוריה שלה</td><td>תיקייה עם מכונת זמן</td></tr>
+<tr><td><code>commit</code></td><td>נקודת שמירה עם תיאור</td><td>שמירה במשחק</td></tr>
+<tr><td><code>push</code></td><td>העלאת נקודות השמירה ל-GitHub</td><td>העלאת תמונות מהטלפון לענן</td></tr>
+<tr><td><code>pull</code></td><td>הורדת שינויים מ-GitHub למחשב</td><td>רענון הפיד כדי לראות מה חדש</td></tr>
+<tr><td><code>clone</code></td><td>הורדה ראשונה של כל המאגר למחשב חדש</td><td>התקנת משחק בטלפון חדש והתחברות לחשבון: כל ההתקדמות חוזרת</td></tr>
+<tr><td><code>branch</code></td><td>ענף: עותק צדדי לניסוי</td><td>טיוטה של פוסט: עובדים עליה בלי שאף אחד רואה</td></tr>
+<tr><td><code>merge</code></td><td>מיזוג הענף בחזרה לגרסה הראשית</td><td>פרסום הטיוטה כשהיא מוכנה</td></tr>
+</table></div>
+<div class="note why"><b>Git מול GitHub, במשפט אחד</b><p>Git הוא התוכנה במחשב ששומרת נקודות. GitHub הוא האתר שמחזיק אותן בענן. Android Studio יודע לדבר עם שניהם, כך שכמעט לא תצטרכו לצאת ממנו.</p></div>
+
+<span class="section-tag">שלב 1</span>
+<h2 class="section-title" id="s1">פותחים חשבון GitHub</h2>
+<div class="step"><div class="num">1</div><div>
+<h3>הרשמה</h3>
+<ol>
+  <li>היכנסו ל-<a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup</a>.</li>
+  <li>הזינו את <b>המייל האישי</b> שלכם, וסיסמה חזקה שלא משמשת אתכם באף אתר אחר.</li>
+  <li>בחרו <b>שם משתמש</b>. הוא יופיע בכתובת של כל הפרויקטים שלכם, למשל <code>github.com/dana-dev</code>. בחרו שם שלא תתביישו בו בעוד שלוש שנים, כשתשלחו אותו למעסיק או ליחידה בצבא.</li>
+  <li>פתרו את הפאזל, ואשרו את הקוד שנשלח למייל.</li>
+  <li>אם GitHub שואל שאלות על התוכנית או על השימוש, אפשר לדלג. התוכנית החינמית (Free) מספיקה.</li>
+</ol>
+<div class="note warn"><b>הסיסמה שלכם בלבד</b><p>שמרו אותה במקום בטוח, לא על פתק ליד המחשב. מי שיש לו את הסיסמה יכול למחוק את כל הפרויקטים שלכם.</p></div>
+
+<div class="note why"><b>אימות דו-שלבי</b><p>GitHub מחייב משתמשים שמעלים קוד להפעיל אימות דו-שלבי, ויבקש את זה מכם תוך כמה שבועות מפתיחת החשבון. תצטרכו אפליקציית אימות בטלפון. כשההודעה תופיע, עשו את זה עם המורה, ושמרו את קודי השחזור שתקבלו.</p></div>
+<div class="note run"><b>סיימתם את השלב כש...</b><p>אתם מחוברים ל-GitHub באתר. קראו למורה לרישום 10 הנקודות.</p></div>
+</div></div>
+
+<span class="section-tag">שלב 2</span>
+<h2 class="section-title" id="s2">פרויקט HelloGit והכנת Android Studio</h2>
+<div class="step"><div class="num">1</div><div>
+<h3>יוצרים פרויקט</h3>
+<p>צרו פרויקט חדש בשם <code>HelloGit</code>. הכול כרגיל: תבנית <code>Empty Views Activity</code>, שפה <code>Java</code>, ‏Minimum SDK ‏<code>API 26</code>, ‏Build configuration language ‏<code>Groovy DSL</code>.</p>
+<p>ב-<code>activity_main.xml</code> מצאו את ה-<code>TextView</code> הקיים, ושנו את הטקסט שלו ל-<code>"Hello GitHub!"</code>. הריצו ובדקו שהמשפט מופיע. זה כל הקוד שתכתבו היום.</p>
+</div></div>
+
+<div class="step"><div class="num">2</div><div>
+<h3>בודקים ש-Git מותקן, ומתקינים מתוך Android Studio אם צריך</h3>
+<p>Android Studio משתמש בתוכנת Git שמותקנת במחשב. ייתכן שבמחשב שקיבלתם היא עוד לא מותקנת. בודקים:</p>
+<ol>
+  <li>בתפריט העליון: <code>File &gt; Settings</code>.</li>
+  <li>בתיבת החיפוש בפינה השמאלית העליונה כתבו <code>Git</code>, ובחרו בצד את <code>Version Control &gt; Git</code>.</li>
+  <li>מצאו את השדה <code>Path to Git executable</code>. <b>לא כותבים בו כלום</b>, ולא מסמנים את <code>Set this path only for the current project</code>. רק מסתכלים על השורה שמתחת לשדה.</li>
+</ol>
+<div class="imp" dir="ltr">
+  <div class="imp-h">Settings</div>
+  <div class="imp-r"><span>Version Control</span></div>
+  <div class="imp-r ok"><span>&nbsp;&nbsp;&nbsp;Git</span><b>לבחור את זו</b></div>
+  <div class="imp-r"><span>&nbsp;&nbsp;&nbsp;GitHub</span></div>
+  <div class="imp-r"><span>&nbsp;&nbsp;&nbsp;GitLab</span></div>
+</div>
+<div class="gitpath" dir="ltr">
+  <div class="gp-row"><span class="gp-l">Path to Git executable:</span><span class="gp-f">Auto-detected: C:\Program Files\Git\cmd\git.exe</span><span class="gp-b">Test</span></div>
+  <div class="gp-ok">Git version is 2.45.1</div>
+</div>
+<p><b>אם בשדה כתוב באפור <code>Auto-detected</code>, ומתחתיו <code>Git version is</code> עם מספר</b>, כמו בציור: Git מותקן, ו-Android Studio מצא אותו לבד. הטקסט האפור הוא לא משהו שצריך להקליד. לחצו <code>OK</code> ועברו לצעד הבא.</p>
+<p><b>אם מתחת לשדה מופיעה הודעה ש-Git לא נמצא</b>, ולידה קישור <code>Download and Install</code>: לחצו על הקישור. Android Studio יוריד את Git ויתקין אותו בעצמו. ההורדה לוקחת דקה או שתיים, ובזמן הזה רואים פס התקדמות בתחתית החלון. בסיום, ורק אז, לחצו על הכפתור <code>Test</code> שליד השדה: הוא בודק מחדש אם Git נמצא. וודאו שמתחת לשדה מופיע עכשיו <code>Git version is</code> עם מספר.</p>
+<div class="note warn"><b>אחרי התקנה: סגרו ופתחו מחדש את Android Studio</b><p>בצעד הבא כותבים פקודה בטרמינל. טרמינל שנפתח לפני ההתקנה לא תמיד יודע ש-Git קיים. <code>File &gt; Exit</code>, ופתחו את Android Studio שוב, עם הפרויקט HelloGit.</p></div>
+</div></div>
+
+<div class="step"><div class="num">3</div><div>
+<h3>מגדירים שהענף הראשי ייקרא main</h3>
+<p>לגרסה הראשית של הפרויקט קוראים <code>main</code>. במחשבים מסוימים Git קורא לה בשם הישן, <code>master</code>. כדי שכולם בכיתה יראו אותו דבר, מגדירים את זה פעם אחת.</p>
+<p>בתחתית הסרגל השמאלי של Android Studio לחצו על סמל ה-<code>Terminal</code> (מלבן עם <code>&gt;_</code>). בחלון שנפתח כתבו את השורה הבאה ולחצו Enter:</p>
+<div class="codebox"><pre>git config --global init.defaultBranch main</pre></div>
+<div class="note why"><b>מה עשינו פה</b><p>כתבנו פקודה ישירות ל-Git. זו הפעם היחידה במדריך שבה מקלידים פקודה "גלובלית", כלומר כזו שחלה על כל המחשב. היא לא מזיקה לאף אחד, ולכן מותר להשאיר אותה.</p></div>
+<div class="note warn"><b>הטרמינל כותב ש-git לא מוכר?</b><p>אם מופיעה הודעה כמו <code>'git' is not recognized</code>: חזרו לצעד 2 וודאו שמתחת לשדה מופיע מספר גרסה. אם כן, סגרו ופתחו מחדש את Android Studio ונסו שוב. אם זה עדיין לא עובד, קראו למורה לפני שממשיכים.</p></div>
+</div></div>
+
+<div class="step"><div class="num">4</div><div>
+<h3>מתחברים לחשבון מתוך Android Studio</h3>
+<ol>
+  <li>בתפריט העליון: <code>File &gt; Settings</code>.</li>
+  <li>בתיבת החיפוש בפינה השמאלית העליונה של החלון כתבו <code>GitHub</code>, ובחרו בצד את <code>Version Control &gt; GitHub</code> (שורה אחת מתחת ל-Git מהצעד הקודם).</li>
+  <li>לחצו על <code>+</code> ובחרו <code>Log In via GitHub...</code>.</li>
+  <li>הדפדפן ייפתח. אם צריך, התחברו לחשבון. יופיע מסך שמבקש אישור עבור <code>JetBrains IDE Integration</code>: ‏JetBrains היא החברה שבנתה את הבסיס של Android Studio ואת החיבור שלו ל-GitHub. לא צריך להירשם אליה או לפתוח שום חשבון נוסף. לחצו <code>Authorize</code>.</li>
+  <li>חזרו ל-Android Studio. שם המשתמש שלכם מופיע עכשיו ברשימה. לחצו <code>OK</code>.</li>
+</ol>
+<div class="note warn"><b>מופיע ברשימה חשבון של מישהו אחר?</b><p>זה אומר שהתלמיד הקודם לא יצא מהחשבון. סמנו את החשבון שלו, לחצו <code>-</code> כדי להסיר אותו, ורק אז הוסיפו את שלכם. ספרו למורה.</p></div>
+<div class="note run"><b>סיימתם את השלב כש...</b><p>האפליקציה מציגה "Hello GitHub!", ב-<code>Settings &gt; Version Control &gt; Git</code> מופיע מספר גרסה מתחת לשדה, וב-<code>Settings &gt; Version Control &gt; GitHub</code> מופיע החשבון שלכם בלבד. קראו למורה לרישום 10 הנקודות.</p></div>
+</div></div>
+
+<span class="section-tag">שלב 3</span>
+<h2 class="section-title" id="s3">העלאה ראשונה: Share Project on GitHub</h2>
+<p>עכשיו הופכים את תיקיית הפרויקט למאגר, ומעלים אותו ל-GitHub. Android Studio עושה את שני הדברים בפעולה אחת.</p>
+<div class="step"><div class="num">1</div><div>
+<h3>פותחים את חלון השיתוף</h3>
+<p>בתפריט העליון לחצו <code>VCS</code>, ובחרו <code>Share Project on GitHub</code>:</p>
+<div class="imp" dir="ltr">
+  <div class="imp-h">VCS</div>
+  <div class="imp-r"><span>Enable Version Control Integration...</span></div>
+  <div class="imp-r"><span>Get from Version Control...</span></div>
+  <div class="imp-r"><span>Create Git Repository...</span></div>
+  <div class="imp-r ok"><span>Share Project on GitHub</span><b>לבחור את זו</b></div>
+</div>
+<p>בחלון שנפתח:</p>
+<ul>
+  <li><code>Repository name</code>: <code>HelloGit</code></li>
+  <li><code>Private</code>: <b>לא</b> מסומן. המאגר ציבורי, כדי שהמורה יוכל לראות אותו.</li>
+  <li><code>Share by</code>: החשבון שלכם. ודאו שזה באמת שלכם.</li>
+  <li><code>Description</code>: משפט קצר באנגלית, למשל <code>My first GitHub practice</code>.</li>
+</ul>
+<p>לחצו <code>Share</code>.</p>
+<div class="note warn"><b>ב-GitHub כותבים רק באנגלית</b><p>שם המאגר, התיאור, הודעות ה-commit ושמות הענפים: הכול באנגלית. כך עובדים מתכנתים בכל העולם, ועברית בשמות של ענפים וקבצים גם עלולה לגרום לתקלות. זה כלל לכל השנה, לא רק במדריך הזה.</p></div>
+</div></div>
+
+<div class="step"><div class="num">2</div><div>
+<h3>בוחרים מה עולה</h3>
+<p>ייפתח חלון <code>Add Files For Initial Commit</code> עם רשימת הקבצים. אל תשנו כלום. השאירו את ההודעה <code>Initial commit</code> ולחצו <code>Add</code>.</p>
+<div class="note why"><b>למה לא כל הקבצים ברשימה?</b><p>בפרויקט יש קובץ בשם <code>.gitignore</code>, ש-Android Studio יצר בשבילכם. הוא רשימה של מה לא לארוז: קבצים זמניים שהמחשב יוצר לבד בכל בנייה, והגדרות שמתאימות רק למחשב הזה. כמו שלא אורזים את המקרר כשנוסעים לטיול: במקום החדש כבר יש אחד.</p></div>
+<div class="note warn"><b>Android Studio שואל על שם ומייל?</b><p>אם קופץ חלון שמבקש <code>Name</code> ו-<code>Email</code>: כתבו את השם שלכם ואת המייל שאיתו נרשמתם ל-GitHub, ו<b>בטלו</b> את הסימון ב-<code>Set properties globally</code>. אחר כך המשיכו.</p></div>
+</div></div>
+
+<div class="step"><div class="num">3</div><div>
+<h3>בודקים באתר</h3>
+<p>אחרי כמה שניות תופיע בפינת המסך הודעה <code>Successfully shared project on GitHub</code>, עם קישור. לחצו עליו, או היכנסו לאתר GitHub ופתחו את המאגר <code>HelloGit</code>.</p>
+<p>אתם אמורים לראות את תיקיות הפרויקט: <code>app</code>, <code>gradle</code>, וקבצים כמו <code>build.gradle</code>. היכנסו ל-<code>app/src/main/res/layout/activity_main.xml</code> ומצאו את "Hello GitHub!".</p>
+<div class="note why"><b>התפריט VCS השתנה לשם Git</b><p>מעכשיו, בפרויקט הזה, במקום התפריט <code>VCS</code> מופיע תפריט בשם <code>Git</code>. כל הפעולות של המדריך נמצאות בו.</p></div>
+<div class="note run"><b>סיימתם את השלב כש...</b><p>באתר GitHub, בכתובת <code>github.com/שם-המשתמש/HelloGit</code>, רואים את קובצי הפרויקט. הראו למורה את הדף לרישום 15 הנקודות.</p></div>
+</div></div>
+
+<span class="section-tag">שלב 4</span>
+<h2 class="section-title" id="s4">commit ו-push: שומרים ומעלים</h2>
+<p>זו הפעולה שתעשו הכי הרבה פעמים השנה: משנים משהו, שומרים נקודה, ומעלים אותה לענן. את כל הפעולות עושים ב-Android Studio. לאתר GitHub בדפדפן נכנסים רק כדי לבדוק מה הגיע לענן.</p>
+<div class="step"><div class="num">1</div><div>
+<h3>משנים משהו</h3>
+<span class="where as">איפה: Android Studio</span>
+<p>ב-<code>activity_main.xml</code> שנו את הטקסט ל-<code>"Hello GitHub! My name is ..."</code> עם השם שלכם, והוסיפו <code>android:textSize="24sp"</code>. הריצו ובדקו.</p>
+<p>שימו לב: שם הקובץ בעץ הקבצים ובלשונית למעלה צבוע עכשיו <span class="blue-t">בכחול</span>. כך Android Studio מסמן קובץ שהשתנה מאז נקודת השמירה האחרונה.</p>
+</div></div>
+
+<div class="step"><div class="num">2</div><div>
+<h3>commit: נקודת שמירה</h3>
+<span class="where as">איפה: Android Studio</span>
+<ol>
+  <li>לחצו <code>Ctrl+K</code>, או בתפריט <code>Git &gt; Commit...</code>. בצד שמאל ייפתח חלון <code>Commit</code>.</li>
+  <li>ברשימה מופיע <code>activity_main.xml</code>, מסומן. לחיצה כפולה עליו מראה מה בדיוק השתנה: משמאל הגרסה הקודמת, מימין החדשה.</li>
+  <li>בתיבת ההודעה כתבו מה עשיתם, למשל: <code>Add my name and bigger text</code>.</li>
+  <li>לחצו <code>Commit</code> (לא <code>Commit and Push</code>, את זה נעשה בצעד הבא בנפרד).</li>
+</ol>
+<div class="note why"><b>הודעה טובה, הודעה גרועה</b><p>"שינויים", "עדכון" או "asdf" לא יעזרו לכם בעוד חודש, כשתחפשו מתי שברתם משהו. הודעה טובה עונה על השאלה "מה השתנה?" במשפט קצר: "Add reset button", "Fix crash on empty name". כמו שם לשמירה במשחק: "לפני הבוס של שלב 3" עדיף על "שמירה 17".</p></div>
+<p>שם הקובץ ב-Android Studio חזר לצבע רגיל: אין שינויים שלא נשמרו. אבל הנקודה עדיין <b>רק במחשב</b>.</p>
+<span class="where web">איפה: אתר GitHub בדפדפן</span>
+<p>עברו לדפדפן, לדף המאגר <code>HelloGit</code>, ורעננו אותו (<code>F5</code>). פתחו את <code>activity_main.xml</code>: הטקסט שם עדיין הישן, כי עוד לא העליתם כלום.</p>
+</div></div>
+
+<div class="step"><div class="num">3</div><div>
+<h3>push: מעלים לענן</h3>
+<span class="where as">איפה: Android Studio</span>
+<ol>
+  <li>לחצו <code>Ctrl+Shift+K</code>, או בתפריט <code>Git &gt; Push...</code>.</li>
+  <li>בחלון מופיעה רשימת הנקודות שעוד לא עלו לענן. אמורה להיות אחת: זו שיצרתם עכשיו.</li>
+  <li>לחצו <code>Push</code>.</li>
+</ol>
+<span class="where web">איפה: אתר GitHub בדפדפן</span>
+<p>חזרו לדפדפן ורעננו את דף המאגר. ליד שם הקובץ מופיעה עכשיו ההודעה שכתבתם. עכשיו פתחו את ההיסטוריה: לחצו על הכפתור עם סמל השעון. אם אתם בתוך דף של קובץ, למשל <code>activity_main.xml</code>, הוא נקרא <code>History</code>, ומציג את ההיסטוריה של הקובץ הזה. בדף הראשי של המאגר הוא נקרא <code>Commits</code>, ומציג את ההיסטוריה של כל הפרויקט. בשני המקרים תראו את נקודות השמירה שלכם, כל אחת עם ההודעה שכתבתם.</p>
+<div class="note run"><b>סיימתם את השלב כש...</b><p>באתר רואים את הטקסט החדש, ובהיסטוריה יש שני commits. עכשיו עברו את אימות ההבנה.</p></div>
+</div></div>
+
+<div class="verify">
+  <div class="v-head"><span class="v-title">אימות הבנה עם המורה: commit ו-push</span><span class="pts-badge">חלק מ-15 הנקודות</span></div>
+  <p><b>הסבירו מה קרה כאן.</b> תלמיד עבד כל השיעור, עשה חמישה commits עם הודעות טובות, וסגר את המחשב. בבית הוא פתח את המאגר באתר GitHub, ולא מצא שם אף אחד מהשינויים של היום. מה הוא שכח? האם העבודה שלו אבדה? מה הוא צריך לעשות בשיעור הבא, ובאיזה מחשב?</p>
+  <p><b>דרישה חדשה.</b> אתם עומדים לשנות משהו גדול במסך, ולא בטוחים שזה יעבוד. איך תשתמשו ב-commit כדי שתוכלו לחזור לגרסה שעבדה, ומתי בדיוק תעשו אותו?</p>
+</div>
+
+<span class="section-tag">שלב 5</span>
+<h2 class="section-title" id="s5">pull: מקבלים שינוי שנעשה במקום אחר</h2>
+<p>בבית תעבדו על מחשב אחר, ובשיעור הבא תצטרכו להוריד את מה שעשיתם שם. כדי לתרגל את זה בכיתה, בלי מחשב שני, נשתמש באתר GitHub עצמו בתור "המחשב האחר".</p>
+<div class="step"><div class="num">1</div><div>
+<h3>משנים באתר</h3>
+<ol>
+  <li>באתר GitHub, במאגר <code>HelloGit</code>, היכנסו ל-<code>app/src/main/res/layout/activity_main.xml</code>.</li>
+  <li>לחצו על סמל העיפרון (<code>Edit this file</code>) בפינה של תוכן הקובץ.</li>
+  <li>שנו את הטקסט ל-<code>"Hello from home!"</code>.</li>
+  <li>לחצו <code>Commit changes...</code>, כתבו הודעה (<code>Change text from home</code>), ובחרו <code>Commit directly to the main branch</code>. לחצו שוב <code>Commit changes</code>.</li>
+</ol>
+<p>עכשיו בענן יש נקודת שמירה שאין במחשב. ב-Android Studio הטקסט עדיין הישן.</p>
+</div></div>
+
+<div class="step"><div class="num">2</div><div>
+<h3>pull: מורידים</h3>
+<ol>
+  <li>ב-Android Studio לחצו <code>Ctrl+T</code>, או בתפריט <code>Git &gt; Update Project...</code>.</li>
+  <li>אם נפתח חלון שאלות, בחרו <code>Merge</code> ולחצו <code>OK</code>.</li>
+  <li>פתחו את <code>activity_main.xml</code>. הטקסט הוא עכשיו "Hello from home!". הריצו ובדקו.</li>
+</ol>
+<div class="note why"><b>Update Project ו-Pull</b><p>ב-Android Studio הפעולה נקראת <code>Update Project</code>. מאחורי הקלעים היא עושה pull: מורידה מהענן את כל מה שחסר במחשב.</p></div>
+<div class="note warn"><b>הכלל הכי חשוב בכל המדריך</b><p><b>pull בתחילת העבודה, push בסוף העבודה.</b> אם תתחילו לשנות קוד לפני pull, בזמן שבענן יש גרסה חדשה יותר, Git יצטרך למזג שתי גרסאות שונות של אותו קובץ. זה פתיר, אבל מבלבל ולוקח זמן. הרגל של חמש שניות בתחילת שיעור חוסך את זה.</p></div>
+<div class="note run"><b>סיימתם את השלב כש...</b><p>הטקסט שנכתב באתר מופיע באפליקציה שרצה במחשב. עכשיו עברו את אימות ההבנה.</p></div>
+</div></div>
+
+<div class="verify">
+  <div class="v-head"><span class="v-title">אימות הבנה עם המורה: pull</span><span class="pts-badge">חלק מ-15 הנקודות</span></div>
+  <p><b>הסבירו מה קרה כאן.</b> תלמידה עבדה בבית ועשתה push. בכיתה היא פתחה את הפרויקט שנשאר על המחשב מהשבוע שעבר, ומיד התחילה לשנות קוד, בלי pull. כשניסתה לעשות push בסוף השיעור, Android Studio סירב ואמר שבענן יש שינויים שאין אצלה. למה Git עוצר אותה? מה הייתה הדרך לחסוך את זה?</p>
+  <p><b>דרישה חדשה.</b> מעכשיו תעבדו כל שבוע בשלושה מקומות: בכיתה, בבית, ולפעמים במחשב של סבתא. כתבו למורה את הסדר המדויק של הפעולות שלכם, מרגע שאתם מתיישבים מול מחשב ועד שאתם קמים.</p>
+</div>
+
+<span class="section-tag">שלב 6</span>
+<h2 class="section-title" id="s6">clone: הפרויקט במחשב חדש</h2>
+<p>במחשב שהפרויקט עוד לא נמצא עליו, למשל מחשב נייד אחר בכיתה, אין מה למשוך. צריך להוריד את כל המאגר בפעם הראשונה. לזה קוראים clone. כאן נדמה מחשב חדש על ידי הורדה לתיקייה חדשה.</p>
+<div class="step"><div class="num">1</div><div>
+<h3>סוגרים ומורידים</h3>
+<ol>
+  <li>סגרו את הפרויקט: <code>File &gt; Close Project</code>. נפתח מסך הפתיחה של Android Studio.</li>
+  <li>במסך הפתיחה לחצו <code>Clone Repository</code>, או בתוך פרויקט: <code>VCS &gt; Get from Version Control...</code>.</li>
+  <li>בצד שמאל של החלון בחרו <code>GitHub</code>. מופיעה רשימת המאגרים שלכם. בחרו <code>HelloGit</code>.</li>
+  <li>בשדה <code>Directory</code> בסוף הנתיב שנו את שם התיקייה ל-<code>HelloGit2</code>, כדי שלא תדרוס את המקורית.</li>
+  <li>לחצו <code>Clone</code>. אם נשאלים אם לסמוך על הפרויקט, בחרו <code>Trust Project</code>.</li>
+  <li>חכו שהסנכרון של Gradle יסתיים (פס ההתקדמות למטה), והריצו.</li>
+</ol>
+</div></div>
+
+<div class="step"><div class="num">2</div><div>
+<h3>אומרים ל-Git מי אתם, בפרויקט הזה</h3>
+<p>המחשבים הניידים בכיתה משותפים. כדי שה-commits שלכם יירשמו על שמכם ולא על שם התלמיד הקודם, מגדירים את השם והמייל <b>בתוך הפרויקט בלבד</b>. פתחו את ה-<code>Terminal</code> וכתבו, כל שורה ואחריה Enter (עם השם שלכם והמייל שאיתו נרשמתם ל-GitHub, בתוך המירכאות):</p>
+<div class="codebox"><pre>git config user.name "Dana Levi"
+git config user.email "dana.levi@gmail.com"</pre></div>
+<p>כדי לבדוק, כתבו <code>git config user.name</code>. אמור להופיע השם שלכם.</p>
+<div class="note warn"><b>בלי המילה --global</b><p>בשלב 2 השתמשנו ב-<code>--global</code>, וזה היה בסדר כי ההגדרה לא אישית. כאן <b>לא</b> כותבים <code>--global</code>, כי במחשב משותף השם שלכם היה נרשם גם על העבודה של התלמיד הבא.</p></div>
+<div class="note run"><b>סיימתם את השלב כש...</b><p>הפרויקט <code>HelloGit2</code> פתוח, רץ, ומציג "Hello from home!", ו-<code>git config user.name</code> מחזיר את השם שלכם. קראו למורה לרישום 10 הנקודות.</p></div>
+</div></div>
+
+<span class="section-tag">שלב 7</span>
+<h2 class="section-title" id="s7">ענף זמני: שינוי זהיר בלי לסכן את main</h2>
+<p>עד עכשיו עבדתם ישר על <code>main</code>, הגרסה הראשית. רוב הזמן זה מה שתעשו. אבל כשאתם עומדים לנסות משהו שעלול לשבור את הפרויקט, עדיף לנסות אותו בצד. אם הניסיון מצליח, מעבירים אותו ל-main. אם לא, זורקים אותו, ו-main נשאר שלם.</p>
+<div class="dia">
+  <figure style="grid-column:1/-1">
+    <div class="branch-d" dir="ltr">
+      <div class="lane"><span class="lbl-l">main</span><span class="dot"></span><span class="line"></span><span class="dot"></span><span class="line long"></span><span class="dot merge"></span></div>
+      <div class="lane side"><span class="lbl-l">try-color</span><span class="sp"></span><span class="dot b"></span><span class="line b"></span><span class="dot b"></span></div>
+    </div>
+    <figcaption>הענף try-color יוצא מ-main, מקבל commits משלו, וחוזר ל-main במיזוג. אחרי המיזוג מוחקים אותו.</figcaption>
+  </figure>
+</div>
+<div class="step"><div class="num">1</div><div>
+<h3>יוצרים ענף</h3>
+<ol>
+  <li>בסרגל העליון, ליד שם הפרויקט, מופיע שם הענף הנוכחי: <code>main</code>. לחצו עליו. (אם לא מוצאים: <code>Git &gt; Branches...</code>.)</li>
+  <li>בחרו <code>New Branch...</code>.</li>
+  <li>שם: <code>try-color</code>. ודאו ש-<code>Checkout branch</code> מסומן, ולחצו <code>Create</code>.</li>
+</ol>
+<p>בסרגל העליון כתוב עכשיו <code>try-color</code>: אתם עובדים בענף הצדדי.</p>
+</div></div>
+
+<div class="step"><div class="num">2</div><div>
+<h3>משנים ושומרים בענף</h3>
+<p>הוסיפו ל-<code>TextView</code> את השורה <code>android:textColor="#C62828"</code>, הריצו ובדקו שהטקסט אדום. עשו commit עם ההודעה <code>Try red text</code>.</p>
+<p><b>ניסוי של דקה:</b> לחצו על שם הענף בסרגל העליון, בחרו <code>main</code> ואז <code>Checkout</code>. הריצו. הטקסט שחור! השינוי קיים רק בענף. חזרו לענף <code>try-color</code> באותה דרך.</p>
+</div></div>
+
+<div class="step"><div class="num">3</div><div>
+<h3>ממזגים ל-main, מעלים ומוחקים את הענף</h3>
+<p>הניסיון הצליח. מעבירים אותו לגרסה הראשית:</p>
+<ol>
+  <li>חזרו ל-<code>main</code>: שם הענף בסרגל העליון, <code>main</code>, <code>Checkout</code>.</li>
+  <li>שוב לחצו על שם הענף. בחרו <code>try-color</code>, ואז <code>Merge 'try-color' into 'main'</code>.</li>
+  <li>הריצו: עכשיו הטקסט אדום גם ב-main.</li>
+  <li>עשו push (<code>Ctrl+Shift+K</code>), ובדקו באתר שהשינוי הגיע.</li>
+  <li>מחקו את הענף שכבר לא צריך: שם הענף בסרגל העליון, <code>try-color</code>, <code>Delete</code>.</li>
+</ol>
+<div class="note warn"><b>מתי מוחקים, ומתי לא</b><p>מוחקים ענף רק אחרי שמיזגתם אותו ל-main ובדקתם שהכול עובד. ואם הניסיון נכשל? חוזרים ל-main ומוחקים את הענף בלי למזג. main לא נפגע בכלל.</p></div>
+<div class="note run"><b>סיימתם את השלב כש...</b><p>הטקסט אדום באתר GitHub, ב-main, ונשאר רק ענף אחד: main. עכשיו עברו את אימות ההבנה.</p></div>
+</div></div>
+
+<div class="verify">
+  <div class="v-head"><span class="v-title">אימות הבנה עם המורה: ענף זמני</span><span class="pts-badge">חלק מ-10 הנקודות</span></div>
+  <p><b>הסבירו מה קרה כאן.</b> תלמיד יצר ענף <code>new-design</code>, עבד בו שעה, עשה commit ו-push, וראה ב-GitHub שה-push הצליח. אבל כשפתח את האפליקציה בבית אחרי pull, העיצוב הישן חזר. איפה העבודה שלו? מה הוא לא עשה?</p>
+  <p><b>דרישה חדשה.</b> בעוד שבוע תוסיפו לפרויקט הגמר מסך מסובך, שאתם לא בטוחים שיעבוד. תארו למורה את כל הצעדים, מיצירת הענף ועד מחיקתו, כולל מה תעשו אם אחרי שעתיים יתברר שהרעיון לא עובד.</p>
+</div>
+
+<span class="section-tag">שלב 8</span>
+<h2 class="section-title" id="s8">יציאה מהחשבון וניקוי המחשב</h2>
+<p>המחשבים הניידים בכיתה עוברים מיד ליד, וכולם עובדים תחת אותו משתמש Windows. אם לא תצאו מהחשבון, התלמיד הבא יוכל להעלות קוד לחשבון שלכם, או למחוק בו דברים. זה כמו להשאיר את האינסטגרם שלכם פתוח בטלפון של חבר.</p>
+<p>את ארבעת הצעדים עושים <b>בסוף כל שיעור</b>, ולפי הסדר. קודם מוודאים שהעבודה בענן, ורק אז מוחקים.</p>
+
+<div class="step"><div class="num">1</div><div>
+<h3>מוודאים שהכול בענן</h3>
+<ol>
+  <li>אין קבצים בכחול או באדום בעץ הקבצים. אם יש, עשו commit.</li>
+  <li>עשו push. אם Android Studio אומר שאין מה להעלות, מצוין.</li>
+  <li>באתר GitHub, ודאו שה-commit האחרון שלכם מופיע בראש רשימת הקבצים.</li>
+</ol>
+</div></div>
+
+<div class="step"><div class="num">2</div><div>
+<h3>מסירים את החשבון מ-Android Studio</h3>
+<ol>
+  <li><code>File &gt; Settings</code>, חיפוש <code>GitHub</code>, ובחירה ב-<code>Version Control &gt; GitHub</code>.</li>
+  <li>סמנו את החשבון שלכם ולחצו <code>-</code> (הסרה). הרשימה צריכה להיות ריקה.</li>
+  <li><code>OK</code>.</li>
+</ol>
+</div></div>
+
+<div class="step"><div class="num">3</div><div>
+<h3>מוחקים את הסיסמאות השמורות ב-Windows</h3>
+<p>Windows שומר עותק של פרטי ההתחברות גם מחוץ ל-Android Studio.</p>
+<ol>
+  <li>לחצו על מקש Windows והקלידו <code>Credential Manager</code> (בעברית: <b>מנהל האישורים</b>). פתחו אותו.</li>
+  <li>בחרו <code>Windows Credentials</code> (<b>אישורי Windows</b>).</li>
+  <li>עברו על הרשימה תחת <code>Generic Credentials</code>. כל שורה שמופיעה בה המילה <code>github</code>, למשל <code>git:https://github.com</code>: לחצו עליה, ואז <code>Remove</code> (<b>הסר</b>), ואשרו.</li>
+  <li>בדקו שוב: לא נשארה אף שורה עם <code>github</code>.</li>
+</ol>
+</div></div>
+
+<div class="step"><div class="num">4</div><div>
+<h3>מתנתקים בדפדפן ומוחקים את הפרויקט מהמחשב</h3>
+<ol>
+  <li>באתר GitHub: תמונת הפרופיל, <code>Sign out</code>.</li>
+  <li>ב-Android Studio: <code>File &gt; Close Project</code>. במסך הפתיחה, ליד שם הפרויקט ברשימה, לחצו על שלוש הנקודות ובחרו <code>Remove from Recent Projects</code>.</li>
+  <li>בסייר הקבצים, מחקו את תיקיות הפרויקט (<code>HelloGit</code> ו-<code>HelloGit2</code>). בדרך כלל הן נמצאות ב-<code>C:\Users\...\AndroidStudioProjects</code>.</li>
+</ol>
+<div class="note why"><b>למה למחוק את הפרויקט?</b><p>הוא שמור ב-GitHub, אז לא מאבדים כלום. ובשיעור הבא תקבלו כנראה מחשב אחר, ושם תעשו clone חדש. עותק ישן שנשאר על מחשב הוא מתכון לבלבול: מישהו יפתח אותו ויעבוד על גרסה שכבר לא עדכנית.</p></div>
+<div class="note run"><b>סיימתם את השלב כש...</b><p>בדיקה של המורה: ב-Settings של GitHub אין חשבון, במנהל האישורים אין שורה עם github, הדפדפן מנותק, ותיקיות הפרויקט נמחקו. 10 נקודות.</p></div>
+</div></div>
+
+<span class="section-tag">שלב 9</span>
+<h2 class="section-title" id="s9">הגשה: קישור במקום ZIP</h2>
+<div class="step"><div class="num">1</div><div>
+<h3>מגישים את הקישור</h3>
+<ol>
+  <li>מכל מחשב, פתחו בדפדפן את המאגר <code>HelloGit</code> והעתיקו את הכתובת מהשורה העליונה. היא נראית כך: <code>https://github.com/dana-dev/HelloGit</code>.</li>
+  <li>ב-Classroom, במשימה של המדריך, הדביקו את הקישור והגישו.</li>
+</ol>
+<div class="note why"><b>מה המורה רואה</b><p>המאגר ציבורי, ולכן המורה פותח את הקישור ורואה את כל הקבצים, ואת כל ההיסטוריה: מתי עבדתם, כמה commits עשיתם, ומה כתבתם בכל אחד. הודעות commit טובות הן חלק מהעבודה.</p></div>
+<div class="note run"><b>סיימתם את השלב כש...</b><p>הקישור הוגש ב-Classroom, והמורה פותח אותו ורואה את הטקסט האדום. 5 נקודות.</p></div>
+</div></div>
+
+<span class="section-tag">לשמור ליד המחשב</span>
+<h2 class="section-title" id="routine">השגרה שלי</h2>
+<p>מעכשיו זו השגרה בכל שיעור ובכל עבודה בבית. צלמו את הכרטיס או הדפיסו אותו.</p>
+<div class="routine">
+  <div class="r-col">
+    <div class="r-h">מחשב נייד בכיתה</div>
+    <ol>
+      <li><b>התחלה:</b> בודקים ש-Git מותקן ומתחברים ל-GitHub ב-Android Studio (שלב 2), ועושים clone (שלב 6).</li>
+      <li>מגדירים שם ומייל בפרויקט, בלי <code>--global</code> (שלב 6).</li>
+      <li><b>במהלך העבודה:</b> commit אחרי כל דבר שעובד.</li>
+      <li><b>סוף:</b> commit אחרון, push, ובדיקה באתר.</li>
+      <li><b>יציאה:</b> ארבעת הצעדים של שלב 8.</li>
+    </ol>
+  </div>
+  <div class="r-col">
+    <div class="r-h">המחשב שלי בבית</div>
+    <ol>
+      <li><b>פעם ראשונה:</b> clone.</li>
+      <li><b>כל פעם אחר כך:</b> pull (<code>Ctrl+T</code>) לפני שנוגעים בקוד.</li>
+      <li><b>במהלך העבודה:</b> commit אחרי כל דבר שעובד.</li>
+      <li><b>סוף:</b> push (<code>Ctrl+Shift+K</code>), ובדיקה באתר.</li>
+    </ol>
+  </div>
+</div>
+<div class="scroll"><table>
+<tr><th>פעולה</th><th>קיצור מקלדת</th><th>בתפריט</th></tr>
+<tr><td>commit</td><td><code>Ctrl+K</code></td><td><code>Git &gt; Commit...</code></td></tr>
+<tr><td>push</td><td><code>Ctrl+Shift+K</code></td><td><code>Git &gt; Push...</code></td></tr>
+<tr><td>pull</td><td><code>Ctrl+T</code></td><td><code>Git &gt; Update Project...</code></td></tr>
+<tr><td>clone</td><td></td><td><code>VCS &gt; Get from Version Control...</code></td></tr>
+<tr><td>ענפים</td><td></td><td>שם הענף בסרגל העליון, או <code>Git &gt; Branches...</code></td></tr>
+</table></div>
+
+<span class="section-tag">ניקוד</span>
+<h2 class="section-title" id="score">הניקוד שלי</h2>
+<p>סמנו מה שהמורה אישר. הסימון נשמר בדפדפן שלכם בלבד.</p>
+<div class="score" id="score-list">
+  <label><input type="checkbox" data-p="10" data-k="s1">שלב 1: חשבון GitHub<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="10" data-k="s2">שלב 2: הכנה והתחברות<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="15" data-k="s3">שלב 3: העלאה ראשונה<span class="p">15</span></label>
+  <label><input type="checkbox" data-p="15" data-k="s4">שלב 4: commit ו-push, כולל אימות הבנה<span class="p">15</span></label>
+  <label><input type="checkbox" data-p="15" data-k="s5">שלב 5: pull, כולל אימות הבנה<span class="p">15</span></label>
+  <label><input type="checkbox" data-p="10" data-k="s6">שלב 6: clone<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="10" data-k="s7">שלב 7: ענף זמני, כולל אימות הבנה<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="10" data-k="s8">שלב 8: יציאה וניקוי<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="5" data-k="s9">שלב 9: הגשה<span class="p">5</span></label>
+</div>
+<div class="total" aria-live="polite"><span id="total">0</span> <small>נקודות מתוך 100</small></div>
+
+<div class="done">
+  <div class="done-title">סיימתם</div>
+  <p>הפרויקט שלכם בענן, ואתם יודעים להגיע אליו מכל מחשב. מהמדריך הבא, כל פרויקט מתחיל ב-Share Project on GitHub ומוגש כקישור.</p>
+</div>
+<footer>מדריך צעד-צעד לשימוש ב-GitHub. נכתב עבור Android Studio Quail 3.</footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY='guide-github';
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){saved={};}
+  var boxes=document.querySelectorAll('#score-list input');
+  function calc(){
+    var t=0;
+    boxes.forEach(function(b){if(b.checked)t+=Number(b.dataset.p);saved[b.dataset.k]=b.checked;});
+    document.getElementById('total').textContent=t;
+    try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(e){}
+  }
+  boxes.forEach(function(b){b.checked=!!saved[b.dataset.k];b.addEventListener('change',calc);});
+  calc();
+
+  document.querySelectorAll('.codebox').forEach(function(box){
+    var pre=box.querySelector('pre');
+    var n=pre.textContent.split('\n').length;
+    var isPrompt=box.classList.contains('prompt');var long=n>8&&!isPrompt;
+    var bar=document.createElement('div');bar.className='bar';
+    var info=document.createElement('span');info.className='lines';info.textContent=isPrompt?'פרומפט להעתקה':n+' שורות';
+    bar.appendChild(info);
+    var more=null,tog=null;
+    function set(shut){
+      box.classList.toggle('shut',shut);
+      tog.textContent=shut?'פתיחת כל הקוד':'סגירה';
+      tog.setAttribute('aria-expanded',String(!shut));
+    }
+    if(long){
+      tog=document.createElement('button');tog.type='button';
+      tog.addEventListener('click',function(){set(!box.classList.contains('shut'));});
+      bar.appendChild(tog);
+      more=document.createElement('button');more.type='button';more.className='more';
+      more.textContent='יש עוד קוד, לחצו לפתיחה';
+      more.addEventListener('click',function(){set(false);});
+    }
+    var btn=document.createElement('button');btn.type='button';btn.textContent='העתקה';
+    btn.addEventListener('click',function(){
+      var text=pre.textContent;
+      function ok(){btn.textContent='הועתק';setTimeout(function(){btn.textContent='העתקה';},1500);}
+      function fallback(){
+        try{
+          var ta=document.createElement('textarea');ta.value=text;ta.style.position='absolute';ta.style.opacity='0';
+          document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();
+        }catch(e){btn.textContent='סמנו והעתיקו ידנית';}
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fallback);}else{fallback();}
+    });
+    bar.appendChild(btn);
+    box.insertBefore(bar,pre);
+    if(long){box.appendChild(more);set(true);}
+  });
+})();
+</script>
+</body>
+</html>
