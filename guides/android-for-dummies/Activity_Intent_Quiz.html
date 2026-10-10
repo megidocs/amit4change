@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מדריך 4: חידון אמת או שקר (Activity ו-Intent)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&family=Assistant:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --yellow:#FFC83D; --yellow-soft:#FFF3D6;
+  --ink:#1A1A1A; --navy:#20304D;
+  --teal:#1B8A75; --teal-soft:#DCF3EC;
+  --coral:#E85B3A; --coral-soft:#FCE4DC;
+  --blue:#2F6FDB; --blue-soft:#E2EBFB;
+  --purple:#7B4FE0; --purple-soft:#EDE5FC;
+  --paper:#FFFDF7;
+  --panel:#fff; --soft:#5A6477; --line:#E4DFD0;
+  --ball-soft:var(--coral-soft); --wood:var(--yellow-soft);
+  --head:'Rubik',sans-serif; --mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Assistant',sans-serif;font-size:16px;line-height:1.75}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px 90px}
+p{margin:0 0 12px}
+a{color:var(--blue)}
+ul,ol{padding-inline-start:22px;margin:0 0 12px}
+li{margin-bottom:6px}
+
+.hero{background:var(--yellow);border-bottom:5px solid var(--ink);padding:52px 20px 40px;margin:0 0 32px}
+.hero-inner{max-width:800px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:28px;align-items:center}
+.badge{display:inline-block;background:var(--ink);color:var(--yellow);font-family:var(--head);font-weight:700;font-size:13px;padding:5px 14px;border-radius:100px;margin-bottom:16px}
+h1{font-family:var(--head);font-weight:900;font-size:34px;line-height:1.18;margin:0 0 12px}
+.hero p{font-size:17px;font-weight:500;max-width:58ch;margin:0}
+.phone{border:3px solid var(--ink);border-radius:22px;background:#fff;padding:12px 10px;font-size:12px;text-align:center;box-shadow:6px 6px 0 var(--ink)}
+.phone .t{font-family:var(--head);font-weight:700;font-size:17px;line-height:1.2}
+.phone .cols{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.phone .col{border-radius:8px;padding:8px 6px}
+.phone .a{background:#FFE0B2}.phone .b{background:#B2DFDB}
+.phone .n{font-family:var(--head);font-weight:900;font-size:38px;line-height:1.1}
+.phone .bt{background:var(--navy);color:#fff;border-radius:14px;padding:3px 0;margin-top:4px;font-size:11px}
+.phone .pill{display:inline-block;background:#C62828;color:#fff;border-radius:14px;padding:3px 16px;font-size:11px}
+.phone .wh{display:inline-block;border:1.5px solid var(--ink);border-radius:14px;padding:2px 12px;margin-top:6px;font-size:11px}
+
+.intro-note{background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:16px 20px;margin:-16px 0 32px;font-size:14px;box-shadow:6px 6px 0 var(--ink)}
+.intro-note b{font-weight:700}
+
+.toc-title{font-family:var(--head);font-weight:700;font-size:18px;margin:0 0 10px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.toc li{margin:0}
+.toc a{display:block;text-decoration:none;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:100px;padding:4px 14px;font-family:var(--head);font-weight:500;font-size:14px}
+.toc a:hover,.toc a:focus-visible{background:var(--yellow);outline:none}
+
+.section-tag{display:inline-block;font-family:var(--mono);font-size:12.5px;color:var(--purple);background:var(--purple-soft);padding:3px 10px;border-radius:100px;margin:44px 0 10px}
+h2.section-title{font-family:var(--head);font-weight:900;font-size:26px;line-height:1.25;margin:0 0 14px}
+h3{font-family:var(--head);font-weight:700;font-size:18px;margin:26px 0 8px}
+
+code{font-family:var(--mono);font-size:.86em;direction:ltr;unicode-bidi:isolate;background:var(--yellow-soft);padding:1px 6px;border-radius:5px}
+
+table{width:100%;border-collapse:collapse;margin:8px 0 18px;font-size:15px;background:#fff}
+.scroll{overflow-x:auto;border:3px solid var(--ink);border-radius:14px;margin:12px 0 20px;box-shadow:6px 6px 0 var(--ink);background:#fff}
+.scroll table{margin:0}
+th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--head);font-weight:700;background:var(--yellow-soft);border-bottom:2px solid var(--ink)}
+td.pts,th.pts{text-align:center;white-space:nowrap;font-weight:700}
+
+.step{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:24px 24px 22px;margin:0 0 28px;box-shadow:6px 6px 0 var(--ink);display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px}
+.step .num{width:44px;height:44px;border-radius:50%;background:var(--yellow);border:3px solid var(--ink);font-family:var(--head);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center}
+.step h3{font-size:20px;margin:6px 0 12px}
+.step h3 ~ h3{margin-top:24px}
+
+pre{direction:ltr;text-align:left;background:var(--navy);color:#EAEDF3;font-family:var(--mono);font-size:13px;line-height:1.6;padding:14px 16px;overflow-x:auto;margin:0;tab-size:4}
+.codebox{margin:14px 0;border-radius:10px;overflow:hidden;background:var(--navy)}
+.codebox.shut pre{max-height:9.6em;overflow:hidden}
+.bar{display:flex;gap:8px;align-items:center;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.2)}
+.bar .lines{color:#8FA3C8;font-family:var(--mono);font-size:12px;margin-inline-end:auto}
+.bar button,.more{font-family:var(--head);font-size:13px;font-weight:500;background:transparent;color:#EAEDF3;border:1.5px solid #EAEDF3;border-radius:100px;padding:1px 12px;cursor:pointer}
+.bar button:hover,.bar button:focus-visible,.more:hover,.more:focus-visible{background:var(--yellow);border-color:var(--yellow);color:var(--ink);outline:none}
+.more{display:none;width:100%;border:0;border-top:1px solid rgba(255,255,255,.2);border-radius:0;padding:7px}
+.codebox.shut .more{display:block}
+.file{direction:ltr;text-align:left;font-family:var(--mono);font-size:12.5px;color:var(--soft);margin:12px 0 -8px}
+
+.note{margin:14px 0;border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:26px minmax(0,1fr);column-gap:10px;font-size:14px;color:var(--navy)}
+.note::before{grid-column:1;grid-row:1 / span 30;width:26px;height:26px;border-radius:50%;color:#fff;font-family:var(--head);font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center}
+.note>*{grid-column:2;min-width:0}
+.note>b:first-child{font-family:var(--head);font-weight:700;font-size:13px;display:block;margin-bottom:2px}
+.note p{margin:0 0 8px}.note p:last-child,.note ul:last-child{margin-bottom:0}
+.note.why{background:var(--teal-soft)}.note.why::before{content:"?";background:var(--teal)}.note.why>b:first-child{color:var(--teal)}
+.note.run{background:var(--blue-soft)}.note.run::before{content:"\2713";background:var(--blue)}.note.run>b:first-child{color:var(--blue)}
+.note.warn{background:var(--coral-soft)}.note.warn::before{content:"!";background:var(--coral)}.note.warn>b:first-child{color:var(--coral)}
+
+details{background:var(--yellow-soft);border:2px dashed var(--ink);border-radius:14px;padding:10px 18px;margin:12px 0;font-size:14px}
+summary{cursor:pointer;font-family:var(--head);font-weight:700;font-size:15px}
+details[open] summary{margin-bottom:8px}
+
+.dia{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:18px 0}
+.dia figure{margin:0;background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:16px}
+.dia figcaption{font-size:12.5px;color:var(--navy);margin-top:10px;text-align:center}
+.box{border:2px solid var(--ink);border-radius:6px;padding:6px;font-size:13px;text-align:center;font-weight:600}
+.v{display:flex;flex-direction:column;gap:6px}.h{display:flex;gap:6px;direction:ltr}
+.fa{background:var(--coral-soft)}.fb{background:var(--teal-soft)}.fw{background:var(--yellow-soft)}
+
+.goal{display:flex;gap:18px;align-items:center;background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:14px 16px;margin:0 0 14px}
+.goal .phone{width:150px;flex:none;box-shadow:none;border-radius:16px;padding:8px 7px;font-size:10px}
+.goal .phone .t{font-size:12px}
+.goal .phone .wh{font-size:9px;padding:1px 8px;margin-top:4px}
+.goal .phone .cols{direction:ltr;margin:6px 0 0;gap:0}
+.goal .phone .col{min-height:170px;border-radius:0;padding:6px 5px}
+.goal .phone .n{font-size:28px}
+.goal .phone .bt{font-size:9px;padding:2px 0}
+.goal-cap{font-size:13.5px;color:var(--navy)}
+.goal-cap b{display:block;font-family:var(--head);font-weight:700;color:var(--ink);font-size:14px;margin-bottom:2px}
+@media (max-width:520px){.goal{flex-direction:column;align-items:flex-start}}
+.task{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:22px 24px;margin:0 0 28px;box-shadow:6px 6px 0 var(--ink)}
+.task h3{font-size:20px;margin:0 0 10px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.pts-badge{background:var(--ink);color:var(--yellow);font-family:var(--head);font-weight:700;font-size:13px;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.task.adv{background:var(--purple-soft)}
+.task.adv .pts-badge{background:var(--purple);color:#fff}
+.success{font-weight:700;color:var(--teal);margin-top:8px}
+
+.score{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:10px 22px;box-shadow:6px 6px 0 var(--ink)}
+.score label{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.score label:last-child{border-bottom:0}
+.score input{width:20px;height:20px;accent-color:var(--teal)}
+.score .p{margin-inline-start:auto;font-family:var(--head);font-weight:700}
+.total{font-family:var(--head);font-weight:900;font-size:44px;line-height:1;margin-top:22px}
+.total small{font-family:'Assistant',sans-serif;font-size:15px;color:var(--soft);font-weight:400}
+
+.done{margin-top:44px;background:var(--navy);border-radius:16px;padding:32px 28px;text-align:center}
+.done .done-title{font-family:var(--head);color:var(--yellow);font-size:24px;font-weight:900;margin:0 0 8px}
+.done p{color:#EAEDF3;font-size:15px;margin:0}
+footer{text-align:center;font-size:13px;color:#8B8F87;margin-top:32px}
+
+@media (max-width:620px){
+  h1{font-size:26px}.hero{padding:40px 16px 32px}
+  .hero-inner{grid-template-columns:minmax(0,1fr)}.phone{max-width:210px}
+  .step{padding:20px 18px 18px;box-shadow:4px 4px 0 var(--ink);grid-template-columns:minmax(0,1fr)}
+  .step h3{font-size:17px}.task{padding:18px;box-shadow:4px 4px 0 var(--ink)}
+}
+
+.hero-inner{grid-template-columns:minmax(0,1fr) 300px}
+.duo{display:flex;gap:8px;align-items:center;justify-content:center}
+.duo .phone{width:128px;flex:none;padding:10px 8px;font-size:10px;min-height:190px;display:flex;flex-direction:column;justify-content:center;gap:8px;border-radius:18px}
+.duo .arrow{font-family:var(--head);font-weight:900;font-size:26px}
+.phone .q{font-family:var(--head);font-weight:700;font-size:12px;line-height:1.3}
+.phone .row{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.phone .row .bt{margin-top:0}
+.phone .big{font-family:var(--head);font-weight:900;font-size:24px}
+.phone.good{background:#DCF3EC}
+.phone .wh{align-self:center}
+.goal .phone{min-height:200px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.goal .phone .bt{padding:3px 10px;align-self:center}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;font-size:13px;direction:ltr}
+.kv .k{font-family:var(--mono);background:var(--yellow-soft);border:2px solid var(--ink);border-radius:6px;padding:3px 8px}
+.kv .val{font-family:var(--mono);background:var(--teal-soft);border:2px solid var(--ink);border-radius:6px;padding:3px 8px;text-align:center}
+.stackd{display:flex;flex-direction:column;gap:4px}
+@media (max-width:620px){.hero-inner{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="badge">מדריך למתחילים · Activity ו-Intent · שיעור כפול</span>
+      <h1>חידון אמת או שקר<br>שני מסכים, מסר אחד</h1>
+      <p>בונים חידון על נושא שאתם בוחרים. מסך אחד שואל, מסך שני עונה "צדקת" או "טעית". בדרך לומדים איך אפליקציה עוברת ממסך למסך ואיך מעבירים מידע ביניהם.</p>
+    </div>
+    <div class="duo" role="img" aria-label="איור: מסך שאלה עם כפתורי אמת ושקר, חץ, ומסך תוצאה שכתוב בו צדקת">
+      <div class="phone"><div class="q">כדור הארץ שטוח</div><div class="row"><div class="bt">אמת</div><div class="bt">שקר</div></div></div>
+      <div class="arrow">←</div>
+      <div class="phone good"><div class="big">צדקת!</div><div class="wh">חזרה לשאלה</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="intro-note">
+    <b>מה בונים היום:</b> מסך שאלה עם שני כפתורים, "אמת" ו"שקר". לחיצה פותחת מסך שני שמודיע אם צדקתם. קודם חוזרים על LinearLayout מהמדריך הקודם, ואז מכירים את Activity (מסך), את Intent (בקשה לעבור מסך), ואת putExtra (מידע שנוסע עם הבקשה).
+  </div>
+
+<nav aria-labelledby="toc-title">
+  <div class="toc-title" id="toc-title">חלקי המסמך</div>
+  <ul class="toc">
+    <li><a href="#warm">1 - חזרה</a></li>
+    <li><a href="#theory">2 - הסבר</a></li>
+    <li><a href="#build">3 - בונים צעד-צעד</a></li>
+    <li><a href="#check">4 - נקודת בדיקה</a></li>
+    <li><a href="#ext">5 - הרחבות</a></li>
+    <li><a href="#adv">6 - מסלול מתקדם</a></li>
+    <li><a href="#score">7 - הניקוד שלי</a></li>
+  </ul>
+</nav>
+
+<span class="section-tag">ניקוד</span>
+<h2 class="section-title" id="points">איך צוברים נקודות</h2>
+<p>נושא החידון והשאלות הם בחירה שלכם: כדורגל, מוזיקה, משחקי מחשב, היסטוריה, סדרות. המדריך כתוב עם שאלה לדוגמה, החליפו אותה בשאלה שלכם.</p>
+<div class="scroll"><table>
+<tr><th>חלק</th><th>מה עושים</th><th class="pts">נקודות</th><th class="pts">זמן משוער</th></tr>
+<tr><td>חזרה</td><td>מסך השאלה, מהזיכרון</td><td class="pts">10</td><td class="pts">20 דק'</td></tr>
+<tr><td>הפרויקט</td><td>מסך תוצאה, מעבר בין המסכים והעברת התשובה</td><td class="pts">40</td><td class="pts">45 דק'</td></tr>
+<tr><td>נקודת בדיקה</td><td>מסבירים למורה שלושה דברים קצרים</td><td class="pts">10</td><td class="pts">10 דק'</td></tr>
+<tr><td>הרחבה 1</td><td>צבע לפי התוצאה</td><td class="pts">10</td><td class="pts" rowspan="3">בזמן שנשאר ובבית</td></tr>
+<tr><td>הרחבה 2</td><td>הסבר לתשובה</td><td class="pts">15</td></tr>
+<tr><td>הרחבה 3</td><td>שאלה שנייה</td><td class="pts">15</td></tr>
+<tr><td>מסלול מתקדם</td><td>שלוש משימות</td><td class="pts">בונוס עד 30</td><td class="pts"></td></tr>
+</table></div>
+<div class="note warn"><b>חוק אחד חשוב</b><p>ניקוד על הרחבות ועל המסלול המתקדם נרשם רק אחרי שעברתם את נקודת הבדיקה מול המורה. אפליקציה שעובדת בלי שאתם יודעים להסביר אותה לא נחשבת.</p></div>
+
+<span class="section-tag">חלק 1</span>
+<h2 class="section-title" id="warm">חזרה: בונים את מסך השאלה</h2>
+<ol>
+  <li>צרו פרויקט חדש עם <b>שם משמעותי</b> - למשל <code>TrueFalseQuiz</code>. השם באנגלית בלבד, בלי רווחים ובלי תווים מיוחדים. תבנית <code>Empty Views Activity</code>, שפה <code>Java</code>, ‏Minimum SDK ‏<code>API 26</code>, ‏Build configuration language ‏<code>Groovy DSL</code>.</li>
+  <li><b>חובה, לפני שמוסיפים רכיב כלשהו:</b> פתחו את <code>activity_main.xml</code> במצב Code, מחקו את כל התוכן שלו והדביקו במקומו את שלד ה-<code>LinearLayout</code> שמופיע מתחת לרשימה.</li>
+  <li>בתוך השלד הוסיפו <code>TextView</code> עם id בשם <code>tvQuestion</code>: משפט על הנושא שלכם שאפשר לענות עליו "אמת" או "שקר", גודל טקסט <code>24sp</code>, רוחב <code>match_parent</code>, והטקסט ממורכז.</li>
+  <li>מתחתיו הוסיפו שורה אופקית (<code>LinearLayout</code> עם <code>horizontal</code>) ובתוכה שני כפתורים: <code>btnTrue</code> עם הטקסט "אמת" ו-<code>btnFalse</code> עם הטקסט "שקר". כל כפתור תופס חצי מרוחב השורה.</li>
+  <li>לחיצה על כל כפתור מציגה Toast: "בחרת אמת" או "בחרת שקר".</li>
+  <li>ב-<code>colors.xml</code> הוסיפו צבע בשם <code>screen_bg</code> והגדירו אותו כרקע המסך.</li>
+  <li>הריצו ובדקו.</li>
+</ol>
+
+<h3>השלד שמדביקים ב-activity_main.xml</h3>
+<div class="file">res/layout/activity_main.xml</div>
+<div class="codebox"><pre>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp"&gt;
+
+    &lt;!-- את הרכיבים שלכם מוסיפים כאן, בין שתי התגיות --&gt;
+
+&lt;/LinearLayout&gt;</pre></div>
+<p>השלד זהה לזה של המדריך הקודם, עם שורה אחת חדשה: <code>android:gravity="center"</code> על הקופסה הראשית. היא ממרכזת את כל התוכן באמצע המסך.</p>
+
+<div class="note warn"><b>בוחרים Empty Views Activity, לא Empty Activity</b>
+<p>במסך בחירת התבנית יש שתי תבניות עם שם כמעט זהה, זו ליד זו. הנכונה היא <code>Empty Views Activity</code>, עם המילה Views.</p>
+<p>איך מזהים שבחרתם לא נכון: במסך הבא אין שדה <code>Language</code>, ומתחת לכותרת כתוב "Jetpack Compose". במקרה כזה לחצו <code>Previous</code>, בחרו <code>Empty Views Activity</code>, ורק אז בחרו <code>Java</code>.</p></div>
+<div class="note warn"><b>אל תמחקו את השורה <code>android:id="@+id/main"</code></b><p>ב-<code>MainActivity.java</code> יש שורה ש-Android Studio כתב בשבילכם ומחפשת רכיב בשם <code>main</code>. בלי ה-id הזה האפליקציה לא תיבנה.</p></div>
+
+<details><summary>רמז: שורה אופקית עם שני כפתורים חצי-חצי</summary>
+<p>זה אותו רעיון של שתי העמודות מלוח התוצאות: רוחב <code>0dp</code> ומשקל שווה.</p>
+<div class="codebox"><pre>&lt;LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="24dp"
+    android:orientation="horizontal"&gt;
+
+    &lt;Button
+        android:id="@+id/btnTrue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:text="אמת" /&gt;
+
+    &lt;Button
+        android:id="@+id/btnFalse"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="שקר" /&gt;
+
+&lt;/LinearLayout&gt;</pre></div>
+</details>
+<details><summary>רמז: הקוד של Toast בלחיצה על כפתור</summary>
+<p>ב-<code>MainActivity.java</code>, בתוך <code>onCreate</code>, אחרי השורות שכבר כתובות שם:</p>
+<div class="codebox"><pre>Button btnTrue = findViewById(R.id.btnTrue);
+btnTrue.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Toast.makeText(MainActivity.this, "בחרת אמת", Toast.LENGTH_SHORT).show();
+    }
+});</pre></div>
+<p>מילה שמסומנת באדום: עמדו עליה, <code>Alt+Enter</code>, ‏Import class.</p>
+</details>
+<details><summary>רמז: צבע רקע מ-colors.xml</summary>
+<p>ב-<code>app &gt; res &gt; values &gt; colors.xml</code>, לפני <code>&lt;/resources&gt;</code>:</p>
+<div class="codebox"><pre>&lt;color name="screen_bg"&gt;#FFF8EE&lt;/color&gt;</pre></div>
+<p>ובתגית הפותחת של ה-<code>LinearLayout</code> הראשי, כשורה נוספת <b>לפני</b> הסוגר <code>&gt;</code>:</p>
+<div class="codebox"><pre>android:background="@color/screen_bg"</pre></div>
+</details>
+<div class="note run"><b>סיימתם את החזרה כש...</b><p>רואים שאלה באמצע המסך, מתחתיה שני כפתורים ברוחב שווה, וכל כפתור מציג את ההודעה שלו. קראו למורה לרישום 10 הנקודות.</p></div>
+
+<span class="section-tag">חלק 2</span>
+<h2 class="section-title" id="theory">הסבר: Activity ו-Intent</h2>
+<p>כל האפליקציות שבניתם עד עכשיו היו מסך אחד. אפליקציות אמיתיות בנויות מהרבה מסכים: מסך כניסה, מסך ראשי, מסך הגדרות. היום האפליקציה שלכם מקבלת מסך שני.</p>
+
+<h3>Activity: מסך אחד</h3>
+<p><b>Activity</b> הוא מסך אחד באפליקציה. כל Activity בנוי משני קבצים שעובדים יחד: קובץ XML שקובע איך המסך נראה, וקובץ Java שקובע מה המסך עושה. את הזוג הראשון אתם כבר מכירים: <code>activity_main.xml</code> ו-<code>MainActivity.java</code>. דימוי: חדר בבית. לכל חדר יש רהיטים משלו (ה-XML) וחוקים משלו (ה-Java).</p>
+
+<h3>Intent: בקשה לעבור מסך</h3>
+<p>מסך לא יכול "לקפוץ" למסך אחר בעצמו. הוא כותב בקשה ומוסר אותה למערכת אנדרואיד, והמערכת פותחת את המסך המבוקש. לבקשה הזו קוראים <b>Intent</b>. בבקשה כתובים שני דברים: מי מבקש, ולאן רוצים להגיע.</p>
+<div class="dia">
+  <figure style="grid-column:1/-1">
+    <div class="h" style="direction:rtl;align-items:center;justify-content:center">
+      <div class="box fa" style="padding:14px">MainActivity<br>מסך השאלה</div>
+      <div style="font-size:13px;text-align:center;font-weight:600">Intent<br>←</div>
+      <div class="box fb" style="padding:14px">ResultActivity<br>מסך התוצאה</div>
+    </div>
+    <figcaption><code>new Intent(MainActivity.this, ResultActivity.class)</code><br>הפרמטר הראשון: מי מבקש. הפרמטר השני: לאן.</figcaption>
+  </figure>
+</div>
+
+<h3>Extra: מידע שנוסע עם הבקשה</h3>
+<p>מסך התוצאה צריך לדעת אם צדקתם. המידע הזה נמצא במסך השאלה, ולכן צריך לשלוח אותו. מצמידים ל-Intent "פתק" שנקרא <b>extra</b>. לכל פתק יש שם (מפתח) ותוכן (ערך). המסך השולח כותב את הפתק עם <code>putExtra</code>, והמסך המקבל קורא אותו לפי אותו שם בדיוק.</p>
+<div class="dia">
+  <figure>
+    <div class="kv"><div class="k">"isCorrect"</div><div class="val">true</div></div>
+    <figcaption>פתק אחד: המפתח הוא שם שאתם בוחרים, הערך הוא המידע עצמו.</figcaption>
+  </figure>
+  <figure>
+    <div class="stackd">
+      <div class="box fb">ResultActivity (למעלה, זה מה שרואים)</div>
+      <div class="box fa">MainActivity (מחכה מתחת)</div>
+    </div>
+    <figcaption>מסך חדש נפתח מעל הקודם, כמו קלף שמונח על ערימה. <code>finish()</code> מסיר את הקלף העליון, והמסך שמתחתיו חוזר.</figcaption>
+  </figure>
+</div>
+
+<div class="note why"><b>ועוד קובץ אחד שכדאי להכיר: Manifest</b><p><code>AndroidManifest.xml</code> הוא "תעודת הזהות" של האפליקציה. רשומים בו כל המסכים שלה. מסך שלא רשום שם לא יכול להיפתח, והאפליקציה תקרוס. כשיוצרים מסך בדרך שתלמדו מיד, Android Studio רושם אותו בשבילכם.</p></div>
+
+<span class="section-tag">חלק 3</span>
+<h2 class="section-title" id="build">בונים צעד-צעד</h2>
+<p>אחרי כל תיבה כחולה של "הריצו ובדקו" מריצים ובודקים. לא ממשיכים הלאה עם שגיאה.</p>
+
+<div class="step"><div class="num">1</div><div>
+<h3>יוצרים מסך שני</h3>
+<p>בעץ הקבצים משמאל, פתחו את <code>app &gt; java</code> ולחצו לחיצה ימנית על שם החבילה שלכם (השורה הראשונה, זו שבתוכה <code>MainActivity</code>).</p>
+<p>בחרו <code>New &gt; Activity &gt; Empty Views Activity</code>. בחלון שנפתח:</p>
+<ul>
+  <li>Activity Name: <code>ResultActivity</code></li>
+  <li>Layout Name: <code>activity_result</code> (מתמלא לבד)</li>
+  <li>Launcher Activity: <b>לא</b> מסומן</li>
+  <li>Source Language: <code>Java</code></li>
+</ul>
+<p>לחצו <code>Finish</code>.</p>
+<div class="note why"><b>מה קרה פה</b><p>Android Studio יצר שני קבצים חדשים: <code>ResultActivity.java</code> ו-<code>activity_result.xml</code>. זה הזוג של המסך השני. בנוסף הוא רשם את המסך ב-Manifest.</p></div>
+</div></div>
+
+<div class="step"><div class="num">2</div><div>
+<h3>מציצים ב-Manifest</h3>
+<p>פתחו את <code>app &gt; manifests &gt; AndroidManifest.xml</code>. חפשו את השורות האלה:</p>
+<div class="codebox"><pre>&lt;activity
+    android:name=".ResultActivity"
+    android:exported="false" /&gt;</pre></div>
+<p>זה הרישום של המסך החדש. <b>לא משנים כלום</b>, רק מוודאים שהוא שם. סגרו את הקובץ.</p>
+</div></div>
+
+<div class="step"><div class="num">3</div><div>
+<h3>מעצבים את מסך התוצאה</h3>
+<div class="goal">
+  <div class="phone" role="img" aria-label="איור: מסך עם טקסט גדול במרכז ומתחתיו כפתור חזרה לשאלה">
+    <div class="t">כאן תופיע התוצאה</div>
+    <div class="bt">חזרה לשאלה</div>
+  </div>
+  <div class="goal-cap"><b>התוצאה הרצויה בסוף הצעד</b>מסך עם טקסט גדול באמצע ומתחתיו כפתור. עדיין אי אפשר להגיע אליו מהאפליקציה, רואים אותו רק בתצוגה המקדימה (Split או Design).</div>
+</div>
+<p>פתחו את <code>app &gt; res &gt; layout &gt; activity_result.xml</code> במצב Code. מחקו את כל התוכן והדביקו:</p>
+<div class="file">res/layout/activity_result.xml</div>
+<div class="codebox"><pre>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_bg"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp"&gt;
+
+    &lt;TextView
+        android:id="@+id/tvResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="כאן תופיע התוצאה"
+        android:textSize="36sp" /&gt;
+
+    &lt;Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="חזרה לשאלה" /&gt;
+
+&lt;/LinearLayout&gt;</pre></div>
+<div class="note why"><b>מה כתבנו פה</b><p>אותו שלד של LinearLayout אנכי, עם שני רכיבים. גם כאן ה-id של הקופסה הראשית הוא <code>main</code>, כי גם <code>ResultActivity.java</code> מחפש אותו. שני מסכים יכולים להשתמש באותו id בלי בעיה, כי כל מסך מכיר רק את הקובץ שלו.</p></div>
+</div></div>
+
+<div class="step"><div class="num">4</div><div>
+<h3>עוברים למסך התוצאה עם Intent</h3>
+<p>פתחו את <code>MainActivity.java</code>. מצאו את הקוד של <code>btnTrue</code> מהחזרה. בתוך <code>onClick</code>, מחקו את שורת ה-Toast וכתבו במקומה את שתי השורות של ה-Intent. כך צריך להיראות הקוד של הכפתור:</p>
+<div class="file">MainActivity.java</div>
+<div class="codebox"><pre>Button btnTrue = findViewById(R.id.btnTrue);
+btnTrue.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+        startActivity(intent);
+    }
+});</pre></div>
+<p>אם <code>Intent</code> מסומן באדום: עמדו עליו, <code>Alt+Enter</code>, ‏Import class.</p>
+<div class="note why"><b>מה כתבנו פה</b>
+<p>שורה ראשונה: כותבים את הבקשה. "אני, <code>MainActivity</code>, מבקש לפתוח את <code>ResultActivity</code>".</p>
+<p>שורה שנייה: <code>startActivity</code> מוסר את הבקשה למערכת, והיא פותחת את המסך.</p></div>
+<div class="note run"><b>הריצו ובדקו</b><p>לחיצה על "אמת" פותחת את מסך התוצאה, עם הטקסט "כאן תופיע התוצאה". כפתור Back של המכשיר מחזיר לשאלה. הכפתור "חזרה לשאלה" עדיין לא עובד.</p></div>
+</div></div>
+
+<div class="step"><div class="num">5</div><div>
+<h3>שולחים את התשובה עם putExtra</h3>
+<p><b>חלק ראשון:</b> מסך השאלה צריך לדעת מהי התשובה הנכונה לשאלה שלכם. מיד אחרי השורה <code>public class MainActivity extends AppCompatActivity {</code> הוסיפו:</p>
+<div class="file">MainActivity.java (בראש המחלקה)</div>
+<div class="codebox"><pre>    boolean correctAnswer = false;</pre></div>
+<p>אם התשובה הנכונה לשאלה שלכם היא "אמת", כתבו <code>true</code> במקום <code>false</code>.</p>
+<p><b>חלק שני:</b> עדכנו את <code>onClick</code> של <code>btnTrue</code>. נוספו שלושה דברים: המשתנה <code>userAnswer</code>, בדיקת <code>if</code> שקובעת את <code>isCorrect</code>, ושורת <code>putExtra</code>.</p>
+<div class="file">MainActivity.java</div>
+<div class="codebox"><pre>btnTrue.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        boolean userAnswer = true;
+
+        boolean isCorrect;
+        if (userAnswer == correctAnswer) {
+            isCorrect = true;
+        } else {
+            isCorrect = false;
+        }
+
+        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+        intent.putExtra("isCorrect", isCorrect);
+        startActivity(intent);
+    }
+});</pre></div>
+<div class="note why"><b>מה כתבנו פה</b>
+<p><code>userAnswer</code> הוא מה שהמשתמש בחר. בכפתור "אמת" הוא <code>true</code>.</p>
+<p>ה-<code>if</code> משווה את הבחירה לתשובה הנכונה. אם הן שוות, המשתמש צדק ו-<code>isCorrect</code> מקבל <code>true</code>. אחרת הוא מקבל <code>false</code>.</p>
+<p><code>putExtra</code> מצמיד ל-Intent פתק בשם <code>"isCorrect"</code>, והערך שלו הוא מה שנמצא במשתנה <code>isCorrect</code>.</p></div>
+</div></div>
+
+<div class="step"><div class="num">6</div><div>
+<h3>כפתור "שקר": עכשיו אתם</h3>
+<p>עדכנו את <code>onClick</code> של <code>btnFalse</code> באותה צורה. ההבדל היחיד: מה הערך של <code>userAnswer</code> כשהמשתמש לוחץ "שקר"?</p>
+<details><summary>נתקעתי: הקוד המלא של btnFalse</summary>
+<div class="codebox"><pre>Button btnFalse = findViewById(R.id.btnFalse);
+btnFalse.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        boolean userAnswer = false;
+
+        boolean isCorrect;
+        if (userAnswer == correctAnswer) {
+            isCorrect = true;
+        } else {
+            isCorrect = false;
+        }
+
+        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+        intent.putExtra("isCorrect", isCorrect);
+        startActivity(intent);
+    }
+});</pre></div>
+</details>
+<div class="note run"><b>הריצו ובדקו</b><p>שני הכפתורים פותחים את מסך התוצאה. הטקסט עדיין "כאן תופיע התוצאה", כי המסך השני עוד לא קורא את הפתק.</p></div>
+</div></div>
+
+<div class="step"><div class="num">7</div><div>
+<h3>קוראים את התשובה במסך התוצאה</h3>
+<div class="goal">
+  <div class="phone good" role="img" aria-label="איור: מסך תוצאה שכתוב בו צדקת, ומתחתיו כפתור חזרה לשאלה">
+    <div class="big">צדקת!</div>
+    <div class="bt">חזרה לשאלה</div>
+  </div>
+  <div class="goal-cap"><b>התוצאה הרצויה בסוף הצעד</b>תשובה נכונה מציגה "צדקת!", תשובה שגויה מציגה "טעית...". באיור הרקע ירוק רק להמחשה, את הצבע תוסיפו בהרחבה 1.</div>
+</div>
+<p>פתחו את <code>ResultActivity.java</code>. בתוך <code>onCreate</code>, אחרי השורות שכבר כתובות שם ולפני הסוגר <code>}</code> שסוגר את <code>onCreate</code>, הוסיפו:</p>
+<div class="file">ResultActivity.java (בסוף onCreate)</div>
+<div class="codebox"><pre>        TextView tvResult = findViewById(R.id.tvResult);
+
+        boolean isCorrect = getIntent().getBooleanExtra("isCorrect", false);
+
+        if (isCorrect) {
+            tvResult.setText("צדקת!");
+        } else {
+            tvResult.setText("טעית...");
+        }</pre></div>
+<div class="note why"><b>מה כתבנו פה</b>
+<p><code>getIntent()</code> מחזיר את הבקשה שפתחה את המסך הזה.</p>
+<p><code>getBooleanExtra("isCorrect", false)</code> קורא ממנה את הפתק בשם <code>"isCorrect"</code>. הערך השני, <code>false</code>, הוא ברירת מחדל: מה לקבל אם אין פתק בשם הזה.</p></div>
+<div class="note run"><b>הריצו ובדקו</b><p>ענו נכון ובדקו שכתוב "צדקת!". חזרו עם Back, ענו לא נכון ובדקו שכתוב "טעית...".</p></div>
+<div class="note warn"><b>תמיד כתוב "טעית...", גם כשעניתם נכון?</b>
+<p>אל תמחקו קוד ואל תמשיכו הלאה. זו תקלה שכדאי להבין לבד:</p>
+<ol>
+  <li>שום דבר לא אדום והאפליקציה לא קורסת. כלומר הקוד תקין מבחינת Java, אבל המידע לא מגיע.</li>
+  <li>שאלו את עצמכם: מתי <code>getBooleanExtra</code> מחזיר את ברירת המחדל?</li>
+  <li>השוו אות אחרי אות בין שני הקבצים.</li>
+</ol>
+<details><summary>רמז</summary><p>שם הפתק ב-<code>putExtra</code> (ב-<code>MainActivity</code>) חייב להיות זהה בדיוק לשם ב-<code>getBooleanExtra</code> (ב-<code>ResultActivity</code>), כולל אותיות גדולות וקטנות. <code>"isCorrect"</code> ו-<code>"iscorrect"</code> הם שני פתקים שונים. בדקו גם שלא שכחתם את שורת ה-<code>putExtra</code> באחד הכפתורים.</p></details>
+</div>
+</div></div>
+
+<div class="step"><div class="num">8</div><div>
+<h3>כפתור החזרה: finish</h3>
+<p>ב-<code>ResultActivity.java</code>, בסוף <code>onCreate</code>, אחרי ה-<code>if</code>:</p>
+<div class="codebox"><pre>        Button btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });</pre></div>
+<div class="note why"><b>למה finish ולא Intent חדש</b><p>מסך השאלה לא נסגר כשעברתם למסך התוצאה. הוא מחכה מתחת, כמו קלף בערימה. <code>finish()</code> סוגר את המסך הנוכחי ומגלה את מה שמתחתיו. Intent חדש ל-<code>MainActivity</code> היה פותח עותק נוסף של מסך השאלה מעל הערימה, והערימה הייתה גדלה עם כל סיבוב.</p></div>
+<div class="note run"><b>בדיקת סיום של הפרויקט</b>
+<ul>
+  <li>מסך השאלה מציג שאלה שלכם ושני כפתורים.</li>
+  <li>תשובה נכונה פותחת מסך עם "צדקת!", תשובה שגויה פותחת מסך עם "טעית...".</li>
+  <li>"חזרה לשאלה" מחזיר למסך השאלה.</li>
+  <li>אחרי חזרה למסך השאלה, לחיצה אחת על Back של המכשיר יוצאת מהאפליקציה.</li>
+</ul></div>
+</div></div>
+
+<span class="section-tag">חלק 4</span>
+<h2 class="section-title" id="check">נקודת בדיקה</h2>
+<p>קראו למורה. תתבקשו להסביר בעל-פה את שלושת הדברים הבאים. הכינו את התשובות לפני כן, ונסו כל דבר באפליקציה שלכם.</p>
+<div class="task">
+<h3>א. קריסה מכוונת</h3>
+<p>פתחו את <code>AndroidManifest.xml</code>, סמנו את שלוש השורות של <code>ResultActivity</code> וגזרו אותן (<code>Ctrl+X</code>). הריצו ולחצו על אחד הכפתורים. האפליקציה תקרוס.</p>
+<p>פתחו את חלון <b>Logcat</b> בתחתית Android Studio וחפשו את השורות האדומות. מה שם השגיאה? איזו שאלה Android שואל אתכם בהודעה? הדביקו את השורות חזרה (<code>Ctrl+V</code>) וודאו שהכול עובד שוב.</p>
+</div>
+<div class="task">
+<h3>ב. מה יקרה אם</h3>
+<p>נחשו קודם, ורק אחר כך נסו:</p>
+<ol>
+  <li>ב-<code>ResultActivity</code> משנים את ברירת המחדל מ-<code>false</code> ל-<code>true</code>, וגם משנים את שם הפתק ל-<code>"result"</code>. מה יוצג כשעונים לא נכון, ולמה?</li>
+  <li>מחליפים את <code>finish()</code> ב-Intent חדש ל-<code>MainActivity</code>. עונים על השאלה שלוש פעמים, ובכל פעם חוזרים בכפתור. כמה לחיצות על Back של המכשיר צריך עכשיו כדי לצאת מהאפליקציה, ולמה?</li>
+</ol>
+<p>אל תשכחו להחזיר את הקוד התקין.</p>
+</div>
+<div class="task">
+<h3>ג. במילים שלכם</h3>
+<p>מה ההבדל בין Activity לבין קובץ layout? ומה תפקידו של כל אחד משני הפרמטרים ב-<code>new Intent(MainActivity.this, ResultActivity.class)</code>?</p>
+</div>
+
+<span class="section-tag">חלק 5</span>
+<h2 class="section-title" id="ext">הרחבות</h2>
+<p>כאן אין צעד-צעד. יש דרישה, הגדרת הצלחה ורמז. כל מה שצריך כבר מופיע במדריך הזה או במדריכים הקודמים.</p>
+
+<div class="task">
+<h3><span>הרחבה 1: צבע לפי התוצאה</span><span class="pts-badge">10 נק'</span></h3>
+<p>מסך התוצאה נראה אותו דבר כשצודקים וכשטועים. שנו את זה:</p>
+<ul>
+  <li>ב-<code>colors.xml</code> שני צבעים חדשים: <code>result_correct</code> (ירקרק) ו-<code>result_wrong</code> (אדמדם).</li>
+  <li>רקע מסך התוצאה משתנה לפי התשובה.</li>
+  <li>גם הטקסט שונה מ"צדקת!" ו"טעית...": נסחו הודעות משלכם שמתאימות לנושא החידון.</li>
+</ul>
+<p class="success">הצלחה: תשובה נכונה פותחת מסך ירקרק, תשובה שגויה פותחת מסך אדמדם.</p>
+<details><summary>רמז</summary><p>הקופסה הראשית של המסך היא רכיב כמו כל רכיב אחר, ויש לה id. אפשר למצוא אותה עם <code>findViewById(R.id.main)</code> ולקרוא לפעולה <code>setBackgroundColor</code>. צבע מ-colors.xml מקבלים ב-Java עם <code>getColor(R.color.result_correct)</code>.</p></details>
+</div>
+
+<div class="task">
+<h3><span>הרחבה 2: הסבר לתשובה</span><span class="pts-badge">15 נק'</span></h3>
+<p>חידון טוב גם מלמד. הוסיפו למסך התוצאה משפט שמסביר מהי התשובה הנכונה ולמה.</p>
+<ul>
+  <li>ההסבר נכתב ב-<code>MainActivity</code>, ליד השאלה, ונשלח למסך התוצאה כפתק שני ב-Intent.</li>
+  <li>במסך התוצאה מופיע <code>TextView</code> חדש בשם <code>tvExplanation</code>, בין התוצאה לכפתור, והוא מציג את ההסבר שהתקבל.</li>
+</ul>
+<p class="success">הצלחה: אם משנים את טקסט ההסבר ב-<code>MainActivity</code> בלבד, מסך התוצאה מציג את הטקסט החדש.</p>
+<details><summary>רמז</summary><p>Intent יכול לשאת כמה פתקים, כל אחד עם שם אחר. לפתק מסוג טקסט קוראים עם <code>getStringExtra</code>, והוא מקבל רק את שם הפתק, בלי ברירת מחדל.</p></details>
+</div>
+
+<div class="task">
+<h3><span>הרחבה 3: שאלה שנייה</span><span class="pts-badge">15 נק'</span></h3>
+<p>חידון של שאלה אחת הוא לא חידון. הוסיפו מסך שלישי עם שאלה נוספת.</p>
+<ul>
+  <li>מסך חדש בשם <code>SecondQuestionActivity</code>, עם שאלה אחרת ושני כפתורים, שנראה כמו מסך השאלה הראשון.</li>
+  <li>במסך התוצאה נוסף כפתור "לשאלה הבאה" שפותח אותו.</li>
+  <li>גם השאלה השנייה שולחת את התשובה למסך התוצאה.</li>
+  <li>אחרי השאלה השנייה, הכפתור "לשאלה הבאה" לא מוצג.</li>
+</ul>
+<p class="success">הצלחה: אפשר לעבור שאלה, תוצאה, שאלה שנייה, תוצאה, ובמסך התוצאה האחרון אין כפתור "לשאלה הבאה".</p>
+<details><summary>רמז</summary><p>מסך התוצאה צריך לדעת מאיזו שאלה הגיעו אליו. זה עוד פתק ב-Intent. כדי להעלים כפתור: <code>setVisibility(View.GONE)</code>.</p></details>
+</div>
+
+<span class="section-tag">חלק 6</span>
+<h2 class="section-title" id="adv">מסלול מתקדם</h2>
+<p>פתוח לכל מי שסיים את הפרויקט ואת נקודת הבדיקה. כאן אין צעדים ואין רמזים. יש יעד וקישור לתיעוד הרשמי, ואתם לומדים לבד. על כל משימה תצטרכו להסביר למורה מה עשיתם ולמה זה עובד.</p>
+
+<div class="task adv">
+<h3><span>מתקדם 1: מחזור החיים של מסך</span><span class="pts-badge">+10</span></h3>
+<p>מסך לא רק "קיים" או "לא קיים". הוא עובר בין מצבים, ובכל מעבר אנדרואיד קורא לפעולה מיוחדת.</p>
+<ul>
+  <li>בשני המסכים, דרסו את <code>onStart</code>, <code>onResume</code>, <code>onPause</code>, <code>onStop</code> ו-<code>onDestroy</code>, ובכל אחת (וגם ב-<code>onCreate</code>) הדפיסו שורה ל-Logcat עם <code>Log.d</code>, כולל שם המסך ושם הפעולה.</li>
+  <li>רשמו את סדר ההדפסות בשלושה מצבים: מעבר משאלה לתוצאה, חזרה עם <code>finish()</code>, ולחיצה על כפתור הבית של המכשיר.</li>
+</ul>
+<p class="success">למורה: במעבר משאלה לתוצאה, מה קורה קודם, <code>onPause</code> של השאלה או <code>onCreate</code> של התוצאה? והאם <code>onDestroy</code> של השאלה נקרא?</p>
+<p><a href="https://developer.android.com/guide/components/activities/activity-lifecycle" target="_blank" rel="noopener">תיעוד: The activity lifecycle</a></p>
+</div>
+
+<div class="task adv">
+<h3><span>מתקדם 2: Intent שיוצא מהאפליקציה</span><span class="pts-badge">+10</span></h3>
+<p>ה-Intent שכתבתם נקרא מפורש: הוא נוקב בשם המסך. יש גם Intent מרומז, שאומר רק מה רוצים לעשות, ואנדרואיד מחפש אפליקציה שיודעת לעשות את זה.</p>
+<ul>
+  <li>במסך התוצאה, כפתור "שתף" ששולח את התוצאה כטקסט דרך אפליקציה שהמשתמש בוחר (WhatsApp, מייל וכו'), בעזרת <code>ACTION_SEND</code>.</li>
+  <li>כפתור "למד עוד" שפותח בדפדפן דף אינטרנט שקשור לשאלה, בעזרת <code>ACTION_VIEW</code>.</li>
+</ul>
+<p class="success">למורה: מה ההבדל בין Intent מפורש למרומז, ומי מחליט איזו אפליקציה תיפתח?</p>
+<p><a href="https://developer.android.com/guide/components/intents-filters" target="_blank" rel="noopener">תיעוד: Intents and intent filters</a></p>
+</div>
+
+<div class="task adv">
+<h3><span>מתקדם 3: חמש שאלות, מסך שאלה אחד</span><span class="pts-badge">+10</span></h3>
+<p>מסך נפרד לכל שאלה (כמו בהרחבה 3) לא מחזיק מעמד בחידון של עשרים שאלות. בנו את החידון נכון:</p>
+<ul>
+  <li>השאלות והתשובות שמורות במערכים.</li>
+  <li>יש מסך שאלה אחד בלבד, שמציג את השאלה לפי מספר שהוא מקבל ב-Intent.</li>
+  <li>הניקוד המצטבר עובר ממסך למסך.</li>
+  <li>בסוף מוצג מסך סיכום: כמה צדקתם מתוך חמש.</li>
+</ul>
+<p class="success">למורה: כמה שורות צריך לשנות אצלכם כדי להוסיף שאלה שישית?</p>
+</div>
+
+<span class="section-tag">חלק 7</span>
+<h2 class="section-title" id="score">הניקוד שלי</h2>
+<p>סמנו מה שהמורה אישר. הסימון נשמר בדפדפן שלכם בלבד.</p>
+<div class="score" id="score-list">
+  <label><input type="checkbox" data-p="10" data-k="warm">חזרה<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="40" data-k="base">הפרויקט: חידון עם שני מסכים<span class="p">40</span></label>
+  <label><input type="checkbox" data-p="10" data-k="check">נקודת בדיקה<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="10" data-k="e1">הרחבה 1: צבע לפי התוצאה<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="15" data-k="e2">הרחבה 2: הסבר לתשובה<span class="p">15</span></label>
+  <label><input type="checkbox" data-p="15" data-k="e3">הרחבה 3: שאלה שנייה<span class="p">15</span></label>
+  <label><input type="checkbox" data-p="10" data-k="m1">מתקדם 1: מחזור החיים<span class="p">+10</span></label>
+  <label><input type="checkbox" data-p="10" data-k="m2">מתקדם 2: Intent מרומז<span class="p">+10</span></label>
+  <label><input type="checkbox" data-p="10" data-k="m3">מתקדם 3: חמש שאלות<span class="p">+10</span></label>
+</div>
+<div class="total" aria-live="polite"><span id="total">0</span> <small>נקודות (100 בלי בונוס, 130 עם בונוס)</small></div>
+
+<div class="done">
+  <div class="done-title">סיימתם</div>
+  <p>הראו למורה את האפליקציה רצה, ואז הגישו כרגיל: File ← Export ← Export to Zip File, והעלאה ל-Classroom.</p>
+</div>
+<footer>מדריך 4 בסדרה. קודמים לו: כרטיס ברכה אישי, כרטיס ביקור מקצועי, לוח תוצאות.</footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY='guide4-quiz';
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){saved={};}
+  var boxes=document.querySelectorAll('#score-list input');
+  function calc(){
+    var t=0;
+    boxes.forEach(function(b){if(b.checked)t+=Number(b.dataset.p);saved[b.dataset.k]=b.checked;});
+    document.getElementById('total').textContent=t;
+    try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(e){}
+  }
+  boxes.forEach(function(b){b.checked=!!saved[b.dataset.k];b.addEventListener('change',calc);});
+  calc();
+
+  document.querySelectorAll('.codebox').forEach(function(box){
+    var pre=box.querySelector('pre');
+    var n=pre.textContent.split('\n').length;
+    var long=n>8;
+    var bar=document.createElement('div');bar.className='bar';
+    var info=document.createElement('span');info.className='lines';info.textContent=n+' שורות';
+    bar.appendChild(info);
+    var more=null,tog=null;
+    function set(shut){
+      box.classList.toggle('shut',shut);
+      tog.textContent=shut?'פתיחת כל הקוד':'סגירה';
+      tog.setAttribute('aria-expanded',String(!shut));
+    }
+    if(long){
+      tog=document.createElement('button');tog.type='button';
+      tog.addEventListener('click',function(){set(!box.classList.contains('shut'));});
+      bar.appendChild(tog);
+      more=document.createElement('button');more.type='button';more.className='more';
+      more.textContent='יש עוד קוד, לחצו לפתיחה';
+      more.addEventListener('click',function(){set(false);});
+    }
+    var btn=document.createElement('button');btn.type='button';btn.textContent='העתקה';
+    btn.addEventListener('click',function(){
+      var text=pre.textContent;
+      function ok(){btn.textContent='הועתק';setTimeout(function(){btn.textContent='העתקה';},1500);}
+      function fallback(){
+        try{
+          var ta=document.createElement('textarea');ta.value=text;ta.style.position='absolute';ta.style.opacity='0';
+          document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();
+        }catch(e){btn.textContent='סמנו והעתיקו ידנית';}
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fallback);}else{fallback();}
+    });
+    bar.appendChild(btn);
+    box.insertBefore(bar,pre);
+    if(long){box.appendChild(more);set(true);}
+  });
+})();
+</script>
+</body>
+</html>
