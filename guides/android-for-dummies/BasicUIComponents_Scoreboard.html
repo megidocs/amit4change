@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מדריך 3: לוח תוצאות (LinearLayout)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&family=Assistant:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --yellow:#FFC83D; --yellow-soft:#FFF3D6;
+  --ink:#1A1A1A; --navy:#20304D;
+  --teal:#1B8A75; --teal-soft:#DCF3EC;
+  --coral:#E85B3A; --coral-soft:#FCE4DC;
+  --blue:#2F6FDB; --blue-soft:#E2EBFB;
+  --purple:#7B4FE0; --purple-soft:#EDE5FC;
+  --paper:#FFFDF7;
+  --panel:#fff; --soft:#5A6477; --line:#E4DFD0;
+  --ball-soft:var(--coral-soft); --wood:var(--yellow-soft);
+  --head:'Rubik',sans-serif; --mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Assistant',sans-serif;font-size:16px;line-height:1.75}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px 90px}
+p{margin:0 0 12px}
+a{color:var(--blue)}
+ul,ol{padding-inline-start:22px;margin:0 0 12px}
+li{margin-bottom:6px}
+
+.hero{background:var(--yellow);border-bottom:5px solid var(--ink);padding:52px 20px 40px;margin:0 0 32px}
+.hero-inner{max-width:800px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:28px;align-items:center}
+.badge{display:inline-block;background:var(--ink);color:var(--yellow);font-family:var(--head);font-weight:700;font-size:13px;padding:5px 14px;border-radius:100px;margin-bottom:16px}
+h1{font-family:var(--head);font-weight:900;font-size:34px;line-height:1.18;margin:0 0 12px}
+.hero p{font-size:17px;font-weight:500;max-width:58ch;margin:0}
+.phone{border:3px solid var(--ink);border-radius:22px;background:#fff;padding:12px 10px;font-size:12px;text-align:center;box-shadow:6px 6px 0 var(--ink)}
+.phone .t{font-family:var(--head);font-weight:700;font-size:17px;line-height:1.2}
+.phone .cols{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.phone .col{border-radius:8px;padding:8px 6px}
+.phone .a{background:#FFE0B2}.phone .b{background:#B2DFDB}
+.phone .n{font-family:var(--head);font-weight:900;font-size:38px;line-height:1.1}
+.phone .bt{background:var(--navy);color:#fff;border-radius:14px;padding:3px 0;margin-top:4px;font-size:11px}
+.phone .pill{display:inline-block;background:#C62828;color:#fff;border-radius:14px;padding:3px 16px;font-size:11px}
+.phone .wh{display:inline-block;border:1.5px solid var(--ink);border-radius:14px;padding:2px 12px;margin-top:6px;font-size:11px}
+
+.intro-note{background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:16px 20px;margin:-16px 0 32px;font-size:14px;box-shadow:6px 6px 0 var(--ink)}
+.intro-note b{font-weight:700}
+
+.toc-title{font-family:var(--head);font-weight:700;font-size:18px;margin:0 0 10px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.toc li{margin:0}
+.toc a{display:block;text-decoration:none;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:100px;padding:4px 14px;font-family:var(--head);font-weight:500;font-size:14px}
+.toc a:hover,.toc a:focus-visible{background:var(--yellow);outline:none}
+
+.section-tag{display:inline-block;font-family:var(--mono);font-size:12.5px;color:var(--purple);background:var(--purple-soft);padding:3px 10px;border-radius:100px;margin:44px 0 10px}
+h2.section-title{font-family:var(--head);font-weight:900;font-size:26px;line-height:1.25;margin:0 0 14px}
+h3{font-family:var(--head);font-weight:700;font-size:18px;margin:26px 0 8px}
+
+code{font-family:var(--mono);font-size:.86em;direction:ltr;unicode-bidi:isolate;background:var(--yellow-soft);padding:1px 6px;border-radius:5px}
+
+table{width:100%;border-collapse:collapse;margin:8px 0 18px;font-size:15px;background:#fff}
+.scroll{overflow-x:auto;border:3px solid var(--ink);border-radius:14px;margin:12px 0 20px;box-shadow:6px 6px 0 var(--ink);background:#fff}
+.scroll table{margin:0}
+th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--head);font-weight:700;background:var(--yellow-soft);border-bottom:2px solid var(--ink)}
+td.pts,th.pts{text-align:center;white-space:nowrap;font-weight:700}
+
+.step{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:24px 24px 22px;margin:0 0 28px;box-shadow:6px 6px 0 var(--ink);display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px}
+.step .num{width:44px;height:44px;border-radius:50%;background:var(--yellow);border:3px solid var(--ink);font-family:var(--head);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center}
+.step h3{font-size:20px;margin:6px 0 12px}
+.step h3 ~ h3{margin-top:24px}
+
+pre{direction:ltr;text-align:left;background:var(--navy);color:#EAEDF3;font-family:var(--mono);font-size:13px;line-height:1.6;padding:14px 16px;overflow-x:auto;margin:0;tab-size:4}
+.codebox{margin:14px 0;border-radius:10px;overflow:hidden;background:var(--navy)}
+.codebox.shut pre{max-height:9.6em;overflow:hidden}
+.bar{display:flex;gap:8px;align-items:center;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.2)}
+.bar .lines{color:#8FA3C8;font-family:var(--mono);font-size:12px;margin-inline-end:auto}
+.bar button,.more{font-family:var(--head);font-size:13px;font-weight:500;background:transparent;color:#EAEDF3;border:1.5px solid #EAEDF3;border-radius:100px;padding:1px 12px;cursor:pointer}
+.bar button:hover,.bar button:focus-visible,.more:hover,.more:focus-visible{background:var(--yellow);border-color:var(--yellow);color:var(--ink);outline:none}
+.more{display:none;width:100%;border:0;border-top:1px solid rgba(255,255,255,.2);border-radius:0;padding:7px}
+.codebox.shut .more{display:block}
+.file{direction:ltr;text-align:left;font-family:var(--mono);font-size:12.5px;color:var(--soft);margin:12px 0 -8px}
+
+.note{margin:14px 0;border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:26px minmax(0,1fr);column-gap:10px;font-size:14px;color:var(--navy)}
+.note::before{grid-column:1;grid-row:1 / span 30;width:26px;height:26px;border-radius:50%;color:#fff;font-family:var(--head);font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center}
+.note>*{grid-column:2;min-width:0}
+.note>b:first-child{font-family:var(--head);font-weight:700;font-size:13px;display:block;margin-bottom:2px}
+.note p{margin:0 0 8px}.note p:last-child,.note ul:last-child{margin-bottom:0}
+.note.why{background:var(--teal-soft)}.note.why::before{content:"?";background:var(--teal)}.note.why>b:first-child{color:var(--teal)}
+.note.run{background:var(--blue-soft)}.note.run::before{content:"\2713";background:var(--blue)}.note.run>b:first-child{color:var(--blue)}
+.note.warn{background:var(--coral-soft)}.note.warn::before{content:"!";background:var(--coral)}.note.warn>b:first-child{color:var(--coral)}
+
+details{background:var(--yellow-soft);border:2px dashed var(--ink);border-radius:14px;padding:10px 18px;margin:12px 0;font-size:14px}
+summary{cursor:pointer;font-family:var(--head);font-weight:700;font-size:15px}
+details[open] summary{margin-bottom:8px}
+
+.dia{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:18px 0}
+.dia figure{margin:0;background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:16px}
+.dia figcaption{font-size:12.5px;color:var(--navy);margin-top:10px;text-align:center}
+.box{border:2px solid var(--ink);border-radius:6px;padding:6px;font-size:13px;text-align:center;font-weight:600}
+.v{display:flex;flex-direction:column;gap:6px}.h{display:flex;gap:6px;direction:ltr}
+.fa{background:var(--coral-soft)}.fb{background:var(--teal-soft)}.fw{background:var(--yellow-soft)}
+
+.goal{display:flex;gap:18px;align-items:center;background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:14px 16px;margin:0 0 14px}
+.goal .phone{width:150px;flex:none;box-shadow:none;border-radius:16px;padding:8px 7px;font-size:10px}
+.goal .phone .t{font-size:12px}
+.goal .phone .wh{font-size:9px;padding:1px 8px;margin-top:4px}
+.goal .phone .cols{direction:ltr;margin:6px 0 0;gap:0}
+.goal .phone .col{min-height:170px;border-radius:0;padding:6px 5px}
+.goal .phone .n{font-size:28px}
+.goal .phone .bt{font-size:9px;padding:2px 0}
+.goal-cap{font-size:13.5px;color:var(--navy)}
+.goal-cap b{display:block;font-family:var(--head);font-weight:700;color:var(--ink);font-size:14px;margin-bottom:2px}
+@media (max-width:520px){.goal{flex-direction:column;align-items:flex-start}}
+.task{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:22px 24px;margin:0 0 28px;box-shadow:6px 6px 0 var(--ink)}
+.task h3{font-size:20px;margin:0 0 10px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.pts-badge{background:var(--ink);color:var(--yellow);font-family:var(--head);font-weight:700;font-size:13px;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.task.adv{background:var(--purple-soft)}
+.task.adv .pts-badge{background:var(--purple);color:#fff}
+.success{font-weight:700;color:var(--teal);margin-top:8px}
+
+.score{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:10px 22px;box-shadow:6px 6px 0 var(--ink)}
+.score label{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.score label:last-child{border-bottom:0}
+.score input{width:20px;height:20px;accent-color:var(--teal)}
+.score .p{margin-inline-start:auto;font-family:var(--head);font-weight:700}
+.total{font-family:var(--head);font-weight:900;font-size:44px;line-height:1;margin-top:22px}
+.total small{font-family:'Assistant',sans-serif;font-size:15px;color:var(--soft);font-weight:400}
+
+.done{margin-top:44px;background:var(--navy);border-radius:16px;padding:32px 28px;text-align:center}
+.done .done-title{font-family:var(--head);color:var(--yellow);font-size:24px;font-weight:900;margin:0 0 8px}
+.done p{color:#EAEDF3;font-size:15px;margin:0}
+footer{text-align:center;font-size:13px;color:#8B8F87;margin-top:32px}
+
+@media (max-width:620px){
+  h1{font-size:26px}.hero{padding:40px 16px 32px}
+  .hero-inner{grid-template-columns:minmax(0,1fr)}.phone{max-width:210px}
+  .step{padding:20px 18px 18px;box-shadow:4px 4px 0 var(--ink);grid-template-columns:minmax(0,1fr)}
+  .step h3{font-size:17px}.task{padding:18px;box-shadow:4px 4px 0 var(--ink)}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="badge">מדריך למתחילים · LinearLayout · שיעור כפול</span>
+      <h1>לוח תוצאות<br>מסדרים מסך עם LinearLayout</h1>
+      <p>בונים אפליקציה שסופרת נקודות במשחק בין שתי קבוצות. בדרך לומדים איך מסדרים רכיבים על המסך: מה למעלה, מה למטה, ומה זה ליד זה.</p>
+    </div>
+  <div class="phone" aria-label="כך תיראה האפליקציה בסוף המדריך">
+    <div class="t">גמר הליגה</div>
+    <div class="wh">שריקת פתיחה</div>
+    <div class="cols">
+      <div class="col a"><div>הנשרים</div><div class="n">21</div><div class="bt">+3</div><div class="bt">+2</div><div class="bt">+1</div></div>
+      <div class="col b"><div>הכרישים</div><div class="n">18</div><div class="bt">+3</div><div class="bt">+2</div><div class="bt">+1</div></div>
+    </div>
+    <div class="pill">איפוס</div>
+  </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="intro-note">
+    <b>מה בונים היום:</b> מסך עם כותרת, שתי קבוצות זו ליד זו, לכל קבוצה ניקוד גדול ושלושה כפתורים, וכפתור איפוס למטה. קודם חוזרים על מה שנלמד בשני המדריכים הקודמים, ואז מכירים את LinearLayout, קינון, weight, margin ו-padding, ואת המאפיינים של כפתור.
+  </div>
+
+
+<nav aria-labelledby="toc-title">
+  <div class="toc-title" id="toc-title">חלקי המסמך</div>
+  <ul class="toc">
+    <li><a href="#warm">1 - חזרה</a></li>
+    <li><a href="#theory">2 - הסבר</a></li>
+    <li><a href="#build">3 - בונים צעד-צעד</a></li>
+    <li><a href="#check">4 - נקודת בדיקה</a></li>
+    <li><a href="#ext">5 - הרחבות</a></li>
+    <li><a href="#adv">6 - מסלול מתקדם</a></li>
+    <li><a href="#score">7 - הניקוד שלי</a></li>
+  </ul>
+</nav>
+
+<span class="section-tag">ניקוד</span>
+<h2 class="section-title" id="points">איך צוברים נקודות</h2>
+<p>הספורט, שמות הקבוצות והצבעים הם בחירה שלכם: כדורסל, כדורגל, פינג-פונג, קלפים. המדריך כתוב על כדורסל (מאפשר הוספה של 3 נק', 2 נק', או 1 נק').</p>
+<div class="scroll"><table>
+<tr><th>חלק</th><th>מה עושים</th><th class="pts">נקודות</th><th class="pts">זמן משוער</th></tr>
+<tr><td>חזרה</td><td>פרויקט חדש בלי מדריך, מהזיכרון</td><td class="pts">10</td><td class="pts">20 דק'</td></tr>
+<tr><td>הפרויקט</td><td>לוח תוצאות עובד לשתי קבוצות, עם איפוס</td><td class="pts">40</td><td class="pts">45 דק'</td></tr>
+<tr><td>נקודת בדיקה</td><td>מסבירים למורה שלושה דברים קצרים</td><td class="pts">10</td><td class="pts">10 דק'</td></tr>
+<tr><td>הרחבה 1</td><td>עיצוב הקבוצות</td><td class="pts">10</td><td class="pts" rowspan="3">בזמן שנשאר ובבית</td></tr>
+<tr><td>הרחבה 2</td><td>כפתור תיקון טעות</td><td class="pts">15</td></tr>
+<tr><td>הרחבה 3</td><td>סיום משחק והכרזת מנצח</td><td class="pts">15</td></tr>
+<tr><td>מסלול מתקדם</td><td>שלוש משימות</td><td class="pts">בונוס עד 30</td><td class="pts"></td></tr>
+</table></div>
+<div class="note warn"><b>חוק אחד חשוב</b><p>ניקוד על הרחבות ועל המסלול המתקדם נרשם רק אחרי שעברתם את נקודת הבדיקה מול המורה. אפליקציה שעובדת בלי שאתם יודעים להסביר אותה לא נחשבת.</p></div>
+
+<span class="section-tag">חלק 1</span>
+<h2 class="section-title" id="warm">חזרה: מהזיכרון, בלי מדריך</h2>
+<ol>
+  <li>צרו פרויקט חדש עם <b>שם משמעותי</b> - למשל <code>ScoreBoard</code>. השם באנגלית בלבד, בלי רווחים ובלי תווים מיוחדים. תבנית <code>Empty Views Activity</code>, שפה <code>Java</code>, ‏Minimum SDK ‏<code>API 26</code>, ‏Build configuration language ‏<code>Groovy DSL</code>.</li>
+  <li><b>חובה, לפני שמוסיפים רכיב כלשהו:</b> פתחו את <code>activity_main.xml</code> במצב Code, מחקו את כל התוכן שלו והדביקו במקומו את שלד ה-<code>LinearLayout</code> שמופיע מתחת לרשימה.</li>
+  <li>בתוך השלד הוסיפו <code>TextView</code>: id בשם <code>tvTitle</code>, טקסט עם שם המשחק שלכם, וגודל טקסט <code>28sp</code>.</li>
+  <li>מתחתיו הוסיפו כפתור עם id בשם <code>btnWhistle</code> וטקסט "שריקת פתיחה". לחיצה עליו מציגה Toast: "המשחק התחיל!".</li>
+  <li>ב-<code>colors.xml</code> הוסיפו צבע חדש בשם <code>screen_bg</code> (צבע בהיר לבחירתכם), והגדירו אותו כרקע של המסך.</li>
+  <li>הריצו את האפליקציה ובדקו שהכול עובד.</li>
+</ol>
+<div class="note warn"><b>בוחרים Empty Views Activity, לא Empty Activity</b>
+<p>במסך בחירת התבנית יש שתי תבניות עם שם כמעט זהה, זו ליד זו. הנכונה היא <code>Empty Views Activity</code>, עם המילה Views.</p>
+<p>איך מזהים שבחרתם לא נכון: במסך הבא אין שדה <code>Language</code>, ומתחת לכותרת כתוב "Jetpack Compose". במקרה כזה לחצו <code>Previous</code>, בחרו <code>Empty Views Activity</code>, ורק אז בחרו <code>Java</code>.</p></div>
+<h3>השלד שמדביקים ב-activity_main.xml</h3>
+<div class="file">res/layout/activity_main.xml</div>
+<div class="codebox"><pre>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"&gt;
+
+    &lt;!-- את הרכיבים שלכם מוסיפים כאן, בין שתי התגיות --&gt;
+
+&lt;/LinearLayout&gt;</pre></div>
+<div class="note why"><b>למה מתחילים מהשלד הזה</b>
+<p>פרויקט חדש נפתח עם קופסה מסוג <code>ConstraintLayout</code>. בקופסה כזו כל רכיב חייב להיות "קשור" לשכנים שלו, ורכיב שלא נקשר מסומן בשגיאה אדומה וקופץ לפינת המסך. זו הסיבה לרוב התקלות בתחילת הדרך.</p>
+<p>ב-<code>LinearLayout</code> אין צורך לקשור כלום: כל רכיב שמוסיפים מופיע מתחת לקודם. מה בדיוק כתוב בשלד תלמדו בחלק 2.</p></div>
+<div class="note warn"><b>אל תמחקו את השורה <code>android:id="@+id/main"</code></b><p>ב-<code>MainActivity.java</code> יש שורה ש-Android Studio כתב בשבילכם ומחפשת רכיב בשם <code>main</code>. אם ה-id הזה חסר, תקבלו שגיאה אדומה על <code>R.id.main</code> והאפליקציה לא תיבנה.</p></div>
+<p>בשלב הזה הרכיבים יופיעו אחד מתחת לשני, צמודים לצד המסך. את היישור למרכז נעשה בחלק 3. חשוב לדייק בשמות (<code>tvTitle</code>, <code>btnWhistle</code>, <code>screen_bg</code>) כי ההמשך משתמש בהם.</p>
+
+<details><summary>רמז: איפה כותבים XML ואיך מוסיפים רכיב עם id</summary>
+<p>פתחו את <code>app &gt; res &gt; layout &gt; activity_main.xml</code>. בפינה הימנית העליונה של העורך יש שלושה מצבים: Code, Split, Design. עברו ל-Code. רכיב חדש כותבים בתוך השלד, במקום שורת ההערה. כך נראה TextView עם id:</p>
+<div class="codebox"><pre>&lt;TextView
+    android:id="@+id/tvTitle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="גמר הליגה"
+    android:textSize="28sp" /&gt;</pre></div>
+<p>כפתור נכתב באותה צורה, עם <code>&lt;Button</code> במקום <code>&lt;TextView</code>. מספיק להקליד <code>&lt;Bu</code> ולבחור מההשלמה האוטומטית.</p>
+</details>
+<details><summary>רמז: איפה colors.xml ואיך מוסיפים צבע</summary>
+<p>הקובץ נמצא ב-<code>app &gt; res &gt; values &gt; colors.xml</code>. מוסיפים שורה לפני התגית הסוגרת <code>&lt;/resources&gt;</code>:</p>
+<div class="codebox"><pre>&lt;color name="screen_bg"&gt;#FFF8EE&lt;/color&gt;</pre></div>
+<p>ובתגית הפותחת של ה-<code>LinearLayout</code> ב-<code>activity_main.xml</code>, כשורה נוספת:</p>
+<div class="codebox"><pre>android:background="@color/screen_bg"</pre></div>
+</details>
+<details><summary>רמז: הקוד של Toast בלחיצה על כפתור</summary>
+<p>ב-<code>MainActivity.java</code>, בתוך <code>onCreate</code>, אחרי השורות שכבר כתובות שם:</p>
+<div class="codebox"><pre>Button btnWhistle = findViewById(R.id.btnWhistle);
+btnWhistle.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Toast.makeText(MainActivity.this, "המשחק התחיל!", Toast.LENGTH_SHORT).show();
+    }
+});</pre></div>
+<p>אם <code>Button</code>, <code>View</code> או <code>Toast</code> מסומנים באדום, עמדו על המילה ולחצו <code>Alt+Enter</code> ואז Import class.</p>
+<p>שימו לב שכתוב <code>MainActivity.this</code> ולא <code>this</code>: בתוך ה-<code>OnClickListener</code> המילה <code>this</code> לבדה מצביעה על המאזין עצמו ולא על המסך.</p>
+</details>
+<div class="note run"><b>סיימתם את החזרה כש...</b><p>האפליקציה רצה, רואים את שם המשחק על רקע בצבע שבחרתם, ולחיצה על הכפתור מציגה את ההודעה. קראו למורה לרישום 10 הנקודות.</p></div>
+
+<span class="section-tag">חלק 2</span>
+<h2 class="section-title" id="theory">הסבר: מה זה Layout</h2>
+<p>בחלק 1 הדבקתם שלד של <code>LinearLayout</code> בלי לדעת מה הוא. עכשיו מבינים אותו. עד עכשיו שמתם רכיבים על המסך בלי לחשוב איפה הם יושבים. באפליקציה אמיתית צריך להחליט: מה למעלה, מה למטה, מה זה ליד זה. מי שמחליט על כך הוא ה-<b>Layout</b>.</p>
+<p>Layout הוא קופסה שקופה שמחזיקה בתוכה רכיבים ומסדרת אותם לפי חוק. לקופסה מהסוג <code>LinearLayout</code> יש חוק פשוט מאוד: היא מסדרת את הרכיבים שבתוכה בקו אחד. או אחד מתחת לשני (<code>vertical</code>), או אחד ליד השני (<code>horizontal</code>). כמו מדף ספרים: ספרים עומדים בשורה, או מונחים בערימה.</p>
+
+<div class="dia">
+  <figure>
+    <div class="box v"><div class="box fa">רכיב 1</div><div class="box fa">רכיב 2</div><div class="box fa">רכיב 3</div></div>
+    <figcaption><code>orientation="vertical"</code><br>ערימה: אחד מתחת לשני</figcaption>
+  </figure>
+  <figure>
+    <div class="box h"><div class="box fb" style="flex:1">1</div><div class="box fb" style="flex:1">2</div><div class="box fb" style="flex:1">3</div></div>
+    <figcaption><code>orientation="horizontal"</code><br>שורה: אחד ליד השני</figcaption>
+  </figure>
+</div>
+
+<h3>קופסה בתוך קופסה</h3>
+<p>מה עושים כשרוצים גם וגם? כותרת למעלה, מתחתיה שתי קבוצות זו ליד זו, ולמטה כפתור. הפתרון: שמים LinearLayout בתוך LinearLayout. לזה קוראים <b>קינון</b>. כך בנוי המסך שלנו:</p>
+<div class="dia">
+  <figure style="grid-column:1/-1">
+    <div class="box v fw">
+      <div>LinearLayout אנכי (כל המסך)</div>
+      <div class="box" style="background:var(--panel);color:var(--ink)">כותרת</div>
+      <div class="box" style="background:var(--panel);color:var(--ink)">כפתור שריקה</div>
+      <div class="box h" style="background:var(--panel);color:var(--ink)">
+        <div class="box v fa" style="flex:1"><div>LinearLayout אנכי</div><div class="box">שם</div><div class="box">ניקוד</div><div class="box">+3 +2 +1</div></div>
+        <div class="box v fb" style="flex:1"><div>LinearLayout אנכי</div><div class="box">שם</div><div class="box">ניקוד</div><div class="box">+3 +2 +1</div></div>
+      </div>
+      <div class="box" style="background:var(--panel);color:var(--ink)">כפתור איפוס</div>
+    </div>
+    <figcaption>שלוש רמות: קופסה אנכית גדולה, בתוכה שורה אופקית, ובתוך השורה שתי עמודות אנכיות.</figcaption>
+  </figure>
+</div>
+
+<h3>ארבעה מושגים שתפגשו בקוד</h3>
+<div class="scroll"><table>
+<tr><th>מושג</th><th>מה הוא אומר</th><th>דימוי</th></tr>
+<tr><td><code>match_parent</code></td><td>תהיה גדול כמו הקופסה שמחזיקה אותך</td><td>שטיח מקיר לקיר</td></tr>
+<tr><td><code>wrap_content</code></td><td>תהיה גדול רק כמו התוכן שלך</td><td>חולצה במידה שלך</td></tr>
+<tr><td><code>layout_weight</code></td><td>איך מחלקים את המקום הפנוי בין הרכיבים. משקל שווה, חלק שווה</td><td>חלוקת פיצה: לכל אחד 1, כולם מקבלים אותו דבר</td></tr>
+<tr><td><code>padding</code> ו-<code>margin</code></td><td>padding הוא רווח בתוך הרכיב, בין הגבול לתוכן. margin הוא רווח מחוץ לרכיב, בינו לבין השכנים</td><td>padding: ריפוד בתוך קופסה. margin: מרחק בין שתי קופסאות</td></tr>
+</table></div>
+
+<div class="dia">
+  <figure>
+    <div class="box h" style="padding:0;gap:0"><div class="fa" style="flex:1;padding:8px">weight 1</div><div class="fb" style="flex:1;padding:8px">weight 1</div></div>
+    <div class="box h" style="padding:0;gap:0;margin-top:8px"><div class="fa" style="flex:2;padding:8px">weight 2</div><div class="fb" style="flex:1;padding:8px">weight 1</div></div>
+    <figcaption>משקל 1 ו-1: חצי-חצי. משקל 2 ו-1: שני שלישים ושליש.</figcaption>
+  </figure>
+  <figure>
+    <div style="border:2px dashed var(--soft);padding:14px;border-radius:6px;font-size:13px;text-align:center">margin
+      <div class="box fw" style="padding:14px">padding
+        <div class="box" style="background:var(--panel);color:var(--ink)">התוכן</div>
+      </div>
+    </div>
+    <figcaption>הקו המלא הוא גבול הרכיב. padding בפנים, margin בחוץ.</figcaption>
+  </figure>
+</div>
+
+<div class="note why"><b>ועוד צמד שמתבלבלים בו</b><p><code>gravity</code> קובע איפה התוכן יושב <b>בתוך</b> הרכיב (למשל טקסט ממורכז בתוך TextView). <code>layout_gravity</code> קובע איפה <b>הרכיב עצמו</b> יושב בתוך הקופסה שמחזיקה אותו. תפגשו את שניהם בהמשך.</p></div>
+
+<span class="section-tag">חלק 3</span>
+<h2 class="section-title" id="build">בונים צעד-צעד</h2>
+<p>עובדים בשני קבצים: <code>activity_main.xml</code> (איך המסך נראה) ו-<code>MainActivity.java</code> (מה קורה כשלוחצים). אחרי כל תיבה כחולה של "הריצו ובדקו" מריצים ובודקים. לא ממשיכים הלאה עם שגיאה.</p>
+
+<div class="step"><div class="num">1</div><div>
+<h3>פותחים את קובץ המסך במצב Code</h3>
+<p>בעץ הקבצים משמאל: <code>app &gt; res &gt; layout &gt; activity_main.xml</code>. לחיצה כפולה. בפינה הימנית העליונה של העורך בחרו <b>Code</b> (או Split אם אתם רוצים לראות תצוגה מקדימה ליד הקוד).</p>
+</div></div>
+
+<div class="step"><div class="num">2</div><div>
+<h3>מיישרים את הכותרת ואת הכפתור למרכז</h3>
+<p>הקובץ שלכם כבר מכיל <code>LinearLayout</code> עם כותרת וכפתור מחלק 1. עדכנו אותו כך שייראה כמו הקוד הבא. שלוש שורות חדשות: <code>android:gravity="center"</code> בכותרת, ו-<code>android:layout_gravity="center_horizontal"</code> ו-<code>android:layout_marginTop="8dp"</code> בכפתור. ודאו גם שהרוחב של הכותרת הוא <code>match_parent</code> ושל הכפתור <code>wrap_content</code>.</p>
+<div class="file">res/layout/activity_main.xml</div>
+<div class="codebox"><pre>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_bg"
+    android:orientation="vertical"
+    android:padding="16dp"&gt;
+
+    &lt;TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="גמר הליגה"
+        android:textSize="28sp" /&gt;
+
+    &lt;Button
+        android:id="@+id/btnWhistle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="שריקת פתיחה" /&gt;
+
+&lt;/LinearLayout&gt;</pre></div>
+<div class="note why"><b>מה כתבנו פה</b>
+<p><code>orientation="vertical"</code>: הרכיבים מסודרים אחד מתחת לשני. <code>padding="16dp"</code>: רווח פנימי של 16 מכל הצדדים, כדי ששום דבר לא יידבק לקצה המסך.</p>
+<p>בכותרת: הרוחב <code>match_parent</code> (כל רוחב המסך) ו-<code>gravity="center"</code> ממרכז את הטקסט בתוכה.</p>
+<p>בכפתור: הרוחב <code>wrap_content</code> (רק כמו הטקסט), ולכן ממרכזים את הכפתור עצמו עם <code>layout_gravity</code>.</p></div>
+<div class="note run"><b>הריצו ובדקו</b><p>הכותרת למעלה באמצע, הכפתור מתחתיה באמצע, והוא עדיין מציג את ה-Toast. קו צהוב מתחת לטקסט בעברית הוא רק אזהרה, אפשר להתעלם ממנו בינתיים.</p></div>
+</div></div>
+
+<div class="step"><div class="num">3</div><div>
+<h3>מוסיפים שורה אופקית עם שתי עמודות</h3>
+<div class="goal">
+  <div class="phone" role="img" aria-label="איור: כותרת וכפתור למעלה, ומתחתם שני מלבנים צבעוניים ריקים זה ליד זה, כל אחד בחצי מרוחב המסך">
+    <div class="t">גמר הליגה</div>
+    <div class="wh">שריקת פתיחה</div>
+    <div class="cols"><div class="col a"></div><div class="col b"></div></div>
+  </div>
+  <div class="goal-cap"><b>התוצאה הרצויה בסוף הצעד</b>מתחת לכפתור מופיעים שני מלבנים צבעוניים ריקים, זה ליד זה. כל מלבן תופס חצי מרוחב המסך, ושניהם ממלאים את כל הגובה שנשאר.</div>
+</div>
+<p>הדביקו את הקוד הבא <b>אחרי</b> התגית של הכפתור (<code>/&gt;</code>) ו<b>לפני</b> השורה האחרונה <code>&lt;/LinearLayout&gt;</code>.</p>
+<div class="codebox"><pre>    &lt;LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"&gt;
+
+        &lt;LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#FFE0B2"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="8dp"&gt;
+
+        &lt;/LinearLayout&gt;
+
+        &lt;LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#B2DFDB"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="8dp"&gt;
+
+        &lt;/LinearLayout&gt;
+
+    &lt;/LinearLayout&gt;</pre></div>
+<div class="note why"><b>מה כתבנו פה</b>
+<p>השורה האופקית: גובה <code>0dp</code> יחד עם <code>layout_weight="1"</code> פירושו "קח את כל הגובה שנשאר במסך".</p>
+<p>כל עמודה: רוחב <code>0dp</code> יחד עם <code>layout_weight="1"</code>. שתיהן עם אותו משקל, ולכן כל אחת מקבלת בדיוק חצי מהרוחב. זו הפיצה מההסבר.</p>
+<p>שני הצבעים (<code>#FFE0B2</code>, <code>#B2DFDB</code>) זמניים. הם שם כדי שתראו בעיניים איפה כל עמודה נמצאת.</p></div>
+<div class="note run"><b>הריצו ובדקו</b><p>מתחת לכפתור רואים שני מלבנים צבעוניים שממלאים את שאר המסך, חצי-חצי.</p></div>
+<p><b>ניסוי של דקה:</b> בעמודה הראשונה שנו את <code>layout_weight</code> מ-1 ל-2 והריצו. מה קרה לרוחב? החזירו ל-1.</p>
+<div class="note warn"><b>הקבוצות הופיעו בסדר הפוך?</b><p>במכשיר שמוגדר בעברית, שורה אופקית מסתדרת מימין לשמאל, ולכן העמודה הראשונה בקוד תופיע מימין. במכשיר באנגלית היא תופיע משמאל. זה תקין.</p></div>
+</div></div>
+
+<div class="step"><div class="num">4</div><div>
+<h3>ממלאים את העמודה של קבוצה א'</h3>
+<div class="goal">
+  <div class="phone" role="img" aria-label="איור: העמודה הראשונה מכילה שם קבוצה, ניקוד 0 גדול ושלושה כפתורים. העמודה השנייה עדיין ריקה">
+    <div class="t">גמר הליגה</div>
+    <div class="wh">שריקת פתיחה</div>
+    <div class="cols"><div class="col a"><div>הנשרים</div><div class="n">0</div><div class="bt">+3</div><div class="bt">+2</div><div class="bt">+1</div></div><div class="col b"></div></div>
+  </div>
+  <div class="goal-cap"><b>התוצאה הרצויה בסוף הצעד</b>בעמודה הראשונה מופיעים, מלמעלה למטה: שם הקבוצה, ניקוד 0 גדול, ושלושה כפתורים ברוחב העמודה. העמודה השנייה נשארת ריקה בינתיים.</div>
+</div>
+<p>מצאו את העמודה הראשונה (זו עם הרקע <code>#FFE0B2</code>). בין התגית הפותחת שלה לבין <code>&lt;/LinearLayout&gt;</code> שסוגר אותה יש שורה ריקה. הדביקו שם את הקוד הבא, ושנו את "הנשרים" לשם הקבוצה שלכם.</p>
+<div class="codebox"><pre>            &lt;TextView
+                android:id="@+id/tvNameA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="הנשרים"
+                android:textSize="20sp" /&gt;
+
+            &lt;TextView
+                android:id="@+id/tvScoreA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="0"
+                android:textSize="64sp" /&gt;
+
+            &lt;Button
+                android:id="@+id/btnA3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="+3" /&gt;
+
+            &lt;Button
+                android:id="@+id/btnA2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="+2" /&gt;
+
+            &lt;Button
+                android:id="@+id/btnA1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="+1" /&gt;</pre></div>
+<div class="note why"><b>מה כתבנו פה</b>
+<p>העמודה היא LinearLayout אנכי, ולכן חמשת הרכיבים מסתדרים אחד מתחת לשני. ה-<code>gravity="center_horizontal"</code> שכתבנו על העמודה בצעד 3 ממרכז את השם ואת הניקוד.</p>
+<p>לניקוד יש <code>layout_marginTop</code> ו-<code>layout_marginBottom</code>: רווח חיצוני מעליו ומתחתיו, כדי שלא יידבק לשם ולכפתורים.</p>
+<p>הכפתורים ברוחב <code>match_parent</code>: כל רוחב העמודה (לא כל רוחב המסך, כי ה"הורה" שלהם הוא העמודה).</p></div>
+<div class="note run"><b>הריצו ובדקו</b><p>בעמודה אחת רואים שם קבוצה, 0 גדול ושלושה כפתורים. הכפתורים עדיין לא עושים כלום.</p></div>
+</div></div>
+
+<div class="step"><div class="num">5</div><div>
+<h3>מחברים את הכפתורים של קבוצה א' לקוד</h3>
+<p>פתחו את <code>app &gt; java &gt; (שם החבילה שלכם) &gt; MainActivity</code>.</p>
+<p><b>חלק ראשון:</b> מצאו את השורה <code>public class MainActivity extends AppCompatActivity {</code>. מיד אחריה, לפני <code>@Override</code>, הוסיפו:</p>
+<div class="file">MainActivity.java (בראש המחלקה)</div>
+<div class="codebox"><pre>    int scoreA = 0;
+    TextView tvScoreA;</pre></div>
+<p><b>חלק שני:</b> בתוך <code>onCreate</code>, אחרי הקוד של כפתור השריקה ולפני הסוגר המסולסל <code>}</code> שסוגר את <code>onCreate</code>, הוסיפו:</p>
+<div class="file">MainActivity.java (בסוף onCreate)</div>
+<div class="codebox"><pre>        tvScoreA = findViewById(R.id.tvScoreA);
+
+        Button btnA3 = findViewById(R.id.btnA3);
+        Button btnA2 = findViewById(R.id.btnA2);
+        Button btnA1 = findViewById(R.id.btnA1);
+
+        btnA3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scoreA = scoreA + 3;
+                tvScoreA.setText(String.valueOf(scoreA));
+            }
+        });
+
+        btnA2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scoreA = scoreA + 2;
+                tvScoreA.setText(String.valueOf(scoreA));
+            }
+        });
+
+        btnA1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scoreA = scoreA + 1;
+                tvScoreA.setText(String.valueOf(scoreA));
+            }
+        });</pre></div>
+<p>אם <code>TextView</code> או <code>View</code> מסומנים באדום: עמדו על המילה, <code>Alt+Enter</code>, ‏Import class.</p>
+<div class="note why"><b>מה כתבנו פה</b>
+<p><code>scoreA</code> הוא משתנה שזוכר את הניקוד. הוא מוגדר בראש המחלקה ולא בתוך <code>onCreate</code>, כדי שכל הכפתורים יוכלו לשנות אותו והוא לא "יישכח" בין לחיצה ללחיצה.</p>
+<p><code>findViewById</code> מחבר בין רכיב שציירנו ב-XML (לפי ה-id שלו) לבין משתנה ב-Java.</p>
+<p><code>setOnClickListener</code> מצמיד לכפתור "מאזין". מה שכתוב בתוך הפעולה <code>onClick</code> הוא מה שירוץ בכל לחיצה. כשמקלידים <code>new View.On</code> ובוחרים מההשלמה האוטומטית, Android Studio כותב את כל המעטפת בשבילכם.</p>
+<p>בכל לחיצה קורים שני דברים: מעדכנים את המספר בזיכרון, ואז מציגים אותו על המסך. <code>String.valueOf</code> הופך את המספר לטקסט, כי <code>setText</code> צריך לקבל טקסט.</p></div>
+<div class="note run"><b>הריצו ובדקו</b><p>לחצו ‎+3, ‎+2, ‎+1. הניקוד צריך להיות 6.</p></div>
+</div></div>
+
+<div class="step"><div class="num">6</div><div>
+<h3>קבוצה ב': עכשיו אתם</h3>
+<p>העמודה השנייה היא העתק של הראשונה עם שמות אחרים. בצעו לבד:</p>
+<ol>
+  <li>ב-XML: העתיקו את חמשת הרכיבים של קבוצה א' אל תוך העמודה השנייה (זו עם <code>#B2DFDB</code>).</li>
+  <li>שנו בעותק את כל ה-id לפי הטבלה, ואת שם הקבוצה.</li>
+  <li>ב-Java: הוסיפו <code>scoreB</code> ו-<code>tvScoreB</code> בראש המחלקה, ואת אותו קוד של הכפתורים עם B במקום A.</li>
+</ol>
+<div class="scroll"><table>
+<tr><th>בקבוצה א'</th><th>בקבוצה ב'</th></tr>
+<tr><td><code>tvNameA</code></td><td><code>tvNameB</code></td></tr>
+<tr><td><code>tvScoreA</code></td><td><code>tvScoreB</code></td></tr>
+<tr><td><code>btnA3</code>, <code>btnA2</code>, <code>btnA1</code></td><td><code>btnB3</code>, <code>btnB2</code>, <code>btnB1</code></td></tr>
+<tr><td><code>scoreA</code></td><td><code>scoreB</code></td></tr>
+</table></div>
+<div class="note warn"><b>הטעות הנפוצה ביותר בצעד הזה</b><p>שוכחים לשנות A ל-B באחד המקומות. אם לחיצה על כפתור של קבוצה ב' מעלה את הניקוד של קבוצה א', חפשו בקוד של קבוצה ב' איפה נשאר A.</p></div>
+<details><summary>נתקעתי: הקוד המלא של קבוצה ב' ב-Java</summary>
+<p>בראש המחלקה:</p>
+<div class="codebox"><pre>    int scoreB = 0;
+    TextView tvScoreB;</pre></div>
+<p>בסוף <code>onCreate</code>:</p>
+<div class="codebox"><pre>        tvScoreB = findViewById(R.id.tvScoreB);
+
+        Button btnB3 = findViewById(R.id.btnB3);
+        Button btnB2 = findViewById(R.id.btnB2);
+        Button btnB1 = findViewById(R.id.btnB1);
+
+        btnB3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scoreB = scoreB + 3;
+                tvScoreB.setText(String.valueOf(scoreB));
+            }
+        });
+
+        btnB2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scoreB = scoreB + 2;
+                tvScoreB.setText(String.valueOf(scoreB));
+            }
+        });
+
+        btnB1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scoreB = scoreB + 1;
+                tvScoreB.setText(String.valueOf(scoreB));
+            }
+        });</pre></div>
+</details>
+<div class="note run"><b>הריצו ובדקו</b><p>כל קבוצה סופרת בנפרד. לחיצות על קבוצה ב' לא משנות את הניקוד של קבוצה א'.</p></div>
+</div></div>
+
+<div class="step"><div class="num">7</div><div>
+<h3>כפתור איפוס, והמאפיינים של כפתור</h3>
+<p><b>צבע:</b> ב-<code>colors.xml</code> הוסיפו לפני <code>&lt;/resources&gt;</code>:</p>
+<div class="file">res/values/colors.xml</div>
+<div class="codebox"><pre>    &lt;color name="btn_reset"&gt;#C62828&lt;/color&gt;</pre></div>
+<p><b>הכפתור:</b> ב-<code>activity_main.xml</code>, אחרי ה-<code>&lt;/LinearLayout&gt;</code> שסוגר את השורה האופקית ולפני ה-<code>&lt;/LinearLayout&gt;</code> האחרון בקובץ:</p>
+<div class="codebox"><pre>    &lt;Button
+        android:id="@+id/btnReset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/btn_reset"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:text="איפוס"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" /&gt;</pre></div>
+<p><b>הקוד:</b> בסוף <code>onCreate</code> ב-<code>MainActivity.java</code>:</p>
+<div class="codebox"><pre>        Button btnReset = findViewById(R.id.btnReset);
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scoreA = 0;
+                scoreB = 0;
+                tvScoreA.setText("0");
+                tvScoreB.setText("0");
+            }
+        });</pre></div>
+<div class="note warn"><b><code>scoreB</code> או <code>tvScoreB</code> מסומנים באדום?</b>
+<p>אל תמחקו את השורה ואל תמשיכו הלאה. זו תקלה שכדאי להבין לבד:</p>
+<ol>
+  <li>עמדו עם העכבר על המילה האדומה וקראו את ההודעה. כתוב שם <code>Cannot resolve symbol</code>, כלומר "אני לא מכיר את השם הזה".</li>
+  <li>שאלו את עצמכם: למה <code>scoreA</code> לא אדום ו-<code>scoreB</code> כן? מה נעשה ל-<code>scoreA</code> שלא נעשה ל-<code>scoreB</code>?</li>
+  <li>תקנו, וודאו שהאדום נעלם.</li>
+</ol>
+<details><summary>רמז</summary><p>אין הגדרה של המשתנה. ב-Java אי אפשר להשתמש במשתנה לפני שהגדירו אותו. חפשו בראש המחלקה איפה מוגדרים <code>scoreA</code> ו-<code>tvScoreA</code>, והשלימו לידם את מה שחסר לקבוצה ב'. זה חלק מצעד 6.</p></details>
+</div>
+<h3>מאפיינים (properties) של כפתור שכדאי להכיר</h3>
+<div class="scroll"><table>
+<tr><th>מאפיין</th><th>מה הוא קובע</th></tr>
+<tr><td><code>android:text</code></td><td>הטקסט שעל הכפתור</td></tr>
+<tr><td><code>android:textSize</code></td><td>גודל הטקסט, ביחידות <code>sp</code></td></tr>
+<tr><td><code>android:textColor</code></td><td>צבע הטקסט</td></tr>
+<tr><td><code>android:backgroundTint</code></td><td>צבע הרקע של הכפתור</td></tr>
+<tr><td><code>android:paddingStart</code> / <code>paddingEnd</code></td><td>רווח פנימי בצדדים, מרחיב את הכפתור</td></tr>
+<tr><td><code>android:enabled</code></td><td><code>false</code> הופך את הכפתור לאפור ולא לחיץ</td></tr>
+</table></div>
+<div class="note warn"><b>למה backgroundTint ולא background</b><p>בפרויקטים חדשים הכפתור מגיע עם עיצוב מוכן (Material). אם תכתבו <code>android:background</code> עם צבע, ברוב המקרים לא יקרה כלום. הדרך לשנות צבע של כפתור היא <code>backgroundTint</code>.</p></div>
+<div class="note run"><b>בדיקת סיום של הפרויקט</b>
+<ul>
+  <li>שתי קבוצות זו ליד זו, כל אחת עם שם, ניקוד ושלושה כפתורים.</li>
+  <li>כל כפתור מוסיף את המספר הנכון לקבוצה הנכונה.</li>
+  <li>איפוס מחזיר את שתי הקבוצות ל-0.</li>
+  <li>כפתור האיפוס אדום, עם טקסט לבן, באמצע המסך למטה.</li>
+</ul></div>
+</div></div>
+
+<span class="section-tag">חלק 4</span>
+<h2 class="section-title" id="check">נקודת בדיקה</h2>
+<p>קראו למורה. תתבקשו להסביר בעל-פה את שלושת הדברים הבאים. הכינו את התשובות לפני כן, ונסו כל דבר באפליקציה שלכם.</p>
+<div class="task">
+<h3>א. באג לתיקון</h3>
+<p>תלמיד כתב את הקוד הבא. האפליקציה נבנית בלי שגיאות, אבל קורסת ברגע שלוחצים על הכפתור.</p>
+<div class="codebox"><pre>btnA1.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        scoreA = scoreA + 1;
+        tvScoreA.setText(scoreA);
+    }
+});</pre></div>
+<p>החליפו זמנית את הקוד שלכם בקוד הזה, הריצו ולחצו. פתחו את חלון <b>Logcat</b> בתחתית Android Studio וחפשו את השורות האדומות. מה שם השגיאה? מה לא בסדר בקוד, ואיך מתקנים? אל תשכחו להחזיר את הקוד התקין.</p>
+</div>
+<div class="task">
+<h3>ב. מה יקרה אם</h3>
+<p>נחשו קודם, ורק אחר כך נסו:</p>
+<ol>
+  <li>מוחקים את השורה <code>android:layout_weight="1"</code> מהעמודה של קבוצה ב' בלבד. מה רואים על המסך, ולמה?</li>
+  <li>משנים את <code>layout_weight</code> של עמודה א' ל-3 ומשאירים את ב' על 1. איזה חלק מרוחב המסך מקבלת כל קבוצה?</li>
+</ol>
+</div>
+<div class="task">
+<h3>ג. במילים שלכם</h3>
+<p>מה ההבדל בין <code>gravity</code> ל-<code>layout_gravity</code>? הראו בקוד שלכם מקום אחד שבו השתמשנו בכל אחד מהם.</p>
+</div>
+
+<span class="section-tag">חלק 5</span>
+<h2 class="section-title" id="ext">הרחבות</h2>
+<p>כאן אין צעד-צעד. יש דרישה, הגדרת הצלחה ורמז. כל מה שצריך כבר מופיע במדריך הזה או בשני המדריכים הקודמים.</p>
+
+<div class="task">
+<h3><span>הרחבה 1: עיצוב הקבוצות</span><span class="pts-badge">10 נק'</span></h3>
+<p>כרגע צבעי העמודות כתובים ישירות בקוד וכל הכפתורים נראים אותו דבר. תנו לכל קבוצה 'זהות':</p>
+<ul>
+  <li>צבעי הרקע של שתי העמודות מגיעים מ-<code>colors.xml</code> (שמות לדוגמה: <code>team_a_bg</code>, <code>team_b_bg</code>), בלי קוד צבע ישיר ב-layout.</li>
+  <li>לכפתורים של כל קבוצה צבע משלה.</li>
+  <li>הניקוד מודגש (חפשו את המאפיין <code>textStyle</code>).</li>
+  <li>בין שתי העמודות יש רווח של <code>8dp</code>, כך שרואים את רקע המסך ביניהן.</li>
+</ul>
+<p class="success">הצלחה: אין אף <code>#</code> בקובץ activity_main.xml, והמסך נראה כמו לוח של שתי קבוצות שונות.</p>
+<details><summary>רמז</summary><p>רווח בין שתי קופסאות שכנות הוא margin. נסו <code>layout_marginEnd</code> על העמודה הראשונה.</p></details>
+</div>
+
+<div class="task">
+<h3><span>הרחבה 2: תיקון טעות</span><span class="pts-badge">15 נק'</span></h3>
+<p>השופט לחץ בטעות. הוסיפו לכל קבוצה כפתור "‎-1" שמוריד נקודה אחת.</p>
+<ul>
+  <li>הניקוד אף פעם לא יורד מתחת ל-0.</li>
+  <li>אם מנסים להוריד כשהניקוד 0, מוצג Toast: "אי אפשר לרדת מתחת לאפס".</li>
+  <li>כפתור ה-‎-1 נראה שונה מכפתורי ההוספה (צבע אחר).</li>
+</ul>
+<p class="success">הצלחה: מ-2 לוחצים ‎-1 שלוש פעמים. רואים 1, אחר כך 0, ובפעם השלישית נשאר 0 ומופיעה ההודעה.</p>
+<details><summary>רמז</summary><p>לפני שמורידים, בודקים עם <code>if</code> אם הניקוד גדול מ-0.</p></details>
+</div>
+
+<div class="task">
+<h3><span>הרחבה 3: סיום משחק</span><span class="pts-badge">15 נק'</span></h3>
+<p>הוסיפו כפתור "סיום משחק" שיושב <b>ליד</b> כפתור האיפוס, באותה שורה.</p>
+<ul>
+  <li>לחיצה מציגה Toast עם שם הקבוצה המנצחת, או "תיקו" אם הניקוד שווה.</li>
+  <li>אחרי סיום המשחק, כל כפתורי הניקוד הופכים ללא לחיצים.</li>
+  <li>לחיצה על איפוס מחזירה אותם לפעולה.</li>
+</ul>
+<p class="success">הצלחה: אחרי "סיום משחק" אי אפשר לשנות את הניקוד עד שלוחצים "איפוס".</p>
+<details><summary>רמז</summary><p>שני כפתורים זה ליד זה, בתוך מסך אנכי: צריך קופסה חדשה. וב-Java, לכל כפתור יש פעולה <code>setEnabled(false)</code>.</p></details>
+</div>
+
+<span class="section-tag">חלק 6</span>
+<h2 class="section-title" id="adv">מסלול מתקדם</h2>
+<p>פתוח לכל מי שסיים את הפרויקט ואת נקודת הבדיקה. כאן אין צעדים ואין רמזים. יש יעד וקישור לתיעוד הרשמי, ואתם לומדים לבד. על כל משימה תצטרכו להסביר למורה מה עשיתם ולמה זה עובד.</p>
+
+<div class="task adv">
+<h3><span>מתקדם 1: אותו מסך, בלי קינון</span><span class="pts-badge">+10</span></h3>
+<p>קינון של קופסה בתוך קופסה עובד, אבל במסכים מורכבים הוא נהיה מסורבל ואיטי. <code>ConstraintLayout</code> פותר את זה: כל הרכיבים יושבים בקופסה אחת, וכל רכיב "נקשר" לשכנים שלו.</p>
+<ul>
+  <li>צרו קובץ layout חדש בשם <code>activity_main_constraint.xml</code> ובנו בו את אותו מסך בדיוק, בלי אף LinearLayout.</li>
+  <li>החלוקה לחצי-חצי תיעשה בעזרת <code>Guideline</code> ב-50% או בעזרת chain.</li>
+  <li>החליפו את הקובץ ב-<code>setContentView</code> וודאו שהקוד ממשיך לעבוד בלי שינוי נוסף.</li>
+</ul>
+<p class="success">למורה: מתי הייתם בוחרים ב-LinearLayout ומתי ב-ConstraintLayout?</p>
+<p><a href="https://developer.android.com/develop/ui/views/layout/constraint-layout" target="_blank" rel="noopener">תיעוד: Build a responsive UI with ConstraintLayout</a></p>
+</div>
+
+<div class="task adv">
+<h3><span>מתקדם 2: מה קורה כשמסובבים את המכשיר</span><span class="pts-badge">+10</span></h3>
+<p>צברו כמה נקודות וסובבו את המכשיר לרוחב. תגלו שתי בעיות: חלק מהמסך נחתך, והניקוד חוזר ל-0.</p>
+<ul>
+  <li>צרו גרסת layout נפרדת למצב רוחב (תיקייה <code>layout-land</code>) עם סידור שמתאים למסך רחב ונמוך, כך ששום דבר לא נחתך.</li>
+  <li>חקרו למה הניקוד מתאפס (חפשו configuration change), ושמרו אותו בעזרת <code>onSaveInstanceState</code>.</li>
+</ul>
+<p class="success">למורה: מה בדיוק קורה ל-Activity ברגע הסיבוב? (זה הנושא של המדריך הבא, אתם מקדימים את הכיתה.)</p>
+<p><a href="https://developer.android.com/guide/topics/resources/runtime-changes" target="_blank" rel="noopener">תיעוד: Handle configuration changes</a></p>
+</div>
+
+<div class="task adv">
+<h3><span>מתקדם 3: קוד בלי שכפולים</span><span class="pts-badge">+10</span></h3>
+<p>בפתרון הבסיסי יש שישה כפתורים כמעט זהים ב-XML ושישה קטעי קוד כמעט זהים ב-Java. מתכנת מקצועי לא משאיר את זה כך.</p>
+<ul>
+  <li>ב-XML: הגדירו <code>style</code> אחד לכפתורי הניקוד, וכל כפתור רק מפנה אליו.</li>
+  <li>ב-Java: כתבו פעולה אחת שמקבלת קבוצה ומספר נקודות, וכל הכפתורים משתמשים בה.</li>
+  <li>העבירו את כל הטקסטים בעברית ל-<code>strings.xml</code>, עד שלא נשארת אף אזהרה צהובה ב-layout.</li>
+</ul>
+<p class="success">למורה: אם מחר נרצה להוסיף קבוצה שלישית, כמה שורות צריך לשנות אצלכם, וכמה בפתרון הבסיסי?</p>
+<p><a href="https://developer.android.com/develop/ui/views/theming/themes" target="_blank" rel="noopener">תיעוד: Styles and themes</a></p>
+</div>
+
+<span class="section-tag">חלק 7</span>
+<h2 class="section-title" id="score">הניקוד שלי</h2>
+<p>סמנו מה שהמורה אישר. הסימון נשמר בדפדפן שלכם בלבד.</p>
+<div class="score" id="score-list">
+  <label><input type="checkbox" data-p="10" data-k="warm">חזרה<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="40" data-k="base">הפרויקט: לוח תוצאות עובד<span class="p">40</span></label>
+  <label><input type="checkbox" data-p="10" data-k="check">נקודת בדיקה<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="10" data-k="e1">הרחבה 1: עיצוב הקבוצות<span class="p">10</span></label>
+  <label><input type="checkbox" data-p="15" data-k="e2">הרחבה 2: תיקון טעות<span class="p">15</span></label>
+  <label><input type="checkbox" data-p="15" data-k="e3">הרחבה 3: סיום משחק<span class="p">15</span></label>
+  <label><input type="checkbox" data-p="10" data-k="m1">מתקדם 1: ConstraintLayout<span class="p">+10</span></label>
+  <label><input type="checkbox" data-p="10" data-k="m2">מתקדם 2: סיבוב מסך<span class="p">+10</span></label>
+  <label><input type="checkbox" data-p="10" data-k="m3">מתקדם 3: קוד בלי שכפולים<span class="p">+10</span></label>
+</div>
+<div class="total" aria-live="polite"><span id="total">0</span> <small>נקודות (100 בלי בונוס, 130 עם בונוס)</small></div>
+
+<div class="done">
+  <div class="done-title">סיימתם</div>
+  <p>הראו למורה את האפליקציה רצה, ואז הגישו כרגיל: File ← Export ← Export to Zip File, והעלאה ל-Classroom.</p>
+</div>
+<footer>מדריך 3 בסדרה. קודם לו: כרטיס ברכה אישי, כרטיס ביקור מקצועי.</footer>
+
+</div>
+<script>
+(function(){
+  var KEY='guide3-scoreboard';
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){saved={};}
+  var boxes=document.querySelectorAll('#score-list input');
+  function calc(){
+    var t=0;
+    boxes.forEach(function(b){if(b.checked)t+=Number(b.dataset.p);saved[b.dataset.k]=b.checked;});
+    document.getElementById('total').textContent=t;
+    try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(e){}
+  }
+  boxes.forEach(function(b){b.checked=!!saved[b.dataset.k];b.addEventListener('change',calc);});
+  calc();
+
+  document.querySelectorAll('.codebox').forEach(function(box){
+    var pre=box.querySelector('pre');
+    var n=pre.textContent.split('\n').length;
+    var long=n>8;
+    var bar=document.createElement('div');bar.className='bar';
+    var info=document.createElement('span');info.className='lines';info.textContent=n+' שורות';
+    bar.appendChild(info);
+    var more=null,tog=null;
+    function set(shut){
+      box.classList.toggle('shut',shut);
+      tog.textContent=shut?'פתיחת כל הקוד':'סגירה';
+      tog.setAttribute('aria-expanded',String(!shut));
+    }
+    if(long){
+      tog=document.createElement('button');tog.type='button';
+      tog.addEventListener('click',function(){set(!box.classList.contains('shut'));});
+      bar.appendChild(tog);
+      more=document.createElement('button');more.type='button';more.className='more';
+      more.textContent='יש עוד קוד, לחצו לפתיחה';
+      more.addEventListener('click',function(){set(false);});
+    }
+    var btn=document.createElement('button');btn.type='button';btn.textContent='העתקה';
+    btn.addEventListener('click',function(){
+      var text=pre.textContent;
+      function ok(){btn.textContent='הועתק';setTimeout(function(){btn.textContent='העתקה';},1500);}
+      function fallback(){
+        try{
+          var ta=document.createElement('textarea');ta.value=text;ta.style.position='absolute';ta.style.opacity='0';
+          document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();
+        }catch(e){btn.textContent='סמנו והעתיקו ידנית';}
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fallback);}else{fallback();}
+    });
+    bar.appendChild(btn);
+    box.insertBefore(bar,pre);
+    if(long){box.appendChild(more);set(true);}
+  });
+})();
+</script>
+</body>
+</html>
