@@ -1,5 +1,4 @@
-\---
-
+---
 layout: default
 title: מדריכי FOR-DUMIES לפיתוח Android
 permalink: /guides/android-for-dummies/
@@ -9,5 +8,5 @@ permalink: /guides/android-for-dummies/
 
 רשימת המדריכים תתעדכן כאן. נתיב זה קבוע משנה לשנה, ואינו תלוי במחזור לימודים ספציפי.
 
-* \[ACTIVTIY and Intent : חידון אמת או שקר]({{ 'guides/android-for-dummies/Activity\_Intent\_Quiz.html' | relative\_url }})
+- [חידון אמת או שקר: Activity ו-Intent]({{ '/guides/android-for-dummies/Activity_Intent_Quiz.html' | relative_url }})
 
