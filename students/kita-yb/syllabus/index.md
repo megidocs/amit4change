@@ -8,3 +8,4 @@ permalink: /students/kita-yb/syllabus/
 
 - [שבוע 1: 13.09.26](week-01/)
 - [שבוע 2: 4.10.26](week-02/)
+- [שבוע 3: 11.10.26](week-03/)
