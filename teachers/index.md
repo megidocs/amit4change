@@ -9,3 +9,4 @@ permalink: /teachers/
 - [מדריכים](guides/)
 - [מצגות](presentations/)
 - [מערכי שיעור](lesson-plans/)
+- [אירועי השתלמויות וסדנאות](events/)
