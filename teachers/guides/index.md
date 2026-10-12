@@ -6,4 +6,4 @@ permalink: /teachers/guides/
 
 ## מדריכים למורים
 
-תוכן זה יתעדכן כאן.
+- [מדריך להכנת מדריכי "צעד-צעד"]({{ '/teachers/guides/Building_StepByStep_Guide.html' | relative_url }})
