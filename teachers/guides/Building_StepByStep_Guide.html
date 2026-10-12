@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>בונים מדריך צעד-צעד</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&family=Assistant:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --yellow:#FFC83D; --yellow-soft:#FFF3D6;
+  --ink:#1A1A1A; --navy:#20304D;
+  --teal:#1B8A75; --teal-soft:#DCF3EC;
+  --coral:#E85B3A; --coral-soft:#FCE4DC;
+  --blue:#2F6FDB; --blue-soft:#E2EBFB;
+  --purple:#7B4FE0; --purple-soft:#EDE5FC;
+  --paper:#FFFDF7; --panel:#fff; --soft:#5A6477; --line:#E4DFD0;
+  --head:'Rubik',Arial,sans-serif; --body:'Assistant',Arial,sans-serif; --mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.75}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px 90px}
+p{margin:0 0 12px}
+a{color:var(--blue)}
+ul,ol{padding-inline-start:22px;margin:0 0 12px}
+li{margin-bottom:6px}
+
+.hero{background:var(--yellow);border-bottom:5px solid var(--ink);padding:52px 20px 40px;margin:0 0 32px}
+.hero-inner{max-width:800px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:28px;align-items:center}
+.badge{display:inline-block;background:var(--ink);color:var(--yellow);font-family:var(--head);font-weight:700;font-size:13px;padding:5px 14px;border-radius:100px;margin-bottom:16px}
+h1{font-family:var(--head);font-weight:900;font-size:34px;line-height:1.18;margin:0 0 12px;text-wrap:balance}
+.hero p{font-size:17px;font-weight:500;max-width:58ch;margin:0}
+.phone{border:3px solid var(--ink);border-radius:22px;background:#fff;padding:12px 10px;font-size:12px;text-align:center;box-shadow:6px 6px 0 var(--ink);display:flex;flex-direction:column;gap:8px}
+.phone .t{font-family:var(--head);font-weight:700;font-size:17px;line-height:1.2}
+.phone .bt{background:var(--navy);color:#fff;border-radius:14px;padding:3px 12px;font-size:11px;align-self:center}
+
+.intro-note{background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:16px 20px;margin:-16px 0 32px;font-size:14px;box-shadow:6px 6px 0 var(--ink)}
+
+.toc-title{font-family:var(--head);font-weight:700;font-size:18px;margin:0 0 10px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.toc li{margin:0}
+.toc a{display:block;text-decoration:none;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:100px;padding:4px 14px;font-family:var(--head);font-weight:500;font-size:14px}
+.toc a:hover,.toc a:focus-visible{background:var(--yellow);outline:none}
+
+.section-tag{display:inline-block;font-family:var(--mono);font-size:12.5px;color:var(--purple);background:var(--purple-soft);padding:3px 10px;border-radius:100px;margin:44px 0 10px}
+h2.section-title{font-family:var(--head);font-weight:900;font-size:26px;line-height:1.25;margin:0 0 14px}
+h3{font-family:var(--head);font-weight:700;font-size:18px;margin:26px 0 8px}
+
+code{font-family:var(--mono);font-size:.86em;direction:ltr;unicode-bidi:isolate;background:var(--yellow-soft);padding:1px 6px;border-radius:5px}
+
+table{width:100%;border-collapse:collapse;font-size:15px;background:#fff}
+.scroll{overflow-x:auto;border:3px solid var(--ink);border-radius:14px;margin:12px 0 20px;box-shadow:6px 6px 0 var(--ink);background:#fff}
+th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--head);font-weight:700;background:var(--yellow-soft);border-bottom:2px solid var(--ink)}
+td.pts,th.pts{text-align:center;white-space:nowrap;font-weight:700}
+
+.step{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:24px 24px 22px;margin:0 0 28px;box-shadow:6px 6px 0 var(--ink);display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px}
+.step .num{width:44px;height:44px;border-radius:50%;background:var(--yellow);border:3px solid var(--ink);font-family:var(--head);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center}
+.step h3{font-size:20px;margin:6px 0 12px}
+
+pre{direction:ltr;text-align:left;background:var(--navy);color:#EAEDF3;font-family:var(--mono);font-size:13px;line-height:1.6;padding:14px 16px;overflow-x:auto;margin:0;tab-size:4}
+.codebox{margin:14px 0;border-radius:10px;overflow:hidden;background:var(--navy)}
+.codebox.shut pre{max-height:9.6em;overflow:hidden}
+.bar{display:flex;gap:8px;align-items:center;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.2)}
+.bar .lines{color:#8FA3C8;font-family:var(--mono);font-size:12px;margin-inline-end:auto}
+.bar button,.more{font-family:var(--head);font-size:13px;font-weight:500;background:transparent;color:#EAEDF3;border:1.5px solid #EAEDF3;border-radius:100px;padding:1px 12px;cursor:pointer}
+.bar button:hover,.bar button:focus-visible,.more:hover,.more:focus-visible{background:var(--yellow);border-color:var(--yellow);color:var(--ink);outline:none}
+.more{display:none;width:100%;border:0;border-top:1px solid rgba(255,255,255,.2);border-radius:0;padding:7px}
+.codebox.shut .more{display:block}
+.file{direction:ltr;text-align:left;font-family:var(--mono);font-size:12.5px;color:var(--soft);margin:12px 0 -8px}
+.codebox.prompt{background:var(--purple-soft);border:2px solid var(--purple)}
+.codebox.prompt pre{direction:rtl;text-align:right;white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--body);font-size:14.5px;line-height:1.7;background:transparent;color:var(--ink)}
+.codebox.prompt .bar{border-bottom:1px solid var(--purple)}
+.codebox.prompt .bar .lines{color:var(--purple);font-family:var(--head);font-weight:700}
+.codebox.prompt .bar button{color:var(--ink);border-color:var(--ink)}
+
+.note{margin:14px 0;border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:26px minmax(0,1fr);column-gap:10px;font-size:14px;color:var(--navy)}
+.note::before{grid-column:1;grid-row:1 / span 30;width:26px;height:26px;border-radius:50%;color:#fff;font-family:var(--head);font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center}
+.note>*{grid-column:2;min-width:0}
+.note>b:first-child{font-family:var(--head);font-weight:700;font-size:13px;display:block;margin-bottom:2px}
+.note p{margin:0 0 8px}.note p:last-child,.note ul:last-child,.note ol:last-child{margin-bottom:0}
+.note.why{background:var(--teal-soft)}.note.why::before{content:"?";background:var(--teal)}.note.why>b:first-child{color:var(--teal)}
+.note.run{background:var(--blue-soft)}.note.run::before{content:"\2713";background:var(--blue)}.note.run>b:first-child{color:var(--blue)}
+.note.warn{background:var(--coral-soft)}.note.warn::before{content:"!";background:var(--coral)}.note.warn>b:first-child{color:var(--coral)}
+
+details{background:var(--yellow-soft);border:2px dashed var(--ink);border-radius:14px;padding:10px 18px;margin:12px 0;font-size:14px}
+summary{cursor:pointer;font-family:var(--head);font-weight:700;font-size:15px}
+details[open] summary{margin-bottom:8px}
+
+.dia{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:18px 0}
+.dia figure{margin:0;background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:16px}
+.dia figcaption{font-size:12.5px;color:var(--navy);margin-top:10px;text-align:center}
+.box{border:2px solid var(--ink);border-radius:6px;padding:6px;font-size:13px;text-align:center;font-weight:600}
+.v{display:flex;flex-direction:column;gap:6px}.h{display:flex;gap:6px}
+.fa{background:var(--coral-soft)}.fb{background:var(--teal-soft)}.fw{background:var(--yellow-soft)}.fp{background:var(--purple-soft)}.fn{background:#fff}
+
+.goal{display:flex;gap:18px;align-items:center;background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:14px 16px;margin:0 0 14px}
+.goal .phone{width:150px;flex:none;box-shadow:none;border-radius:16px;padding:8px 7px;font-size:10px}
+.goal .phone .t{font-size:12px}
+.goal-cap{font-size:13.5px;color:var(--navy)}
+.goal-cap b{display:block;font-family:var(--head);font-weight:700;color:var(--ink);font-size:14px;margin-bottom:2px}
+
+.ai{display:inline-flex;align-items:center;gap:6px;font-family:var(--head);font-weight:700;font-size:12.5px;padding:3px 12px 3px 10px;border-radius:100px;border:2px solid var(--ink);vertical-align:middle;white-space:nowrap}
+.ai::before{width:18px;height:18px;border-radius:50%;color:#fff;font-size:12px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.ai.no{background:var(--coral-soft)}.ai.no::before{content:"\2715";background:var(--coral)}
+.ai.ok{background:var(--teal-soft)}.ai.ok::before{content:"\2713";background:var(--teal)}
+.ai.must{background:var(--purple-soft)}.ai.must::before{content:"\2605";background:var(--purple)}
+.step .ai,.task>.ai{margin-bottom:6px}
+.legend{background:#fff;border:3px solid var(--ink);border-radius:14px;box-shadow:6px 6px 0 var(--ink);padding:6px 18px;margin:12px 0 20px}
+.legend>div{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px}
+.legend>div:last-child{border-bottom:0}
+
+.verify{background:var(--yellow-soft);border:3px solid var(--ink);border-radius:18px;padding:18px 22px 16px;margin:0 0 28px;box-shadow:6px 6px 0 var(--yellow)}
+.verify .v-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.verify .v-title{display:inline-flex;align-items:center;gap:8px;font-family:var(--head);font-weight:700;font-size:18px}
+.verify .v-title::before{content:"";width:26px;height:26px;border-radius:50%;background-color:var(--ink);flex:none;background-image:radial-gradient(circle at 50% 38%,var(--yellow) 0 22%,transparent 23%),radial-gradient(ellipse at 50% 92%,var(--yellow) 0 38%,transparent 39%)}
+.verify p{font-size:15px}
+.verify.inner{margin:16px 0 0;box-shadow:none;border-width:2px;padding:14px 16px 10px}
+.verify.inner .v-title{font-size:16px}
+
+.task{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:22px 24px;margin:0 0 28px;box-shadow:6px 6px 0 var(--ink)}
+.task h3{font-size:20px;margin:0 0 10px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.pts-badge{background:var(--ink);color:var(--yellow);font-family:var(--head);font-weight:700;font-size:13px;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.task.adv{background:var(--purple-soft)}
+.task.adv .pts-badge{background:var(--purple);color:#fff}
+.success{font-weight:700;color:var(--teal);margin-top:8px}
+
+.score{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:10px 22px;box-shadow:6px 6px 0 var(--ink)}
+.score label{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.score label:last-child{border-bottom:0}
+.score input{width:20px;height:20px;accent-color:var(--teal);flex:none}
+.score .p{margin-inline-start:auto;font-family:var(--head);font-weight:700}
+.total{font-family:var(--head);font-weight:900;font-size:44px;line-height:1;margin-top:22px}
+.total small{font-family:var(--body);font-size:15px;color:var(--soft);font-weight:400}
+
+.done{margin-top:44px;background:var(--navy);border-radius:16px;padding:32px 28px;text-align:center}
+.done .done-title{font-family:var(--head);color:var(--yellow);font-size:24px;font-weight:900;margin:0 0 8px}
+.done p{color:#EAEDF3;font-size:15px;margin:0}
+footer{text-align:center;font-size:13px;color:#8B8F87;margin-top:32px}
+
+@media (max-width:620px){
+  h1{font-size:26px}.hero{padding:40px 16px 32px}
+  .hero-inner{grid-template-columns:minmax(0,1fr)}.phone{max-width:210px}
+  .step{padding:20px 18px 18px;box-shadow:4px 4px 0 var(--ink);grid-template-columns:minmax(0,1fr)}
+  .step h3{font-size:17px}.task{padding:18px;box-shadow:4px 4px 0 var(--ink)}
+  .goal{flex-direction:column;align-items:flex-start}
+}
+.hero-inner{grid-template-columns:minmax(0,1fr) 230px}
+.mini{border:3px solid var(--ink);border-radius:14px;background:#fff;overflow:hidden;box-shadow:6px 6px 0 var(--ink)}
+.m-top{background:var(--yellow);border-bottom:3px solid var(--ink);padding:10px;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
+.m-pill{width:54px;height:7px;border-radius:9px;background:var(--ink)}
+.m-h{width:80%;height:9px;border-radius:3px;background:var(--ink)}.m-h.s{width:55%}
+.m-body{padding:9px;display:flex;flex-direction:column;gap:7px}
+.m-toc{display:flex;gap:4px}.m-toc i{flex:1;height:9px;border:1.5px solid var(--ink);border-radius:9px}
+.m-card{border:2px solid var(--ink);border-radius:7px;padding:6px;display:flex;gap:6px;align-items:flex-start}
+.m-num{width:18px;height:18px;flex:none;border-radius:50%;background:var(--yellow);border:2px solid var(--ink);font-family:var(--head);font-weight:900;font-size:10px;display:flex;align-items:center;justify-content:center;line-height:1}
+.m-lines{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0}
+.m-lines b{height:6px;width:70%;border-radius:3px;background:var(--ink)}.m-lines b.s{width:45%;background:var(--line)}
+.m-lines em{height:11px;border-radius:3px}
+.m-lines .code{background:var(--navy)}.m-lines .why{background:var(--teal-soft)}.m-lines .run{background:var(--blue-soft)}.m-lines .warn{background:var(--coral-soft)}
+.goal .mini,.goal .plan{width:150px;flex:none}
+.goal .mini{box-shadow:none}
+.plan{border:3px solid var(--ink);border-radius:12px;background:#fff;padding:8px 10px;display:flex;flex-direction:column;gap:3px;font-family:var(--head);font-weight:500;font-size:11px}
+.plan span{border-bottom:1px solid var(--line);padding-bottom:2px}
+.plan .weak{border:0;color:var(--coral);font-weight:900;letter-spacing:.3em}
+.swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:12px 0 16px}
+.sw{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:10px;display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:center;font-size:13px}
+.sw i{grid-row:span 2;width:38px;height:38px;border-radius:50%;border:2px solid var(--ink)}
+.sw b{font-family:var(--head);font-weight:700;font-size:14px}
+.sw code{justify-self:start;font-size:11.5px}
+.sw span{grid-column:1/-1;color:var(--navy);line-height:1.45}
+.sw code{grid-column:2}
+@media (max-width:620px){.hero-inner{grid-template-columns:minmax(0,1fr)}.mini{max-width:230px}}
+.loop{align-items:center;justify-content:center;flex-wrap:wrap}
+.loop .box{padding:10px 12px}
+.loop span{font-family:var(--head);font-weight:900;font-size:18px}
+</style>
+</head>
+<body>
+<div dir="rtl" lang="he">
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="badge">מדריך למורים · פרויקט בהנדסת תוכנה · בקצב שלכם</span>
+      <h1>בונים מדריך צעד-צעד<br>לרכיב שהתלמידים צריכים בפרויקט</h1>
+      <p>בונים עם מודל שפה מדריך לתלמידים, שלב אחרי שלב. אחרי כל שלב עוברים עליו בעצמכם כמו תלמיד, ומחזירים למודל הערות.</p>
+    </div>
+    <div class="mini" role="img" aria-label="איור: דף מדריך מוקטן. פס צהוב עליון עם כותרת, שורת כפתורי קפיצה, ושני כרטיסי צעדים ממוספרים">
+      <div class="m-top"><span class="m-pill"></span><span class="m-h"></span><span class="m-h s"></span></div>
+      <div class="m-body">
+        <div class="m-toc"><i></i><i></i><i></i><i></i></div>
+        <div class="m-card"><span class="m-num">1</span><div class="m-lines"><b></b><em class="code"></em><em class="why"></em><em class="run"></em></div></div>
+        <div class="m-card"><span class="m-num">2</span><div class="m-lines"><b></b><em class="code"></em><em class="warn"></em></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="intro-note">
+    <b>מה בונים היום:</b> מדריך צעד-צעד לרכיב אחד מהחלופה שאתם מלמדים ב"פרויקט בהנדסת תוכנה", סביב פרויקט קטן שמעניין את התלמידים שלכם. המדריך שתקבלו ייראה כמו הדף הזה.
+  </div>
+
+<nav aria-labelledby="toc-title">
+  <div class="toc-title" id="toc-title">חלקי המסמך</div>
+  <ul class="toc">
+    <li><a href="#prep">1 - הכנה</a></li>
+    <li><a href="#theory">2 - הסבר</a></li>
+    <li><a href="#build">3 - בונים את המדריך</a></li>
+    <li><a href="#skeleton">4 - השלד להדבקה</a></li>
+  </ul>
+</nav>
+
+<div class="legend" style="margin-top:28px">
+  <div><span class="ai no">מודל שפה: אסור</span>עובדים לבד. כאן נדרש השיפוט שלכם כמורים.</div>
+  <div><span class="ai must">מודל שפה: חובה</span>המשימה היא העבודה עם המודל.</div>
+</div>
+<p><b>עובדים בגרסה חינמית.</b> מבקשים שלב אחד בכל הודעה, ושומרים את ה-HTML לקובץ <code>guide.html</code> אחרי כל שלב. אם תשובה נקטעת באמצע, כותבים "המשך מהמקום שבו עצרת".</p>
+
+<span class="section-tag">חלק 1</span> <span class="ai no">מודל שפה: אסור</span>
+<h2 class="section-title" id="prep">הכנה: דף אחד על הרכיב ועל הכיתה</h2>
+<p>כתבו שש שורות. הן יודבקו בפרומפט הראשון.</p>
+<ol>
+  <li><b>הרכיב והחלופה.</b> דבר אחד: "מעבר בין מסכים עם <code>Intent</code>", לא "Activity, ‏Intent ו-Fragment".</li>
+  <li><b>הכיתה.</b> שכבה, מספר תלמידים, כמה מהירים וכמה מתקשים.</li>
+  <li><b>מה כבר נלמד, ומה עדיין לא.</b></li>
+  <li><b>סביבת העבודה.</b> שפה, סביבת פיתוח, גרסה, תבנית הפרויקט.</li>
+  <li><b>שלוש מטרות.</b> מה כל תלמיד יודע לעשות בסוף.</li>
+  <li><b>שלוש טעויות.</b> מה שתלמידים טועים בו עם הרכיב הזה בכל שנה.</li>
+</ol>
+<details><summary>רמז: דף ממולא, אפליקציות לטלפונים חכמים</summary>
+<p><b>רכיב:</b> מעבר בין מסכים עם <code>Intent</code> מפורש והעברת ערך. <b>כיתה:</b> י"ב, 20 תלמידים, 4 מהירים. <b>נלמד:</b> <code>LinearLayout</code>, <code>Button</code>, <code>Toast</code>, <code>setOnClickListener</code>. <b>לא נלמד:</b> מסך שני, <code>putExtra</code>, ‏Logcat. <b>סביבה:</b> Java, ‏Android Studio, ‏<code>Empty Views Activity</code>, ‏<code>API 26</code>. <b>מטרות:</b> לפתוח מסך שני, להעביר ערך ולקרוא אותו, לסגור מסך עם <code>finish()</code>. <b>טעויות:</b> שם פתק שונה בשני הצדדים, <code>this</code> במקום <code>MainActivity.this</code> בתוך מאזין, חזרה עם <code>Intent</code> חדש במקום <code>finish()</code>.</p>
+</details>
+<details><summary>רמז: דף ממולא, שירותי אינטרנט ומסדי נתונים</summary>
+<p><b>רכיב:</b> קריאה אסינכרונית לשירות אינטרנט עם <code>async</code> ו-<code>await</code>. <b>כיתה:</b> י"ב, 18 תלמידים, 3 מהירים. <b>נלמד:</b> מחלקות ב-C#, טופס עם כפתור, <code>try</code> ו-<code>catch</code>. <b>לא נלמד:</b> <code>Task</code>, ‏REST. <b>סביבה:</b> C#, ‏Visual Studio. <b>מטרות:</b> לקרוא לשירות בלי שהמסך ייתקע, להציג את התשובה, לטפל בשירות שלא עונה. <b>טעויות:</b> שוכחים <code>await</code>, מציגים תשובה לפני שהגיעה, אין <code>try</code> סביב הקריאה.</p>
+</details>
+
+<span class="section-tag">חלק 2</span>
+<h2 class="section-title" id="theory">הסבר: מדריך לא נבנה בבקשה אחת</h2>
+<p>מודל שפה יכתוב לכם מדריך שלם בתוך דקה, והוא ייראה גמור. הוא לא יהיה גמור: המודל לא הריץ את הקוד, לא ראה את הסביבה שבכיתה, ולא מכיר את התלמידים שלכם. לכן עובדים במחזור, ועוברים אותו כמה פעמים בכל שלב:</p>
+<div class="dia">
+  <figure style="grid-column:1/-1">
+    <div class="h loop">
+      <div class="box fp">מבקשים שלב אחד</div><span>←</span>
+      <div class="box fb">עוברים עליו כמו תלמיד</div><span>←</span>
+      <div class="box fa">שולחים הערות למודל</div><span>←</span>
+      <div class="box fw">חוזרים, עד שזה עובד</div>
+    </div>
+    <figcaption>שניים או שלושה סבבים לשלב הם המצב הרגיל, לא סימן לכישלון.</figcaption>
+  </figure>
+</div>
+<p><b>לעבור כמו תלמיד</b> פירושו לבצע, לא לקרוא: לפתוח את סביבת הפיתוח, להתחיל מפרויקט ריק, ולעשות בדיוק מה שכתוב. כל מקום שבו נתקעתם, הופתעתם או נאלצתם לנחש הוא הערה.</p>
+<p><b>הערה טובה למודל</b> אומרת שלושה דברים: איפה, מה הבעיה, ומה צריך להיות.</p>
+<div class="codebox prompt"><pre>בצעד [מספר] כתוב: "[הציטוט]".
+הבעיה: [מה קרה כשביצעתי].
+תקן כך: [מה צריך להיות]. שנה רק את זה, והחזר את הקובץ המלא.</pre></div>
+
+<h3>מה יהיה במדריך שתבנו</h3>
+<div class="scroll"><table>
+<tr><th>העיקרון</th><th>איך הוא נראה בדף</th><th class="pts">נבנה בשלב</th></tr>
+<tr><td>פרויקט שמעניין לבנות</td><td>דבר אחד שעובד בסוף, והתלמיד מתאים אותו לעצמו</td><td class="pts">1</td></tr>
+<tr><td>עיצוב שמוריד עומס</td><td>לכל צבע תפקיד אחד, קוד מקופל, כפתורי קפיצה בראש</td><td class="pts">3</td></tr>
+<tr><td>פיגומים</td><td>רמזים מקופלים, איור של התוצאה, שאלות מובילות במקום פתרון</td><td class="pts">4</td></tr>
+<tr><td>עצירות מול המורה</td><td>התלמיד מסביר בעל-פה, בשיחה אישית</td><td class="pts">5</td></tr>
+<tr><td>קצב אישי ותחושת מסוגלות</td><td>הרחבות לכולם, מסלול מתקדם למהירים</td><td class="pts">6</td></tr>
+<tr><td>אוריינות מודלי שפה</td><td>תג "אסור", "מותר" או "חובה" לפני כל שלב, ויומן שימוש</td><td class="pts">7</td></tr>
+<tr><td>ניקוד</td><td>טבלת ניקוד בראש הדף, "הניקוד שלי" בסופו</td><td class="pts">8</td></tr>
+</table></div>
+
+<span class="section-tag">חלק 3</span>
+<h2 class="section-title" id="build">בונים את המדריך: שמונה שלבים, מחזור בכל אחד</h2>
+<p>שיחה אחת עם מודל אחד. מה שבסוגריים מרובעים מחליפים בתוכן שלכם. לא עוברים לשלב הבא לפני שעברתם על הנוכחי כמו תלמיד.</p>
+
+<div class="step"><div class="num">1</div><div>
+<span class="ai must">מודל שפה: חובה</span>
+<h3>מציגים את הכיתה ובוחרים פרויקט</h3>
+<div class="codebox prompt"><pre>אני מורה ל"פרויקט בהנדסת תוכנה" בכיתה [שכבה], בחלופה [שם החלופה]. אני בונה איתך מדריך צעד-צעד לתלמידים, שמלמד רכיב אחד שיצטרכו בפרויקט הגמר. נעבוד בשלבים. אחרי כל שלב אעבור על התוצאה כמו תלמיד ואחזיר לך הערות.
+
+[הדביקו כאן את דף ההכנה]
+
+שלב ראשון: הצע 5 רעיונות לפרויקט קטן וחווייתי, שאי אפשר להשלים בלי הרכיב. לכל רעיון כתוב מה התלמיד רואה בסוף, ומה החיסרון. עדיין אל תכתוב את המדריך.</pre></div>
+<div class="note run"><b>עברו כמו תלמיד</b><p>קראו את הרעיונות כמו תלמיד בכיתה שלכם. איזה מהם הוא היה רוצה להראות לחבר? אם אף אחד, כתבו למודל במה התלמידים שלכם מתעניינים ובקשו חמישה חדשים.</p></div>
+<p><span class="ai no">מודל שפה: אסור</span> את הבחירה עושים לבד.</p>
+</div></div>
+
+<div class="step"><div class="num">2</div><div>
+<span class="ai must">מודל שפה: חובה</span>
+<h3>מסכימים על תכנית</h3>
+<div class="codebox prompt"><pre>בחרתי ברעיון [מספר]. הצע תכנית למדריך, בלי HTML ובלי קוד: חזרה על מה שכבר נלמד, הסבר של המושגים החדשים, וצעדי הפרויקט (שורה לכל צעד: מה מוסיפים ומה רואים על המסך).
+סמן איפה תלמיד צפוי להיתקע, וכתוב שלוש נקודות חלשות בתכנית.</pre></div>
+<div class="note run"><b>עברו כמו תלמיד</b><p>קראו את רשימת הצעדים כמו התלמיד החלש בכיתה. איפה צעד מוסיף שני דברים בבת אחת? איפה הוא מניח משהו שלא נלמד? האם שלוש הטעויות מדף ההכנה מופיעות? שלחו הערות, ובקשו תכנית מתוקנת.</p></div>
+</div></div>
+
+<div class="step"><div class="num">3</div><div>
+<span class="ai must">מודל שפה: חובה</span>
+<h3>נותנים למודל את השלד, ומקבלים את תחילת הדף</h3>
+<div class="goal">
+  <div class="mini small" role="img" aria-label="איור: דף מוקטן עם פס צהוב עליון ושורת כפתורי קפיצה, ומתחתם שתי שורות טקסט. עדיין בלי כרטיסי צעדים">
+    <div class="m-top"><span class="m-pill"></span><span class="m-h"></span></div>
+    <div class="m-body"><div class="m-toc"><i></i><i></i><i></i><i></i></div><div class="m-lines"><b></b><b class="s"></b></div></div>
+  </div>
+  <div class="goal-cap"><b>התוצאה הרצויה בסוף הצעד</b>דף עם פתיח צהוב, איור של הפרויקט הגמור, כפתורי קפיצה, חזרה והסבר. צעדי הפרויקט עדיין חסרים.</div>
+</div>
+<p>העתיקו את השלד מ<a href="#skeleton">חלק 4</a> והדביקו אותו בפרומפט.</p>
+<div class="codebox prompt"><pre>זה שלד ה-HTML של הפורמט שבו אני עובד:
+
+[הדביקו כאן את השלד]
+
+בכל ההמשך השתמש רק ברכיבים שבשלד, כל אחד לתפקיד שכתוב בהערה שמעליו, ואל תשנה את ה-CSS.
+כתוב קובץ HTML שלם עם הפתיח, כפתורי הקפיצה, חלק החזרה וחלק ההסבר, לפי התכנית. את שאר החלקים נוסיף בהודעות הבאות.</pre></div>
+<div class="note run"><b>עברו כמו תלמיד</b><p>פתחו את הדף. בצעו את החזרה בסביבת הפיתוח, מהזיכרון, כמו שהתלמיד יתבקש. קראו את ההסבר: האם יש בו מילה שלא נלמדה? האם האיור מראה את הפרויקט שלכם? שלחו הערות.</p></div>
+<div class="note warn"><b>הדף יצא בעיצוב אחר?</b><p>השלד לא הגיע במלואו, או שהמודל שינה את ה-CSS. שלחו את השלד בהודעה נפרדת, וכתבו: "החזר את בלוק ה-style בדיוק כפי שהוא בשלד".</p></div>
+</div></div>
+
+<div class="step"><div class="num">4</div><div>
+<span class="ai must">מודל שפה: חובה</span>
+<h3>כותבים את צעדי הפרויקט</h3>
+<div class="codebox prompt"><pre>כתוב את חלק 3, צעדי הפרויקט, והחזר את הקובץ המלא.
+הקוד ברמת תלמיד מתחיל: [המגבלות שלכם, למשל: בלי lambda].
+במקומות שבהם תלמיד צפוי לטעות, תן שאלות מובילות ורמז מקופל במקום פתרון.</pre></div>
+<div class="note run"><b>עברו כמו תלמיד</b>
+<p>זה הסבב החשוב ביותר. פתחו פרויקט ריק בסביבת הפיתוח, ובצעו כל צעד בדיוק כפי שהוא כתוב. העתיקו קוד רק דרך כפתור "העתקה". רשמו הערה בכל מקום שבו:</p>
+<ul>
+  <li>אי אפשר לבצע את ההוראה, או שהקוד לא רץ.</li>
+  <li>מה שרואים על המסך שונה ממה שכתוב או מצויר.</li>
+  <li>הצעד מניח משהו שלא נעשה קודם או שלא נלמד.</li>
+</ul>
+<p>שלחו את ההערות, קבלו קובץ מתוקן, ועברו שוב על הצעדים שהשתנו.</p></div>
+<div class="note warn"><b>לא מצאתם אף הערה?</b><p>כנראה שקראתם במקום לבצע. מדריך ראשון בלי אף ליקוי הוא נדיר מאוד.</p></div>
+</div></div>
+
+<div class="step"><div class="num">5</div><div>
+<span class="ai must">מודל שפה: חובה</span>
+<h3>מוסיפים עצירות אימות הבנה מול המורה</h3>
+<div class="codebox prompt"><pre>הוסף למדריך עצירות "אימות הבנה עם המורה", ברכיב verify שבשלד. בכל עצירה התלמיד קורא למורה ומסביר בעל-פה, כך שאי אפשר לעבור אותה בהעתקה או בעזרת מודל שפה.
+בחר בעצמך כמה עצירות, איפה למקם אותן, ומה לשאול בכל אחת. החזר את הקובץ המלא.</pre></div>
+<div class="note run"><b>עברו כמו תלמיד</b><p>ענו על כל עצירה בקול, כאילו המורה עומד לידכם. עצירה שאפשר לענות עליה בלי לבנות את הפרויקט, או בשינון של הגדרה, היא הערה למודל. כך גם עצירה שתיקח לכם יותר משתי דקות לתלמיד.</p></div>
+</div></div>
+
+<div class="step"><div class="num">6</div><div>
+<span class="ai must">מודל שפה: חובה</span>
+<h3>מוסיפים הרחבות ומסלול מתקדם</h3>
+<div class="codebox prompt"><pre>הוסף למדריך חלק "הרחבות" וחלק "מסלול מתקדם", ברכיבי task ו-task adv שבשלד, ועדכן את כפתורי הקפיצה.
+הרחבות: משימות שהתלמיד מבצע לבד על הפרויקט שבנה, בלי צעד-צעד, כל אחת עם עצירת אימות הבנה.
+מסלול מתקדם: משימות לתלמידים מהירים, על נושאים שעדיין לא נלמדו.
+בחר בעצמך אילו הרחבות ואילו משימות מתאימות לפרויקט הזה.</pre></div>
+<div class="note run"><b>עברו כמו תלמיד</b><p>בצעו הרחבה אחת בעצמכם, בלי לפתוח את הרמז. האם אפשר לבצע אותה עם מה שנלמד במדריך? פתחו כל קישור לתיעוד במסלול המתקדם: מודלים ממציאים כתובות.</p></div>
+</div></div>
+
+<div class="step"><div class="num">7</div><div>
+<span class="ai must">מודל שפה: חובה</span>
+<h3>מוסיפים תגי מודל שפה ויומן שימוש</h3>
+<div class="codebox prompt"><pre>הוסף למדריך את שכבת אוריינות מודלי השפה, לפי הרכיבים שבשלד:
+- תג "מודל שפה: אסור", "מותר" או "חובה" לפני כל חלק ולפני כל צעד, ומקרא בראש המדריך.
+- הנחיות לתלמיד לנהל יומן שימוש בקובץ Word ולצרף אותו להגשה.
+בחר בעצמך איזה תג מתאים לכל שלב, ונמק לי כל בחירה בשורה אחת.</pre></div>
+<div class="note run"><b>עברו כמו תלמיד</b><p>עברו על התגים אחד אחד. בכל שלב שסומן "מותר": מה יישאר מהלמידה אם תלמיד ייתן למודל לעשות אותו? בכל שלב שסומן "אסור": האם תוכלו לאכוף את זה בכיתה? קראו את הנחיות היומן: האם תלמיד ידע מה לכתוב בלי לשאול אתכם?</p></div>
+</div></div>
+
+<div class="step"><div class="num">8</div><div>
+<span class="ai must">מודל שפה: חובה</span>
+<h3>מוסיפים ניקוד</h3>
+<div class="codebox prompt"><pre>הוסף טבלת "איך צוברים נקודות" בראש המדריך, וחלק "הניקוד שלי" בסופו, לפי הרכיבים שבשלד.
+הסך 100, ואי אפשר להגיע אליו בלי ההרחבות. המסלול המתקדם הוא בונוס מעל 100. הצע חלוקת נקודות ונמק אותה בקצרה.</pre></div>
+<div class="note run"><b>עברו כמו תלמיד</b><p>חברו את הנקודות בטבלה: האם הסך 100? סמנו את כל התיבות ב"הניקוד שלי" ובדקו שהסכום זהה. ואז שאלו כמו תלמיד: מה הדרך הקלה ביותר לצבור נקודות בלי להבין? אם יש כזו, זו הערה.</p></div>
+<div class="note run"><b>המדריך מוכן כש...</b><p>עברתם עליו פעם אחת נוספת מההתחלה ועד הסוף, כמו תלמיד, בלי אף הערה חדשה.</p></div>
+</div></div>
+
+<span class="section-tag">חלק 4</span>
+<h2 class="section-title" id="skeleton">השלד להדבקה</h2>
+<p>לחצו "העתקה", והדביקו בפרומפט של שלב 3. לא משנים את השלד בין מדריך למדריך.</p>
+<div class="file">guide-skeleton.html</div>
+<div class="codebox"><pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="he" dir="rtl"&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+&lt;title&gt;[שם המדריך]&lt;/title&gt;
+&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;
+&lt;link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&amp;family=Assistant:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"&gt;
+&lt;style&gt;
+:root{
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --yellow:#FFC83D; --yellow-soft:#FFF3D6;
+  --ink:#1A1A1A; --navy:#20304D;
+  --teal:#1B8A75; --teal-soft:#DCF3EC;
+  --coral:#E85B3A; --coral-soft:#FCE4DC;
+  --blue:#2F6FDB; --blue-soft:#E2EBFB;
+  --purple:#7B4FE0; --purple-soft:#EDE5FC;
+  --paper:#FFFDF7; --panel:#fff; --soft:#5A6477; --line:#E4DFD0;
+  --head:'Rubik',Arial,sans-serif; --body:'Assistant',Arial,sans-serif; --mono:'JetBrains Mono',Consolas,monospace;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.75}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px 90px}
+p{margin:0 0 12px}
+a{color:var(--blue)}
+ul,ol{padding-inline-start:22px;margin:0 0 12px}
+li{margin-bottom:6px}
+
+.hero{background:var(--yellow);border-bottom:5px solid var(--ink);padding:52px 20px 40px;margin:0 0 32px}
+.hero-inner{max-width:800px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:28px;align-items:center}
+.badge{display:inline-block;background:var(--ink);color:var(--yellow);font-family:var(--head);font-weight:700;font-size:13px;padding:5px 14px;border-radius:100px;margin-bottom:16px}
+h1{font-family:var(--head);font-weight:900;font-size:34px;line-height:1.18;margin:0 0 12px;text-wrap:balance}
+.hero p{font-size:17px;font-weight:500;max-width:58ch;margin:0}
+.phone{border:3px solid var(--ink);border-radius:22px;background:#fff;padding:12px 10px;font-size:12px;text-align:center;box-shadow:6px 6px 0 var(--ink);display:flex;flex-direction:column;gap:8px}
+.phone .t{font-family:var(--head);font-weight:700;font-size:17px;line-height:1.2}
+.phone .bt{background:var(--navy);color:#fff;border-radius:14px;padding:3px 12px;font-size:11px;align-self:center}
+
+.intro-note{background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:16px 20px;margin:-16px 0 32px;font-size:14px;box-shadow:6px 6px 0 var(--ink)}
+
+.toc-title{font-family:var(--head);font-weight:700;font-size:18px;margin:0 0 10px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.toc li{margin:0}
+.toc a{display:block;text-decoration:none;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:100px;padding:4px 14px;font-family:var(--head);font-weight:500;font-size:14px}
+.toc a:hover,.toc a:focus-visible{background:var(--yellow);outline:none}
+
+.section-tag{display:inline-block;font-family:var(--mono);font-size:12.5px;color:var(--purple);background:var(--purple-soft);padding:3px 10px;border-radius:100px;margin:44px 0 10px}
+h2.section-title{font-family:var(--head);font-weight:900;font-size:26px;line-height:1.25;margin:0 0 14px}
+h3{font-family:var(--head);font-weight:700;font-size:18px;margin:26px 0 8px}
+
+code{font-family:var(--mono);font-size:.86em;direction:ltr;unicode-bidi:isolate;background:var(--yellow-soft);padding:1px 6px;border-radius:5px}
+
+table{width:100%;border-collapse:collapse;font-size:15px;background:#fff}
+.scroll{overflow-x:auto;border:3px solid var(--ink);border-radius:14px;margin:12px 0 20px;box-shadow:6px 6px 0 var(--ink);background:#fff}
+th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--head);font-weight:700;background:var(--yellow-soft);border-bottom:2px solid var(--ink)}
+td.pts,th.pts{text-align:center;white-space:nowrap;font-weight:700}
+
+.step{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:24px 24px 22px;margin:0 0 28px;box-shadow:6px 6px 0 var(--ink);display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px}
+.step .num{width:44px;height:44px;border-radius:50%;background:var(--yellow);border:3px solid var(--ink);font-family:var(--head);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center}
+.step h3{font-size:20px;margin:6px 0 12px}
+
+pre{direction:ltr;text-align:left;background:var(--navy);color:#EAEDF3;font-family:var(--mono);font-size:13px;line-height:1.6;padding:14px 16px;overflow-x:auto;margin:0;tab-size:4}
+.codebox{margin:14px 0;border-radius:10px;overflow:hidden;background:var(--navy)}
+.codebox.shut pre{max-height:9.6em;overflow:hidden}
+.bar{display:flex;gap:8px;align-items:center;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.2)}
+.bar .lines{color:#8FA3C8;font-family:var(--mono);font-size:12px;margin-inline-end:auto}
+.bar button,.more{font-family:var(--head);font-size:13px;font-weight:500;background:transparent;color:#EAEDF3;border:1.5px solid #EAEDF3;border-radius:100px;padding:1px 12px;cursor:pointer}
+.bar button:hover,.bar button:focus-visible,.more:hover,.more:focus-visible{background:var(--yellow);border-color:var(--yellow);color:var(--ink);outline:none}
+.more{display:none;width:100%;border:0;border-top:1px solid rgba(255,255,255,.2);border-radius:0;padding:7px}
+.codebox.shut .more{display:block}
+.file{direction:ltr;text-align:left;font-family:var(--mono);font-size:12.5px;color:var(--soft);margin:12px 0 -8px}
+.codebox.prompt{background:var(--purple-soft);border:2px solid var(--purple)}
+.codebox.prompt pre{direction:rtl;text-align:right;white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--body);font-size:14.5px;line-height:1.7;background:transparent;color:var(--ink)}
+.codebox.prompt .bar{border-bottom:1px solid var(--purple)}
+.codebox.prompt .bar .lines{color:var(--purple);font-family:var(--head);font-weight:700}
+.codebox.prompt .bar button{color:var(--ink);border-color:var(--ink)}
+
+.note{margin:14px 0;border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:26px minmax(0,1fr);column-gap:10px;font-size:14px;color:var(--navy)}
+.note::before{grid-column:1;grid-row:1 / span 30;width:26px;height:26px;border-radius:50%;color:#fff;font-family:var(--head);font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center}
+.note&gt;*{grid-column:2;min-width:0}
+.note&gt;b:first-child{font-family:var(--head);font-weight:700;font-size:13px;display:block;margin-bottom:2px}
+.note p{margin:0 0 8px}.note p:last-child,.note ul:last-child,.note ol:last-child{margin-bottom:0}
+.note.why{background:var(--teal-soft)}.note.why::before{content:"?";background:var(--teal)}.note.why&gt;b:first-child{color:var(--teal)}
+.note.run{background:var(--blue-soft)}.note.run::before{content:"\2713";background:var(--blue)}.note.run&gt;b:first-child{color:var(--blue)}
+.note.warn{background:var(--coral-soft)}.note.warn::before{content:"!";background:var(--coral)}.note.warn&gt;b:first-child{color:var(--coral)}
+
+details{background:var(--yellow-soft);border:2px dashed var(--ink);border-radius:14px;padding:10px 18px;margin:12px 0;font-size:14px}
+summary{cursor:pointer;font-family:var(--head);font-weight:700;font-size:15px}
+details[open] summary{margin-bottom:8px}
+
+.dia{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:18px 0}
+.dia figure{margin:0;background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:16px}
+.dia figcaption{font-size:12.5px;color:var(--navy);margin-top:10px;text-align:center}
+.box{border:2px solid var(--ink);border-radius:6px;padding:6px;font-size:13px;text-align:center;font-weight:600}
+.v{display:flex;flex-direction:column;gap:6px}.h{display:flex;gap:6px}
+.fa{background:var(--coral-soft)}.fb{background:var(--teal-soft)}.fw{background:var(--yellow-soft)}.fp{background:var(--purple-soft)}.fn{background:#fff}
+
+.goal{display:flex;gap:18px;align-items:center;background:var(--paper);border:2px dashed var(--ink);border-radius:12px;padding:14px 16px;margin:0 0 14px}
+.goal .phone{width:150px;flex:none;box-shadow:none;border-radius:16px;padding:8px 7px;font-size:10px}
+.goal .phone .t{font-size:12px}
+.goal-cap{font-size:13.5px;color:var(--navy)}
+.goal-cap b{display:block;font-family:var(--head);font-weight:700;color:var(--ink);font-size:14px;margin-bottom:2px}
+
+.ai{display:inline-flex;align-items:center;gap:6px;font-family:var(--head);font-weight:700;font-size:12.5px;padding:3px 12px 3px 10px;border-radius:100px;border:2px solid var(--ink);vertical-align:middle;white-space:nowrap}
+.ai::before{width:18px;height:18px;border-radius:50%;color:#fff;font-size:12px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.ai.no{background:var(--coral-soft)}.ai.no::before{content:"\2715";background:var(--coral)}
+.ai.ok{background:var(--teal-soft)}.ai.ok::before{content:"\2713";background:var(--teal)}
+.ai.must{background:var(--purple-soft)}.ai.must::before{content:"\2605";background:var(--purple)}
+.step .ai,.task&gt;.ai{margin-bottom:6px}
+.legend{background:#fff;border:3px solid var(--ink);border-radius:14px;box-shadow:6px 6px 0 var(--ink);padding:6px 18px;margin:12px 0 20px}
+.legend&gt;div{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px}
+.legend&gt;div:last-child{border-bottom:0}
+
+.verify{background:var(--yellow-soft);border:3px solid var(--ink);border-radius:18px;padding:18px 22px 16px;margin:0 0 28px;box-shadow:6px 6px 0 var(--yellow)}
+.verify .v-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.verify .v-title{display:inline-flex;align-items:center;gap:8px;font-family:var(--head);font-weight:700;font-size:18px}
+.verify .v-title::before{content:"";width:26px;height:26px;border-radius:50%;background-color:var(--ink);flex:none;background-image:radial-gradient(circle at 50% 38%,var(--yellow) 0 22%,transparent 23%),radial-gradient(ellipse at 50% 92%,var(--yellow) 0 38%,transparent 39%)}
+.verify p{font-size:15px}
+.verify.inner{margin:16px 0 0;box-shadow:none;border-width:2px;padding:14px 16px 10px}
+.verify.inner .v-title{font-size:16px}
+
+.task{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:22px 24px;margin:0 0 28px;box-shadow:6px 6px 0 var(--ink)}
+.task h3{font-size:20px;margin:0 0 10px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.pts-badge{background:var(--ink);color:var(--yellow);font-family:var(--head);font-weight:700;font-size:13px;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.task.adv{background:var(--purple-soft)}
+.task.adv .pts-badge{background:var(--purple);color:#fff}
+.success{font-weight:700;color:var(--teal);margin-top:8px}
+
+.score{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:10px 22px;box-shadow:6px 6px 0 var(--ink)}
+.score label{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.score label:last-child{border-bottom:0}
+.score input{width:20px;height:20px;accent-color:var(--teal);flex:none}
+.score .p{margin-inline-start:auto;font-family:var(--head);font-weight:700}
+.total{font-family:var(--head);font-weight:900;font-size:44px;line-height:1;margin-top:22px}
+.total small{font-family:var(--body);font-size:15px;color:var(--soft);font-weight:400}
+
+.done{margin-top:44px;background:var(--navy);border-radius:16px;padding:32px 28px;text-align:center}
+.done .done-title{font-family:var(--head);color:var(--yellow);font-size:24px;font-weight:900;margin:0 0 8px}
+.done p{color:#EAEDF3;font-size:15px;margin:0}
+footer{text-align:center;font-size:13px;color:#8B8F87;margin-top:32px}
+
+@media (max-width:620px){
+  h1{font-size:26px}.hero{padding:40px 16px 32px}
+  .hero-inner{grid-template-columns:minmax(0,1fr)}.phone{max-width:210px}
+  .step{padding:20px 18px 18px;box-shadow:4px 4px 0 var(--ink);grid-template-columns:minmax(0,1fr)}
+  .step h3{font-size:17px}.task{padding:18px;box-shadow:4px 4px 0 var(--ink)}
+  .goal{flex-direction:column;align-items:flex-start}
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;!-- פתיח: שם הפרויקט, משפט אחד על מה בונים, ואיור של התוצאה הסופית. מופיע פעם אחת. --&gt;
+&lt;header class="hero"&gt;
+  &lt;div class="hero-inner"&gt;
+    &lt;div&gt;
+      &lt;span class="badge"&gt;מדריך למתחילים · [הנושא] · [משך]&lt;/span&gt;
+      &lt;h1&gt;[שם הפרויקט]&lt;br&gt;[מה לומדים בדרך]&lt;/h1&gt;
+      &lt;p&gt;[שני משפטים: מה בונים, ומה לומדים בדרך.]&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- איור התוצאה הסופית. בונים אותו מ-div פשוטים, לא מתמונה. מתאימים את התוכן לפרויקט. --&gt;
+    &lt;div class="phone" role="img" aria-label="[תיאור האיור במילים]"&gt;
+      &lt;div class="t"&gt;[כותרת המסך]&lt;/div&gt;
+      &lt;div class="bt"&gt;[כפתור]&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/header&gt;
+
+&lt;div class="wrap"&gt;
+
+&lt;!-- כפתורי קפיצה. תמיד מיד אחרי הפתיח, ממוספרים, עם הכותרת "חלקי המסמך". --&gt;
+&lt;nav aria-labelledby="toc-title"&gt;
+  &lt;div class="toc-title" id="toc-title"&gt;חלקי המסמך&lt;/div&gt;
+  &lt;ul class="toc"&gt;
+    &lt;li&gt;&lt;a href="#warm"&gt;1 - חזרה&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#theory"&gt;2 - הסבר&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#build"&gt;3 - הפרויקט&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#ext"&gt;4 - הרחבות&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#adv"&gt;5 - מסלול מתקדם&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#score"&gt;6 - הניקוד שלי&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+
+&lt;!-- טבלת ניקוד. כל טבלה עטופה ב-div.scroll. --&gt;
+&lt;span class="section-tag"&gt;ניקוד&lt;/span&gt;
+&lt;h2 class="section-title" id="points"&gt;איך צוברים נקודות&lt;/h2&gt;
+&lt;div class="scroll"&gt;&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;חלק&lt;/th&gt;&lt;th&gt;מה עושים&lt;/th&gt;&lt;th class="pts"&gt;נקודות&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;חזרה&lt;/td&gt;&lt;td&gt;[...]&lt;/td&gt;&lt;td class="pts"&gt;5&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;הפרויקט&lt;/td&gt;&lt;td&gt;[...]&lt;/td&gt;&lt;td class="pts"&gt;30&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;אימות הבנה&lt;/td&gt;&lt;td&gt;[מספר] עצירות מול המורה, 5 לכל אחת&lt;/td&gt;&lt;td class="pts"&gt;35&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;הרחבות&lt;/td&gt;&lt;td&gt;שלוש הרחבות: 6 על ביצוע ו-4 על אימות ההבנה, לכל אחת&lt;/td&gt;&lt;td class="pts"&gt;30&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;מסלול מתקדם&lt;/td&gt;&lt;td&gt;[...]&lt;/td&gt;&lt;td class="pts"&gt;בונוס&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+&lt;!-- מקרא מודל שפה. מופיע פעם אחת, לפני חלק 1. --&gt;
+&lt;div class="legend"&gt;
+  &lt;div&gt;&lt;span class="ai no"&gt;מודל שפה: אסור&lt;/span&gt;עובדים לבד. מותר לשאול את המורה.&lt;/div&gt;
+  &lt;div&gt;&lt;span class="ai ok"&gt;מודל שפה: מותר&lt;/span&gt;אפשר להיעזר, ומתעדים ביומן השימוש.&lt;/div&gt;
+  &lt;div&gt;&lt;span class="ai must"&gt;מודל שפה: חובה&lt;/span&gt;המשימה היא העבודה עם המודל, ומתעדים ביומן.&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- יומן שימוש. הנחיות לתלמיד, פעם אחת, מיד אחרי המקרא. --&gt;
+&lt;h3&gt;יומן שימוש&lt;/h3&gt;
+&lt;p&gt;פתחו קובץ Word בשם &lt;code&gt;AI-Journal-[Guide]-[Name].docx&lt;/code&gt;. בכל פעם שנעזרתם במודל שפה הוסיפו טבלה אחת, וצרפו את הקובץ להגשה.&lt;/p&gt;
+&lt;div class="scroll"&gt;&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;שורה&lt;/th&gt;&lt;th&gt;מה כותבים&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;איפה במדריך&lt;/td&gt;&lt;td&gt;מספר הצעד או שם ההרחבה&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;איזה מודל&lt;/td&gt;&lt;td&gt;[...]&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;הפרומפט&lt;/td&gt;&lt;td&gt;מה שכתבתם, מילה במילה&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;קטע מהתשובה&lt;/td&gt;&lt;td&gt;העתקה של החלק החשוב. טקסט, לא צילום מסך&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;מה עשיתי עם התשובה&lt;/td&gt;&lt;td&gt;[...]&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;דבר אחד שלא הכרתי&lt;/td&gt;&lt;td&gt;והסבר שלו במילים שלכם&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+&lt;!-- פתיחת חלק: תג "חלק N", תג מודל שפה, וכותרת עם id שתואם לכפתור הקפיצה. --&gt;
+&lt;span class="section-tag"&gt;חלק 1&lt;/span&gt; &lt;span class="ai no"&gt;מודל שפה: אסור&lt;/span&gt;
+&lt;h2 class="section-title" id="warm"&gt;חזרה: [מה מבצעים מהזיכרון]&lt;/h2&gt;
+&lt;ol&gt;&lt;li&gt;[דרישה]&lt;/li&gt;&lt;/ol&gt;
+
+&lt;!-- רמז מקופל. התלמיד פותח רק אם נתקע. --&gt;
+&lt;details&gt;&lt;summary&gt;רמז: [על מה]&lt;/summary&gt;&lt;p&gt;[הרמז]&lt;/p&gt;&lt;/details&gt;
+
+&lt;span class="section-tag"&gt;חלק 2&lt;/span&gt;
+&lt;h2 class="section-title" id="theory"&gt;הסבר: [המושג]&lt;/h2&gt;
+&lt;p&gt;[הסבר פשוט עם דימוי מחיי היום-יום. מילה באנגלית בתוך משפט: &lt;code&gt;word&lt;/code&gt;.]&lt;/p&gt;
+
+&lt;!-- איור הסבר. בונים מקופסאות: box, v (טור), h (שורה). צבעי מילוי: fa, fb, fw, fp, fn. --&gt;
+&lt;div class="dia"&gt;
+  &lt;figure&gt;
+    &lt;div class="box v fw"&gt;&lt;div class="box fn"&gt;[רכיב 1]&lt;/div&gt;&lt;div class="box fn"&gt;[רכיב 2]&lt;/div&gt;&lt;/div&gt;
+    &lt;figcaption&gt;[משפט אחד שמסביר את האיור]&lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;span class="section-tag"&gt;חלק 3&lt;/span&gt; &lt;span class="ai no"&gt;מודל שפה: אסור&lt;/span&gt;
+&lt;h2 class="section-title" id="build"&gt;הפרויקט: בונים צעד-צעד&lt;/h2&gt;
+
+&lt;!-- צעד. מספר בעיגול צהוב, כותרת שמתחילה בפועל, ודבר אחד בלבד. --&gt;
+&lt;div class="step"&gt;&lt;div class="num"&gt;1&lt;/div&gt;&lt;div&gt;
+&lt;span class="ai no"&gt;מודל שפה: אסור&lt;/span&gt;
+&lt;h3&gt;[פועל + מה מוסיפים]&lt;/h3&gt;
+
+&lt;!-- התוצאה הרצויה. רק בצעד שמשנה את מה שרואים על המסך. לפני ההוראות. --&gt;
+&lt;div class="goal"&gt;
+  &lt;div class="phone" role="img" aria-label="[תיאור]"&gt;&lt;div class="t"&gt;[כותרת]&lt;/div&gt;&lt;div class="bt"&gt;[כפתור]&lt;/div&gt;&lt;/div&gt;
+  &lt;div class="goal-cap"&gt;&lt;b&gt;התוצאה הרצויה בסוף הצעד&lt;/b&gt;[מה רואים על המסך.]&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;[איפה בדיוק כותבים: אחרי איזו שורה ולפני איזו שורה.]&lt;/p&gt;
+
+&lt;!-- קוד. תמיד עם שורת file מעליו. הסקריפט מוסיף כפתור העתקה, ומקפל קוד ארוך מ-8 שורות. --&gt;
+&lt;div class="file"&gt;[path/to/file.ext]&lt;/div&gt;
+&lt;div class="codebox"&gt;&lt;pre&gt;[code]&lt;/pre&gt;&lt;/div&gt;
+
+&lt;!-- טורקיז: מסביר מה כתבנו ולמה זה עובד. --&gt;
+&lt;div class="note why"&gt;&lt;b&gt;מה כתבנו פה&lt;/b&gt;&lt;p&gt;[משפט לכל דבר חדש.]&lt;/p&gt;&lt;/div&gt;
+
+&lt;!-- כחול: מה מריצים ומה בדיוק צריך לראות. בסוף כל צעד. --&gt;
+&lt;div class="note run"&gt;&lt;b&gt;הריצו ובדקו&lt;/b&gt;&lt;p&gt;[מה רואים אם הכול תקין.]&lt;/p&gt;&lt;/div&gt;
+
+&lt;!-- אלמוגי: אזהרה או תקלה צפויה. בתקלה לא נותנים פתרון: שאלות מובילות ורמז מקופל. --&gt;
+&lt;div class="note warn"&gt;&lt;b&gt;[התסמין שהתלמיד רואה]?&lt;/b&gt;
+&lt;p&gt;אל תמחקו קוד ואל תמשיכו הלאה. זו תקלה שכדאי להבין לבד:&lt;/p&gt;
+&lt;ol&gt;&lt;li&gt;[שאלה מובילה]&lt;/li&gt;&lt;li&gt;[שאלה מובילה]&lt;/li&gt;&lt;/ol&gt;
+&lt;details&gt;&lt;summary&gt;רמז&lt;/summary&gt;&lt;p&gt;[הרמז]&lt;/p&gt;&lt;/details&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;
+
+&lt;!-- עצירת אימות הבנה מול המורה. תמיד שתי משימות: הסבר של קוד, ודרישה חדשה. --&gt;
+&lt;div class="verify"&gt;
+  &lt;div class="v-head"&gt;&lt;span class="v-title"&gt;אימות הבנה עם המורה: [נושא]&lt;/span&gt;&lt;span class="pts-badge"&gt;5 נק'&lt;/span&gt;&lt;/div&gt;
+  &lt;p&gt;&lt;b&gt;הסבירו מה הקוד הזה עושה.&lt;/b&gt; [קטע קצר, לפעמים עם טעות. מה יקרה כשהוא ירוץ, ולמה?]&lt;/p&gt;
+  &lt;div class="codebox"&gt;&lt;pre&gt;[code]&lt;/pre&gt;&lt;/div&gt;
+  &lt;p&gt;&lt;b&gt;דרישה חדשה.&lt;/b&gt; [שינוי שמישהו ביקש. מה תשנו, ובאיזה קובץ?]&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;span class="section-tag"&gt;חלק 4&lt;/span&gt; &lt;span class="ai ok"&gt;מודל שפה: מותר&lt;/span&gt;
+&lt;h2 class="section-title" id="ext"&gt;הרחבות&lt;/h2&gt;
+
+&lt;!-- הרחבה. בלי צעד-צעד: דרישה, הגדרת הצלחה, רמז, ועצירת אימות פנימית. --&gt;
+&lt;div class="task"&gt;
+&lt;span class="ai ok"&gt;מודל שפה: מותר&lt;/span&gt;
+&lt;h3&gt;&lt;span&gt;הרחבה 1: [שם]&lt;/span&gt;&lt;span class="pts-badge"&gt;10 נק'&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;[הדרישה]&lt;/p&gt;
+&lt;p class="success"&gt;הצלחה: [איך יודעים שזה עובד]&lt;/p&gt;
+&lt;details&gt;&lt;summary&gt;רמז&lt;/summary&gt;&lt;p&gt;[הרמז]&lt;/p&gt;&lt;/details&gt;
+&lt;div class="verify inner"&gt;
+  &lt;div class="v-head"&gt;&lt;span class="v-title"&gt;אימות הבנה עם המורה&lt;/span&gt;&lt;span class="pts-badge"&gt;4 נק'&lt;/span&gt;&lt;/div&gt;
+  &lt;p&gt;[שאלת "מה יקרה אם", או שינוי קטן שמבצעים מול המורה.]&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- פרומפט מוצע לתלמיד. רקע סגול, טקסט מימין לשמאל. רק בשלבים של "מודל שפה: חובה". --&gt;
+&lt;div class="codebox prompt"&gt;&lt;pre&gt;[פרומפט שהתלמיד מעתיק ומשלים]&lt;/pre&gt;&lt;/div&gt;
+
+&lt;span class="section-tag"&gt;חלק 5&lt;/span&gt;
+&lt;h2 class="section-title" id="adv"&gt;מסלול מתקדם&lt;/h2&gt;
+
+&lt;!-- משימה מתקדמת. רקע סגול. בלי צעדים ובלי רמזים: יעד וקישור לתיעוד. --&gt;
+&lt;div class="task adv"&gt;
+&lt;h3&gt;&lt;span&gt;מתקדם 1: [שם]&lt;/span&gt;&lt;span class="pts-badge"&gt;+10&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;[היעד]&lt;/p&gt;
+&lt;p class="success"&gt;למורה: [שאלה שהתלמיד יצטרך לענות עליה]&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;span class="section-tag"&gt;חלק 6&lt;/span&gt;
+&lt;h2 class="section-title" id="score"&gt;הניקוד שלי&lt;/h2&gt;
+&lt;!-- data-p הוא מספר הנקודות, data-k הוא שם ייחודי. הסקריפט מסכם. --&gt;
+&lt;div class="score" id="score-list"&gt;
+  &lt;label&gt;&lt;input type="checkbox" data-p="5" data-k="warm"&gt;חזרה&lt;span class="p"&gt;5&lt;/span&gt;&lt;/label&gt;
+  &lt;label&gt;&lt;input type="checkbox" data-p="30" data-k="base"&gt;הפרויקט&lt;span class="p"&gt;30&lt;/span&gt;&lt;/label&gt;
+&lt;/div&gt;
+&lt;div class="total" aria-live="polite"&gt;&lt;span id="total"&gt;0&lt;/span&gt; &lt;small&gt;נקודות&lt;/small&gt;&lt;/div&gt;
+
+&lt;div class="done"&gt;
+  &lt;div class="done-title"&gt;סיימתם&lt;/div&gt;
+  &lt;p&gt;[איך מגישים]&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;script&gt;
+(function(){
+  var KEY='guide-[שם-קצר-באנגלית]';
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){saved={};}
+  var boxes=document.querySelectorAll('#score-list input');
+  function calc(){
+    var t=0;
+    boxes.forEach(function(b){if(b.checked)t+=Number(b.dataset.p);saved[b.dataset.k]=b.checked;});
+    var out=document.getElementById('total');if(out)out.textContent=t;
+    try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(e){}
+  }
+  boxes.forEach(function(b){b.checked=!!saved[b.dataset.k];b.addEventListener('change',calc);});
+  calc();
+
+  document.querySelectorAll('.codebox').forEach(function(box){
+    var pre=box.querySelector('pre');
+    var n=pre.textContent.split('\n').length;
+    var isPrompt=box.classList.contains('prompt');var long=n&gt;8&amp;&amp;!isPrompt;
+    var bar=document.createElement('div');bar.className='bar';
+    var info=document.createElement('span');info.className='lines';info.textContent=isPrompt?'פרומפט להעתקה':n+' שורות';
+    bar.appendChild(info);
+    var more=null,tog=null;
+    function set(shut){
+      box.classList.toggle('shut',shut);
+      tog.textContent=shut?'פתיחת כל הקוד':'סגירה';
+      tog.setAttribute('aria-expanded',String(!shut));
+    }
+    if(long){
+      tog=document.createElement('button');tog.type='button';
+      tog.addEventListener('click',function(){set(!box.classList.contains('shut'));});
+      bar.appendChild(tog);
+      more=document.createElement('button');more.type='button';more.className='more';
+      more.textContent='יש עוד קוד, לחצו לפתיחה';
+      more.addEventListener('click',function(){set(false);});
+    }
+    var btn=document.createElement('button');btn.type='button';btn.textContent='העתקה';
+    btn.addEventListener('click',function(){
+      var text=pre.textContent;
+      function ok(){btn.textContent='הועתק';setTimeout(function(){btn.textContent='העתקה';},1500);}
+      function fallback(){
+        try{
+          var ta=document.createElement('textarea');ta.value=text;ta.style.position='absolute';ta.style.opacity='0';
+          document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();
+        }catch(e){btn.textContent='סמנו והעתיקו ידנית';}
+      }
+      if(navigator.clipboard&amp;&amp;navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fallback);}else{fallback();}
+    });
+    bar.appendChild(btn);
+    box.insertBefore(bar,pre);
+    if(long){box.appendChild(more);set(true);}
+  });
+})();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+
+<footer>מדריך למורי "פרויקט בהנדסת תוכנה", בסדרת מדריכי הצעד-צעד.</footer>
+
+</div>
+</div>
+
+<script>
+document.documentElement.lang="he";document.documentElement.dir="rtl";
+(function(){
+  var KEY='teacher-guide-builder';
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){saved={};}
+  var boxes=document.querySelectorAll('#score-list input');
+  function calc(){
+    var t=0;
+    boxes.forEach(function(b){if(b.checked)t+=Number(b.dataset.p);saved[b.dataset.k]=b.checked;});
+    var out=document.getElementById('total');if(out)out.textContent=t;
+    try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(e){}
+  }
+  boxes.forEach(function(b){b.checked=!!saved[b.dataset.k];b.addEventListener('change',calc);});
+  calc();
+
+  document.querySelectorAll('.codebox').forEach(function(box){
+    var pre=box.querySelector('pre');
+    var n=pre.textContent.split('\n').length;
+    var isPrompt=box.classList.contains('prompt');var long=n>8&&!isPrompt;
+    var bar=document.createElement('div');bar.className='bar';
+    var info=document.createElement('span');info.className='lines';info.textContent=isPrompt?'פרומפט להעתקה':n+' שורות';
+    bar.appendChild(info);
+    var more=null,tog=null;
+    function set(shut){
+      box.classList.toggle('shut',shut);
+      tog.textContent=shut?'פתיחת כל הקוד':'סגירה';
+      tog.setAttribute('aria-expanded',String(!shut));
+    }
+    if(long){
+      tog=document.createElement('button');tog.type='button';
+      tog.addEventListener('click',function(){set(!box.classList.contains('shut'));});
+      bar.appendChild(tog);
+      more=document.createElement('button');more.type='button';more.className='more';
+      more.textContent='יש עוד קוד, לחצו לפתיחה';
+      more.addEventListener('click',function(){set(false);});
+    }
+    var btn=document.createElement('button');btn.type='button';btn.textContent='העתקה';
+    btn.addEventListener('click',function(){
+      var text=pre.textContent;
+      function ok(){btn.textContent='הועתק';setTimeout(function(){btn.textContent='העתקה';},1500);}
+      function fallback(){
+        try{
+          var ta=document.createElement('textarea');ta.value=text;ta.style.position='absolute';ta.style.opacity='0';
+          document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();
+        }catch(e){btn.textContent='סמנו והעתיקו ידנית';}
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fallback);}else{fallback();}
+    });
+    bar.appendChild(btn);
+    box.insertBefore(bar,pre);
+    if(long){box.appendChild(more);set(true);}
+  });
+})();
+</script>
+</body>
+</html>
