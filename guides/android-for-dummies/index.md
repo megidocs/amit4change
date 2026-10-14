@@ -11,3 +11,4 @@ permalink: /guides/android-for-dummies/
 - [לוח תוצאות: LinearLayout ורכיבי UI בסיסיים]({{ '/guides/android-for-dummies/BasicUIComponents_Scoreboard.html' | relative_url }})
 - [חידון אמת או שקר: Activity ו-Intent]({{ '/guides/android-for-dummies/Activity_Intent_Quiz.html' | relative_url }})
 - [מדריך עזר: שימוש ב-GitHub באנדרואיד סטודיו]({{ '/guides/android-for-dummies/GitHub_Guide.html' | relative_url }})
+- [מדריך עזר: התקנת Android Studio QUAIL3](https://claude.ai/artifact/BK9uNp5BuomL5yM1WFQ7j2)
