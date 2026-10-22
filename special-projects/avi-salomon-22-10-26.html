@@ -170,14 +170,14 @@ button:disabled { opacity: 0.55; cursor: default; }
   <a class="back" href="/special-projects/">&rarr; פרויקטים מיוחדים</a>
 
   <h1>מאיפה נושבת הרוח</h1>
-  <p class="lead">החזיקו את הטלפון ישר מולכם. החץ מצביע אל הכיוון שממנו הרוח מגיעה.</p>
+  <p class="lead">החזיקו את הטלפון ישר מולכם. החץ מראה לאן הרוח נושבת: היא מגיעה מצד הזנב ונושבת אל הראש.</p>
 
   <!-- הודעות מצב (נקראות בקול על ידי קוראי מסך) -->
   <p id="data-status" class="msg" role="status" aria-live="polite" hidden></p>
   <p id="compass-status" class="msg" role="status" aria-live="polite"></p>
 
   <div class="compass-box">
-    <svg id="compass" class="compass" viewBox="-110 -110 220 220" role="img" aria-label="מצפן עם חץ שמצביע אל הכיוון שממנו נושבת הרוח">
+    <svg id="compass" class="compass" viewBox="-110 -110 220 220" role="img" aria-label="מצפן עם חץ שמראה לאן הרוח נושבת">
       <!-- סימן קבוע בראש המכשיר: "קדימה" של הטלפון -->
       <polygon class="phone-top" points="0,-108 -8,-96 8,-96"></polygon>
 
@@ -520,9 +520,10 @@ function smoothHeading(previous, next) {
    שלב 4: חישוב זווית החץ
    ========================================================================== */
 
-// זווית החץ ביחס לראש הטלפון = כיוון הרוח פחות כיוון הטלפון
-// דוגמה: הטלפון מכוון צפונה (0) והרוח מגיעה ממזרח (90): החץ מצביע ימינה (90)
-function arrowAngle(windDirection, heading) { return windDirection - heading; }
+// wind_direction_10m הוא הכיוון שממנו הרוח מגיעה. החץ מראה לאן היא נושבת, ולכן מוסיפים 180.
+// זווית החץ ביחס לראש הטלפון = (כיוון הרוח - כיוון הטלפון) + 180
+// דוגמה: הטלפון מכוון צפונה (0) והרוח מגיעה ממזרח (90): החץ מצביע שמאלה (270), לכיוון מערב
+function arrowAngle(windDirection, heading) { return windDirection - heading + 180; }
 
 
 /* ==========================================================================
