@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>משימת אבי סלומון 22-10-26</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+/* פלטת הצבעים והגופן זהים ל-assets/css/main.css של האתר, אבל מוגדרים כאן במכוון:
+   כך שינויי עיצוב עתידיים באתר לא ישברו את העמוד הזה. */
+:root {
+  --font-text: "Heebo", "Segoe UI", Arial, sans-serif;
+  --bg: #F6F6F3;
+  --surface: #FFFFFF;
+  --text: #1B1D21;
+  --text-2: #5A5F66;
+  --border: #E2E2DD;
+  --accent: #1F56B0;
+  --accent-bg: #EAF0FA;
+  --warn-bg: #FFF3D6;
+  --warn-text: #7A4E00;
+  --radius: 14px;
+  --tap: 44px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 8px 20px calc(32px + env(safe-area-inset-bottom, 0px));
+}
+
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  text-decoration: none;
+  font-weight: 500;
+}
+.back:hover { text-decoration: underline; }
+
+h1 { margin: 4px 0 4px; font-size: 32px; line-height: 1.2; font-weight: 700; }
+.lead { margin: 0 0 16px; color: var(--text-2); }
+
+/* הודעות: כחול עדין למידע, ענבר לאזהרות */
+.msg {
+  margin: 0 0 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--accent-bg);
+  color: var(--text);
+}
+.msg.warn { background: var(--warn-bg); color: var(--warn-text); border: 1px solid #F0D79A; }
+.msg[hidden] { display: none; }
+
+/* המצפן: כרבע מגובה המסך */
+.compass-box { display: flex; justify-content: center; margin: 8px 0 4px; }
+.compass {
+  width: clamp(190px, 25vh, 320px);
+  height: clamp(190px, 25vh, 320px);
+  display: block;
+}
+.compass .ring-line { fill: var(--surface); stroke: var(--border); stroke-width: 2; }
+.compass .tick { stroke: var(--text-2); stroke-width: 2; stroke-linecap: round; }
+.compass .north-label {
+  fill: var(--accent);
+  font-family: var(--font-text);
+  font-size: 26px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.compass .north-mark { fill: var(--accent); }
+.compass .arrow { fill: var(--accent); }
+.compass .phone-top { fill: var(--text); }
+.compass.weak .arrow { opacity: 0.3; }
+
+.reading { text-align: center; margin: 4px 0 16px; }
+.reading-main { font-size: 24px; font-weight: 700; line-height: 1.3; }
+.reading-sub { color: var(--text-2); font-size: 15px; }
+
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0 0 16px;
+}
+.fact {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+}
+.fact.wide { grid-column: 1 / -1; }
+.fact dt { font-size: 14px; color: var(--text-2); }
+.fact dd { margin: 0; font-size: 19px; font-weight: 500; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 16px; }
+button {
+  min-height: var(--tap);
+  padding: 0 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button:disabled { opacity: 0.55; cursor: default; }
+
+.search {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 0 0 16px;
+}
+.search[hidden] { display: none; }
+.search h2 { margin: 0 0 8px; font-size: 18px; }
+.search form { display: flex; gap: 8px; }
+.search input {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--tap);
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font: inherit;
+}
+.results { list-style: none; margin: 8px 0 0; padding: 0; }
+.results button {
+  width: 100%;
+  text-align: start;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+}
+.results button:hover { background: var(--accent-bg); }
+
+.notes { font-size: 14px; color: var(--text-2); }
+.notes p { margin: 0 0 6px; }
+.credit { font-size: 14px; margin: 16px 0 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="/special-projects/">&rarr; פרויקטים מיוחדים</a>
+
+  <h1>מאיפה נושבת הרוח</h1>
+  <p class="lead">החזיקו את הטלפון ישר מולכם. החץ מצביע אל הכיוון שממנו הרוח מגיעה.</p>
+
+  <!-- הודעות מצב (נקראות בקול על ידי קוראי מסך) -->
+  <p id="data-status" class="msg" role="status" aria-live="polite" hidden></p>
+  <p id="compass-status" class="msg" role="status" aria-live="polite"></p>
+
+  <div class="compass-box">
+    <svg id="compass" class="compass" viewBox="-110 -110 220 220" role="img" aria-label="מצפן עם חץ שמצביע אל הכיוון שממנו נושבת הרוח">
+      <!-- סימן קבוע בראש המכשיר: "קדימה" של הטלפון -->
+      <polygon class="phone-top" points="0,-108 -8,-96 8,-96"></polygon>
+
+      <!-- טבעת המצפן: מסתובבת יחד עם הטלפון, האות "צ" תמיד מסמנת צפון -->
+      <g id="ring">
+        <circle class="ring-line" cx="0" cy="0" r="90"></circle>
+        <g id="ticks"></g>
+        <polygon class="north-mark" points="0,-90 -7,-78 7,-78"></polygon>
+        <text class="north-label" x="0" y="-60">צ</text>
+      </g>
+
+      <!-- החץ: מצביע אל הכיוון שממנו הרוח מגיעה -->
+      <g id="arrow" visibility="hidden">
+        <path class="arrow" d="M0,-52 L24,-12 L9,-12 L9,46 L-9,46 L-9,-12 L-24,-12 Z"></path>
+      </g>
+    </svg>
+  </div>
+
+  <div class="reading" aria-live="polite">
+    <div id="reading-main" class="reading-main">&nbsp;</div>
+    <div id="reading-sub" class="reading-sub"></div>
+  </div>
+
+  <p id="wind-note" class="msg warn" role="status" hidden></p>
+
+  <dl class="facts">
+    <div class="fact"><dt>מהירות הרוח</dt><dd id="speed">—</dd></div>
+    <div class="fact"><dt>משבים</dt><dd id="gusts">—</dd></div>
+    <div class="fact wide"><dt>מקום</dt><dd id="place">—</dd></div>
+    <div class="fact wide"><dt>שעת הנתון</dt><dd id="data-time">—</dd></div>
+  </dl>
+
+  <div class="actions">
+    <button id="compass-btn" class="primary" type="button">הפעל מצפן</button>
+    <button id="refresh-btn" type="button" disabled>רענון</button>
+    <button id="change-place-btn" type="button">החלפת מקום</button>
+  </div>
+
+  <section id="search" class="search" hidden aria-labelledby="search-title">
+    <h2 id="search-title">חיפוש עיר</h2>
+    <form id="search-form">
+      <input id="search-input" type="search" placeholder="שם עיר" aria-label="שם עיר" autocomplete="off">
+      <button class="primary" type="submit">חיפוש</button>
+    </form>
+    <ul id="results" class="results"></ul>
+  </section>
+
+  <div class="notes">
+    <p>הנתונים הם תחזית מודל לאזור, לא מדידה במקום שבו אתם עומדים.</p>
+    <p>מצפן הטלפון מושפע ממתכת וממגנטים. אם החץ קופץ, כיילו בתנועת שמונה באוויר.</p>
+  </div>
+
+  <p class="credit"><a href="https://open-meteo.com/" dir="ltr">Weather data by Open-Meteo.com</a></p>
+
+</div>
+
+<script>
+/* ==========================================================================
+   מאיפה נושבת הרוח
+   השלבים: 1. מיקום  2. קריאה ל-API  3. מצפן  4. חישוב הזווית  5. תצוגה  6. רענון
+   ========================================================================== */
+
+/* ---------- מצב האפליקציה: כל המידע שמשתנה, במקום אחד ---------- */
+var state = {
+  lat: null,
+  lon: null,
+  placeName: '',          // שם המקום, אם ידוע
+  wind: null,             // { speed, gusts, direction, time }
+  heading: null,          // הכיוון המוחלק של הטלפון (מעלות מהצפון), null עד שיש מצפן
+  compassActive: false,   // האם מגיעים אירועי מצפן
+  ringRotation: 0,        // הזווית המוצגת של הטבעת (רציפה, לא מגיעה ל-360)
+  arrowRotation: 0,       // הזווית המוצגת של החץ
+  requestId: 0,           // מונה בקשות, כדי להתעלם מתשובות ישנות
+  refreshTimer: null,
+  compassTimer: null
+};
+
+var REFRESH_EVERY_MS = 10 * 60 * 1000;   // רענון אוטומטי כל 10 דקות
+var NETWORK_TIMEOUT_MS = 10 * 1000;
+var COMPASS_WAIT_MS = 3 * 1000;          // כמה זמן מחכים לאירוע מצפן ראשון
+var WEAK_WIND_KMH = 2;                   // מתחת לזה הכיוון אינו משמעותי
+var SMOOTHING = 0.2;                     // 0 = לא זז, 1 = בלי החלקה
+
+var DIRECTION_NAMES = ['צפון', 'צפון-מזרח', 'מזרח', 'דרום-מזרח',
+                       'דרום', 'דרום-מערב', 'מערב', 'צפון-מערב'];
+
+function $(id) { return document.getElementById(id); }
+
+// עוטף טקסט (מספרים, שעות) כך שהסדר שלו לא יתהפך בתוך משפט בעברית
+function ltr(text) { return '\u2066' + text + '\u2069'; }
+
+
+/* ==========================================================================
+   כלי עזר לזוויות
+   ========================================================================== */
+
+// שארית חיובית: mod(-10, 360) = 350
+function mod(n, m) { return ((n % m) + m) % m; }
+
+// ההפרש הקצר ביותר מ-b אל a, בין -180 ל-180. כך 359 -> 1 הוא +2 ולא -358.
+function angleDiff(a, b) { return mod(a - b + 180, 360) - 180; }
+
+// מחזיר זווית חדשה שקרובה לזווית הנוכחית, כדי שהחץ לא יסתובב סיבוב מלא
+function shortestRotation(current, target) { return current + angleDiff(target, current); }
+
+
+/* ==========================================================================
+   שלב 1: מיקום (Geolocation API)
+   ========================================================================== */
+
+function requestLocation() {
+  if (!('geolocation' in navigator)) {
+    onLocationFailed('המכשיר או הדפדפן לא תומכים באיתור מיקום.');
+    return;
+  }
+  showDataStatus('loading', 'מאתר את המיקום שלכם…');
+  navigator.geolocation.getCurrentPosition(onLocationFound, onLocationError, {
+    timeout: 10000,
+    enableHighAccuracy: false
+  });
+}
+
+function onLocationFound(position) {
+  setPlace(position.coords.latitude, position.coords.longitude, '');
+}
+
+function onLocationError(error) {
+  if (error.code === 1) {            // PERMISSION_DENIED
+    onLocationFailed('אין הרשאת מיקום. אפשר לתת הרשאה בהגדרות הדפדפן, או לחפש עיר.');
+  } else {                           // POSITION_UNAVAILABLE / TIMEOUT
+    onLocationFailed('לא הצלחנו לאתר את המיקום שלכם. אפשר לחפש עיר.');
+  }
+}
+
+// כשאין מיקום: מציגים הודעה ושדה חיפוש עיר
+function onLocationFailed(message) {
+  showDataStatus('warn', message);
+  showSearch(true);
+}
+
+// קובעים מקום (ממיקום או מחיפוש) וטוענים עבורו נתוני רוח
+function setPlace(lat, lon, name) {
+  state.lat = lat;
+  state.lon = lon;
+  state.placeName = name;
+  $('place').textContent = name || ('המיקום שלכם ' + ltr('(' + lat.toFixed(2) + ', ' + lon.toFixed(2) + ')'));
+  showSearch(false);
+  refreshWind();
+  startAutoRefresh();
+}
+
+
+/* ==========================================================================
+   שלב 2: קריאה ל-API של Open-Meteo
+   ========================================================================== */
+
+function buildForecastUrl(lat, lon) {
+  return 'https://api.open-meteo.com/v1/forecast' +
+    '?latitude=' + lat + '&longitude=' + lon +
+    '&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m' +
+    '&wind_speed_unit=kmh&timezone=auto';
+}
+
+function buildGeocodingUrl(name) {
+  return 'https://geocoding-api.open-meteo.com/v1/search' +
+    '?name=' + encodeURIComponent(name) + '&count=5&language=he';
+}
+
+// fetch עם הגבלת זמן: אם השרת לא עונה תוך 10 שניות, מבטלים
+function fetchJson(url) {
+  var controller = new AbortController();
+  var timer = setTimeout(function () { controller.abort(); }, NETWORK_TIMEOUT_MS);
+  return fetch(url, { signal: controller.signal })
+    .then(function (response) {
+      if (!response.ok) { throw new Error('HTTP ' + response.status); }
+      return response.json();
+    })
+    .finally(function () { clearTimeout(timer); });
+}
+
+// מוציא מהתשובה רק מה שצריך, ובודק שהמבנה כמו שציפינו
+// wind_direction_10m: הכיוון שממנו הרוח מגיעה, במעלות עם כיוון השעון מהצפון. לא הופכים אותו.
+function parseWind(json) {
+  var c = json && json.current;
+  if (!c || typeof c.wind_speed_10m !== 'number' || typeof c.wind_direction_10m !== 'number') {
+    throw new Error('מבנה תשובה לא צפוי');
+  }
+  return {
+    speed: c.wind_speed_10m,
+    gusts: typeof c.wind_gusts_10m === 'number' ? c.wind_gusts_10m : null,
+    direction: c.wind_direction_10m,
+    time: c.time
+  };
+}
+
+function refreshWind() {
+  if (state.lat === null) { return; }
+  var thisRequest = ++state.requestId;
+  showDataStatus('loading', 'טוען נתוני רוח…');
+  $('refresh-btn').disabled = true;
+
+  fetchJson(buildForecastUrl(state.lat, state.lon))
+    .then(parseWind)
+    .then(function (wind) {
+      if (thisRequest !== state.requestId) { return; }   // הגיעה תשובה ישנה
+      state.wind = wind;
+      showDataStatus('none');
+      drawWindInfo();
+      drawCompass();
+    })
+    .catch(function () {
+      if (thisRequest !== state.requestId) { return; }
+      showDataStatus('warn', 'שגיאת רשת או שרת: לא הצלחנו לטעון נתוני רוח. בדקו את החיבור ונסו שוב ברענון.');
+    })
+    .finally(function () {
+      if (thisRequest === state.requestId) { $('refresh-btn').disabled = false; }
+    });
+}
+
+function searchCity(name) {
+  var list = $('results');
+  list.textContent = '';
+  showDataStatus('loading', 'מחפש…');
+  fetchJson(buildGeocodingUrl(name))
+    .then(function (json) {
+      var results = json.results || [];
+      if (results.length === 0) {
+        showDataStatus('warn', 'לא נמצאה עיר בשם הזה. נסו איות אחר.');
+        return;
+      }
+      showDataStatus('info', 'בחרו מהרשימה:');
+      results.forEach(function (r) { list.appendChild(cityButton(r)); });
+    })
+    .catch(function () {
+      showDataStatus('warn', 'שגיאת רשת: החיפוש נכשל. נסו שוב.');
+    });
+}
+
+function cityButton(result) {
+  var parts = [result.name, result.admin1, result.country].filter(Boolean);
+  var li = document.createElement('li');
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = parts.join(', ');
+  btn.addEventListener('click', function () {
+    $('results').textContent = '';
+    setPlace(result.latitude, result.longitude, parts.join(', '));
+  });
+  li.appendChild(btn);
+  return li;
+}
+
+
+/* ==========================================================================
+   שלב 3: מצפן (DeviceOrientation)
+   ========================================================================== */
+
+function onCompassButtonClick() {
+  // ב-iOS חייבים לבקש הרשאה מתוך הלחיצה עצמה, ולכן הקריאה כאן ולא בפונקציה אחרת
+  if (typeof DeviceOrientationEvent !== 'undefined' &&
+      typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission()
+      .then(function (answer) {
+        if (answer === 'granted') {
+          startCompass();
+        } else {
+          showCompassStatus('warn', 'לא ניתנה הרשאה למצפן. החץ מוצג כשהצפון למעלה.');
+        }
+      })
+      .catch(function () {
+        showCompassStatus('warn', 'לא הצלחנו להפעיל את המצפן. החץ מוצג כשהצפון למעלה.');
+      });
+    return;
+  }
+  startCompass();
+}
+
+function startCompass() {
+  showCompassStatus('info', 'מחפש מצפן…');
+  clearTimeout(state.compassTimer);
+  state.compassTimer = setTimeout(onNoCompass, COMPASS_WAIT_MS);
+
+  // באנדרואיד יש אירוע "מוחלט" (ביחס לצפון האמיתי). אחרת משתמשים באירוע הרגיל.
+  var eventName = ('ondeviceorientationabsolute' in window) ? 'deviceorientationabsolute' : 'deviceorientation';
+  window.removeEventListener('deviceorientationabsolute', onOrientation, true);
+  window.removeEventListener('deviceorientation', onOrientation, true);
+  window.addEventListener(eventName, onOrientation, true);
+}
+
+// לא הגיע אף אירוע תוך 3 שניות: מחשב, או מכשיר בלי מצפן
+function onNoCompass() {
+  if (state.compassActive) { return; }
+  showCompassStatus('warn', 'לא זוהה מצפן במכשיר הזה. החץ מוצג כשהצפון למעלה.');
+}
+
+// זווית המסך: 0 במצב רגיל, 90/270 כשהטלפון מסובב לרוחב
+function getScreenAngle() {
+  if (screen.orientation && typeof screen.orientation.angle === 'number') {
+    return screen.orientation.angle;
+  }
+  if (typeof window.orientation === 'number') { return mod(window.orientation, 360); }
+  return 0;
+}
+
+// מחזיר את כיוון ראש המכשיר במעלות מהצפון, או null אם האירוע לא שימושי
+function readRawHeading(event) {
+  if (typeof event.webkitCompassHeading === 'number' && !isNaN(event.webkitCompassHeading)) {
+    return event.webkitCompassHeading;                       // iOS: כבר מהצפון, עם כיוון השעון
+  }
+  if (event.alpha === null || event.alpha === undefined) { return null; }
+  if (event.type === 'deviceorientationabsolute' || event.absolute === true) {
+    return mod(360 - event.alpha, 360);                      // אנדרואיד: alpha נמדד נגד כיוון השעון
+  }
+  return null;   // אירוע לא מוחלט: אין לו כיוון צפון, לא משתמשים בו
+}
+
+function onOrientation(event) {
+  var raw = readRawHeading(event);
+  if (raw === null) { return; }
+
+  var heading = mod(raw + getScreenAngle(), 360);            // תיקון לפי סיבוב המסך
+  state.heading = smoothHeading(state.heading, heading);
+
+  if (!state.compassActive) {
+    state.compassActive = true;
+    clearTimeout(state.compassTimer);
+    showCompassStatus('info', 'המצפן פעיל. החזיקו את הטלפון אופקית, והחץ יתעדכן כשתסתובבו.');
+  }
+  scheduleDraw();
+}
+
+// החלקה (low-pass): מתקרבים לכיוון החדש בצעדים קטנים, בדרך הקצרה (359 -> 0 בלי סיבוב מלא)
+function smoothHeading(previous, next) {
+  if (previous === null) { return next; }
+  return mod(previous + SMOOTHING * angleDiff(next, previous), 360);
+}
+
+
+/* ==========================================================================
+   שלב 4: חישוב זווית החץ
+   ========================================================================== */
+
+// זווית החץ ביחס לראש הטלפון = כיוון הרוח פחות כיוון הטלפון
+// דוגמה: הטלפון מכוון צפונה (0) והרוח מגיעה ממזרח (90): החץ מצביע ימינה (90)
+function arrowAngle(windDirection, heading) { return windDirection - heading; }
+
+
+/* ==========================================================================
+   שלב 5: תצוגה
+   ========================================================================== */
+
+var drawScheduled = false;
+function scheduleDraw() {
+  if (drawScheduled) { return; }
+  drawScheduled = true;
+  requestAnimationFrame(function () { drawScheduled = false; drawCompass(); });
+}
+
+// מסובב את הטבעת והחץ. בלי מצפן: heading = 0, כלומר צפון למעלה.
+function drawCompass() {
+  var heading = state.compassActive ? state.heading : 0;
+
+  state.ringRotation = shortestRotation(state.ringRotation, -heading);
+  $('ring').setAttribute('transform', 'rotate(' + state.ringRotation.toFixed(1) + ')');
+
+  if (state.wind) {
+    var target = arrowAngle(state.wind.direction, heading);
+    state.arrowRotation = shortestRotation(state.arrowRotation, target);
+    $('arrow').setAttribute('transform', 'rotate(' + state.arrowRotation.toFixed(1) + ')');
+    $('arrow').setAttribute('visibility', 'visible');
+  }
+}
+
+// 0 -> צפון, 45 -> צפון-מזרח, ... (8 כיוונים, כל אחד 45 מעלות)
+function directionName(degrees) {
+  return DIRECTION_NAMES[Math.round(mod(degrees, 360) / 45) % 8];
+}
+
+// "2026-10-22T19:00" -> "19:00 · 22.10.2026" (שעון המקום, בלי המרות אזור זמן)
+function formatDataTime(isoLocal) {
+  var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(isoLocal || '');
+  return m ? (ltr(m[4] + ':' + m[5]) + ' · ' + ltr(m[3] + '.' + m[2] + '.' + m[1])) : '—';
+}
+
+function formatKmh(value) {
+  return value === null ? '—' : ltr(Math.round(value * 10) / 10) + ' קמ״ש';
+}
+
+function drawWindInfo() {
+  var w = state.wind;
+  var weak = w.speed < WEAK_WIND_KMH;
+
+  $('reading-main').textContent = 'הרוח נושבת מכיוון ' + directionName(w.direction);
+  $('reading-sub').textContent = ltr(Math.round(w.direction) + '°') + ' מהצפון, עם כיוון השעון';
+  $('speed').textContent = formatKmh(w.speed);
+  $('gusts').textContent = formatKmh(w.gusts);
+  $('data-time').textContent = formatDataTime(w.time);
+
+  $('compass').classList.toggle('weak', weak);
+  var note = $('wind-note');
+  note.hidden = !weak;
+  if (weak) { note.textContent = 'הרוח חלשה מאוד (מתחת ל-2 קמ״ש), ולכן הכיוון אינו משמעותי.'; }
+}
+
+// kind: 'none' (מסתיר), 'loading' / 'info' (כחול), 'warn' (ענבר)
+function showDataStatus(kind, text) {
+  var el = $('data-status');
+  el.hidden = (kind === 'none');
+  el.className = 'msg' + (kind === 'warn' ? ' warn' : '');
+  el.textContent = text || '';
+}
+
+function showCompassStatus(kind, text) {
+  var el = $('compass-status');
+  el.className = 'msg' + (kind === 'warn' ? ' warn' : '');
+  el.textContent = text;
+}
+
+function showSearch(visible, focusInput) {
+  $('search').hidden = !visible;
+  if (visible && focusInput) { $('search-input').focus(); }
+}
+
+// ציור סימוני הטבעת (8 קווים קטנים, כל 45 מעלות, מלבד הצפון שיש לו סימן משלו)
+function drawTicks() {
+  var ns = 'http://www.w3.org/2000/svg';
+  for (var deg = 45; deg < 360; deg += 45) {
+    var line = document.createElementNS(ns, 'line');
+    line.setAttribute('class', 'tick');
+    line.setAttribute('x1', '0'); line.setAttribute('y1', '-90');
+    line.setAttribute('x2', '0'); line.setAttribute('y2', '-80');
+    line.setAttribute('transform', 'rotate(' + deg + ')');
+    $('ticks').appendChild(line);
+  }
+}
+
+
+/* ==========================================================================
+   שלב 6: רענון (ידני ואוטומטי) וחיבור הכפתורים
+   ========================================================================== */
+
+function startAutoRefresh() {
+  clearInterval(state.refreshTimer);
+  state.refreshTimer = setInterval(refreshWind, REFRESH_EVERY_MS);
+}
+
+function init() {
+  drawTicks();
+  drawCompass();   // מצב התחלתי: צפון למעלה
+  showCompassStatus('info', 'החץ מוצג כרגע כשהצפון למעלה. לחצו על ״הפעל מצפן״ כדי שיתעדכן לפי כיוון הטלפון.');
+
+  $('compass-btn').addEventListener('click', onCompassButtonClick);
+  $('refresh-btn').addEventListener('click', refreshWind);
+  $('change-place-btn').addEventListener('click', function () { showSearch($('search').hidden, true); });
+  $('search-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var name = $('search-input').value.trim();
+    if (name) { searchCity(name); }
+  });
+
+  requestLocation();
+}
+
+init();
+</script>
+</body>
+</html>
