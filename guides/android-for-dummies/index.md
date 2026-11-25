@@ -12,3 +12,4 @@ permalink: /guides/android-for-dummies/
 - [חידון אמת או שקר: Activity ו-Intent]({{ '/guides/android-for-dummies/Activity_Intent_Quiz.html' | relative_url }})
 - [מדריך עזר: שימוש ב-GitHub באנדרואיד סטודיו]({{ '/guides/android-for-dummies/GitHub_Guide.html' | relative_url }})
 - [מדריך עזר: התקנת Android Studio QUAIL3](https://claude.ai/artifact/BK9uNp5BuomL5yM1WFQ7j2)
+- [מדריך 9: הפלייליסט שלי]({{ '/students/kita-yb/guides/guide-9-my-playlist.html' | relative_url }})
