@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מדריך: מסווג סדקים באנדרואיד</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/*
+VOICE: מדריך מעבדה רגוע ומדויק להכשרת מורים, מסקנה קודם ואחריה צעדים.
+IDEA: יומן שטח של מהנדס בניין: משטח בטון, סדק אחד, תגיות כתומות של אתר בנייה.
+PICTURE: פס בטון ובו סדק שמתפצל לשלושה שלבים: Colab, קובץ tflite, טלפון.
+COLOUR and TYPE: בטון אפור-בהיר, פחם כהה, כתום בטיחות אחד; Heebo לטקסט, JetBrains Mono לקוד.
+LAYOUT: כותרת ותמונה בפס מלא, שורת קישורים לפרקים, טור קריאה של 820px עם קוד ברוחב מלא.
+*/
+:root{color-scheme:light dark;--bg:light-dark(#ecebe7,#16191b);--paper:light-dark(#f7f6f3,#1e2225);--ink:light-dark(#1d2124,#e7e5e0);--soft:light-dark(#5c6166,#a3a7aa);--line:light-dark(#d3d0c9,#33393d);--acc:light-dark(#d9480f,#ff8a4c);--accbg:light-dark(#fde6d8,#3a2417);--code:light-dark(#22272b,#0f1214);--codeink:#e8e6e1;--ok:light-dark(#2b6a3f,#7fd19b)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.75 Heebo,"Segoe UI",Arial,sans-serif;overflow-x:clip}
+.band{padding:clamp(28px,4vw,64px) max(5vw,16px)}
+.hero{background:var(--paper);border-bottom:1px solid var(--line)}
+.hero-in{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(20px,4vw,56px);align-items:center}
+h1{font-size:clamp(32px,4.6vw,50px);line-height:1.08;margin:0 0 14px;font-weight:800;text-wrap:balance}
+.lead{font-size:18px;color:var(--soft);margin:0 0 18px;max-width:34em}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.tags li{font-size:14px;padding:4px 12px;border-radius:999px;background:var(--accbg);color:var(--acc);font-weight:500}
+.fig{position:relative;min-height:300px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+nav.scroll{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:4px;padding:8px max(5vw,16px);white-space:nowrap}
+nav.scroll a{flex:none;color:var(--ink);text-decoration:none;font-size:14px;padding:8px 12px;border-radius:8px;min-height:40px;display:inline-flex;align-items:center}
+nav.scroll a:hover,nav.scroll a:focus-visible{background:var(--accbg);color:var(--acc);outline:none}
+@media(max-width:900px){nav.scroll{position:static}}
+main{max-width:860px;margin:0 auto;padding:0 max(5vw,16px) 80px}
+section{padding-top:48px}
+h2{font-size:30px;line-height:1.15;margin:0 0 12px;font-weight:800;text-wrap:balance}
+h2 .n{color:var(--acc);margin-inline-end:10px}
+h3{font-size:20px;margin:32px 0 8px;font-weight:700}
+p{margin:0 0 14px}
+ol,ul{padding-inline-start:22px;margin:0 0 14px}li{margin-bottom:6px}
+code{font-family:"JetBrains Mono",Consolas,monospace;font-size:14px;background:var(--paper);border:1px solid var(--line);padding:1px 6px;border-radius:5px;direction:ltr;unicode-bidi:isolate;overflow-wrap:anywhere}
+.en{direction:ltr;unicode-bidi:isolate}
+.codebox{position:relative;margin:10px 0 18px}
+pre{overflow-x:auto;direction:ltr;text-align:left;background:var(--code);color:var(--codeink);padding:16px 18px;border-radius:10px;font:13.5px/1.6 "JetBrains Mono",Consolas,monospace;margin:0}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.copy{position:absolute;top:8px;left:8px;font:500 13px Heebo,sans-serif;background:#3a4147;color:#e8e6e1;border:0;border-radius:6px;padding:6px 12px;cursor:pointer;min-height:32px}
+.copy:focus-visible{outline:2px solid var(--acc)}
+.why{border-inline-start:4px solid var(--acc);border-radius:0;background:var(--paper);padding:12px 16px;margin:14px 0}
+.why b{color:var(--acc)}
+.note{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat .v{font-size:clamp(26px,4vw,36px);font-weight:800;line-height:1.1}
+.stat .l{font-size:14px;color:var(--soft)}
+table{width:100%;border-collapse:collapse;margin:12px 0 18px;font-size:15px}
+th,td{text-align:right;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;color:var(--soft);font-size:14px}
+td.num{text-align:left;direction:ltr;font-family:"JetBrains Mono",monospace;font-size:14px;white-space:nowrap}
+.trouble td:first-child{font-weight:500;width:34%}
+footer{max-width:860px;margin:0 auto;padding:24px max(5vw,16px) 48px;color:var(--soft);font-size:14px;border-top:1px solid var(--line)}
+@media(max-width:600px){.hero-in{grid-template-columns:1fr}.fig{min-height:220px}.stats{grid-template-columns:1fr}table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--soft)}.stack td:empty{display:none}}
+@media(prefers-reduced-motion:no-preference){.crack{stroke-dasharray:900;stroke-dashoffset:900;animation:draw 2.4s ease-out .3s forwards}@keyframes draw{to{stroke-dashoffset:0}}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+
+<header class="band hero">
+<div class="hero-in">
+<div>
+<h1>מסווג סדקים בבטון: מ-TensorFlow לאפליקציית Android</h1>
+<p class="lead">מדריך צעד אחר צעד להכשרת מורים. מאמנים מודל סיווג בינארי ב-Google Colab, מייצאים אותו לקובץ <span class="en">.tflite</span>, ומשלבים אותו באפליקציית Java שמחזירה "סדוק", "תקין" או "לא בטוח".</p>
+<ul class="tags"><li>Colab + GPU</li><li>MobileNetV2</li><li>Transfer learning</li><li>TensorFlow Lite</li><li>Android · Java</li></ul>
+</div>
+<div class="fig" aria-label="הסדק בבטון עובר דרך שלושה שלבים: אימון ב-Colab, קובץ tflite, ואפליקציה בטלפון">
+<svg viewBox="0 0 600 340" preserveAspectRatio="xMidYMid meet" role="img">
+<defs><pattern id="ag" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="3" cy="4" r="1.3" fill="#a9a59c" opacity=".55"/><circle cx="10" cy="11" r="1" fill="#8f8b83" opacity=".5"/></pattern></defs>
+<rect x="0" y="0" width="600" height="340" rx="18" fill="#cfccc4"/>
+<rect x="0" y="0" width="600" height="340" rx="18" fill="url(#ag)"/>
+<rect x="0" y="292" width="600" height="48" fill="#b9b5ac" opacity=".6"/>
+<path class="crack" d="M600 70 L548 92 L520 84 L470 120 L452 112 L404 150 L360 146 L318 182 L276 176 L232 212 L196 206 L150 246 L104 238 L58 270 L0 262" fill="none" stroke="#2a2724" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path class="crack" d="M404 150 L392 196 L410 232" fill="none" stroke="#2a2724" stroke-width="3" stroke-linecap="round"/>
+<g transform="translate(436 34)"><rect width="140" height="92" rx="10" fill="#f7f6f3" stroke="#1d2124" stroke-width="2"/><rect width="140" height="22" rx="10" fill="#1d2124"/><circle cx="14" cy="11" r="4" fill="#e8590c"/><text x="70" y="15" font-family="JetBrains Mono,monospace" font-size="11" fill="#f7f6f3" text-anchor="middle">Colab</text><rect x="14" y="34" width="70" height="6" rx="3" fill="#8b9096"/><rect x="14" y="48" width="100" height="6" rx="3" fill="#8b9096"/><polyline points="14,82 40,74 62,66 88,62 112,60 126,59" fill="none" stroke="#e8590c" stroke-width="3"/></g>
+<g transform="translate(232 128)"><path d="M0 0 H82 L104 22 V112 H0 Z" fill="#f7f6f3" stroke="#1d2124" stroke-width="2"/><path d="M82 0 V22 H104" fill="#e5e2db" stroke="#1d2124" stroke-width="2"/><rect x="14" y="50" width="76" height="30" rx="6" fill="#e8590c"/><text x="52" y="70" font-family="JetBrains Mono,monospace" font-size="13" font-weight="500" fill="#fff" text-anchor="middle">.tflite</text></g>
+<g transform="translate(40 150)"><rect width="104" height="176" rx="18" fill="#1d2124"/><rect x="8" y="16" width="88" height="144" rx="8" fill="#f7f6f3"/><rect x="16" y="26" width="72" height="56" rx="4" fill="#cfccc4"/><path d="M20 60 L40 50 L52 58 L84 40" fill="none" stroke="#2a2724" stroke-width="2.5"/><rect x="22" y="92" width="60" height="18" rx="9" fill="#e8590c"/><text x="52" y="105" font-family="Heebo,sans-serif" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">סדוק 96%</text><rect x="22" y="120" width="60" height="5" rx="2.5" fill="#8b9096"/><rect x="30" y="132" width="44" height="5" rx="2.5" fill="#b0b4b8"/></g>
+</svg>
+</div>
+</div>
+</header>
+
+<nav class="scroll" aria-label="פרקים">
+<a href="#overview">מבט-על</a><a href="#topic">נושא ומאגר</a><a href="#colab">הכנת Colab</a><a href="#train">אימון: שלבים 1–8</a><a href="#results">פרשנות</a><a href="#studio">Android Studio</a><a href="#code">קוד האפליקציה</a><a href="#run">הרצה</a><a href="#trouble">תקלות</a><a href="#teach">הערות להנחיה</a>
+</nav>
+
+<main>
+
+<section id="overview">
+<h2><span class="n">1</span>מבט-על: מה בונים ולמה</h2>
+<p>הפרויקט מחולק לשני עולמות. ב-<span class="en">Google Colab</span> מאמנים מודל שמבחין בין תמונת בטון סדוק לתמונת בטון תקין ומייצאים אותו לקובץ אחד, <code>crack_classifier.tflite</code>. ב-<span class="en">Android Studio</span> בונים אפליקציה שבוחרת תמונה מהגלריה, מעבירה אותה במודל ומציגה את התוצאה ואת אחוזי הביטחון.</p>
+<p>שני העולמות מתחברים דרך <b>חוזה</b> פשוט, ואם מקפידים עליו, כל השאר נופל למקומו:</p>
+<div class="note">
+<ul style="margin:0">
+<li><b>קלט:</b> מערך <code>float32</code> בגודל <code>[1, 224, 224, 3]</code>, צבעי <span class="en">RGB</span>, ערכים בין <b>0 ל-255</b>, ללא נרמול. הנרמול נעשה בתוך המודל.</li>
+<li><b>פלט:</b> מספר אחד, <code>float32 [1, 1]</code>: ההסתברות שבתמונה יש סדק.</li>
+<li><b>החלטה:</b> <code>confidence = max(p, 1 − p)</code>. אם הביטחון נמוך מ-<span class="en">threshold</span> (כאן 0.90), האפליקציה עונה "לא בטוח".</li>
+</ul>
+</div>
+<p><b>מה צריך:</b> חשבון <span class="en">Google</span> (בשביל <span class="en">Colab</span> ו-<span class="en">Drive</span>), <span class="en">Android Studio</span> עדכני עם אמולטור (למשל <span class="en">Pixel 8</span>), וכ-5GB פנויים במחשב, בעיקר בשביל מאגר תמונות השטח.</p>
+</section>
+
+<section id="topic">
+<h2><span class="n">2</span>בחירת נושא ומאגר נתונים</h2>
+<p>כל פרויקט של סיווג בינארי בנוי באותה צורה. לפני שבוחרים נושא כדאי לשאול שלוש שאלות: האם יש מאגר תמונות פתוח וגדול מספיק? האם יש לנושא לוגיקת אפליקציה מעבר לסיווג עצמו? האם המודל ילמד את מה שרוצים, או משהו אחר, למשל צבע רקע?</p>
+<table class="stack">
+<thead><tr><th>הצעה</th><th>מאגר</th><th>הערה</th></tr></thead>
+<tbody>
+<tr><td>בטון סדוק / תקין</td><td><span class="en">Concrete Crack Images</span>: 40,000 תמונות</td><td>המאגר נקי ומאוזן. זה הנושא שהמדריך הזה בנוי עליו.</td></tr>
+<tr><td>עלה בריא / חולה</td><td><span class="en">PlantVillage</span>: כ-54,000 תמונות</td><td>כל התמונות צולמו במעבדה, על רקע אחיד.</td></tr>
+<tr><td>פלסטיק / נייר</td><td><span class="en">Garbage Classification</span></td><td>חלק מהתמונות נאספו מהרשת ונראות כמו תמונות קטלוג.</td></tr>
+<tr><td>פרי טרי / רקוב</td><td><span class="en">Fruits fresh and rotten</span></td><td>יש פירות במצב ביניים, ואין להם תשובה "נכונה".</td></tr>
+<tr><td>כתב יד / מודפס</td><td>אין מאגר מוכן</td><td>התלמידים אוספים את התמונות בעצמם. זה דורש זמן, אבל זו חוויה לימודית מלאה.</td></tr>
+</tbody>
+</table>
+<h3>שני המאגרים של הפרויקט</h3>
+<ol>
+<li><b>מאגר אימון:</b> <a href="https://data.mendeley.com/datasets/5y9wdsg2zt/2">Concrete Crack Images for Classification</a> ב-<span class="en">Mendeley Data</span>. יש בו שתי תיקיות, <span class="en">Negative</span> (תקין) ו-<span class="en">Positive</span> (סדוק), ובכל אחת 20,000 תמונות בגודל 227×227. ב-<span class="en">Kaggle</span> יש עותק שלו (<code>arunrk7/surface-crack-detection</code>), ואותו המחברת מורידה אוטומטית.</li>
+<li><b>מאגר שטח:</b> <a href="https://data.mendeley.com/datasets/cmcx9kvr68">Metricéa Lab</a>, תמונות מבדיקות של גשרים ותשתיות. <b>לא מאמנים עליו.</b> משתמשים בו רק כדי לבדוק איך המודל מתמודד עם צילומים אמיתיים.</li>
+</ol>
+<div class="why"><b>למה צריך מאגר שטח נפרד?</b> 40,000 התמונות נחתכו מ-458 תמונות מקור בלבד, ושמות הקבצים לא אומרים מאיזו תמונה הגיע כל חיתוך. לכן חיתוכים מאותה תמונה מגיעים גם לאימון וגם לבדיקה, והדיוק בבדיקה יוצא גבוה ממה שהוא באמת. רק מאגר חיצוני מגלה את התמונה האמיתית.</div>
+</section>
+
+<section id="colab">
+<h2><span class="n">3</span>הכנת סביבת Colab</h2>
+<ol>
+<li>נכנסים ל-<a href="https://colab.research.google.com">colab.research.google.com</a>, ובוחרים <span class="en">File → Upload notebook</span> ואת המחברת <code>crack_classifier_training.ipynb</code>.</li>
+<li><span class="en">Runtime → Change runtime type → T4 GPU</span>. גם בלי <span class="en">GPU</span> זה עובד, אבל האימון לוקח פי כמה זמן.</li>
+<li>מריצים את התאים לפי הסדר (<span class="en">Shift+Enter</span>). <b>לא מאתחלים את ה-<span class="en">runtime</span> באמצע</b>: המודל המאומן נשמר רק בזיכרון של ה-<span class="en">runtime</span>.</li>
+</ol>
+<p>התא הראשון מייבא את הספריות ומגדיר את כל הפרמטרים במקום אחד:</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>import os, random, shutil, glob, subprocess
+import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt
+from tensorflow import keras
+from tensorflow.keras import layers
+
+print(&quot;TensorFlow&quot;, tf.__version__, &quot;| GPU:&quot;, tf.config.list_physical_devices(&quot;GPU&quot;))
+
+SEED = 42
+IMG_SIZE = 224          # MobileNetV2 עובד עם 224; תמונות המקור 227 ויוקטנו אוטומטית
+PER_CLASS = 2000        # כמה תמונות לדגום מכל מחלקה (מתוך 20,000)
+SPLIT = (0.70, 0.15, 0.15)   # train / val / test
+BATCH = 32
+EPOCHS = 8
+WEIGHTS = &quot;imagenet&quot;    # המשקלות המאומנים מראש של MobileNetV2
+CLASS_NAMES = [&quot;Negative&quot;, &quot;Positive&quot;]   # 0 = תקין, 1 = סדוק (סדר אלפביתי)
+
+random.seed(SEED); np.random.seed(SEED); tf.random.set_seed(SEED)</code></pre></div>
+</section>
+
+<section id="train">
+<h2><span class="n">4</span>האימון: שמונת שלבי המחברת</h2>
+
+<h3>שלב 1: הורדת המאגר</h3>
+<p>דרך א': הורדה אוטומטית מ-<span class="en">Kaggle</span> עם <code>kagglehub</code>.</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>SRC = None
+try:
+    import kagglehub
+    SRC = kagglehub.dataset_download(&quot;arunrk7/surface-crack-detection&quot;)
+    print(&quot;ירד אל:&quot;, SRC)
+except Exception as e:
+    print(&quot;kagglehub נכשל:&quot;, e)
+    print(&quot;עבור לאפשרות ב&#x27; בתא הבא&quot;)</code></pre></div>
+<p>דרך ב', אם דרך א' נכשלה: מורידים את הארכיון מ-<span class="en">Mendeley</span>, מעלים אותו לחלונית <span class="en">Files</span> ב-<span class="en">Colab</span> וממלאים את <code>ARCHIVE</code>.</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code># אפשרות ב&#x27; - רק אם אפשרות א&#x27; נכשלה
+ARCHIVE = None   # למשל: &quot;/content/Concrete Crack Images for Classification.rar&quot;
+
+if SRC is None and ARCHIVE:
+    os.makedirs(&quot;/content/raw&quot;, exist_ok=True)
+    if ARCHIVE.lower().endswith(&quot;.rar&quot;):
+        subprocess.run([&quot;apt-get&quot;, &quot;-qq&quot;, &quot;install&quot;, &quot;-y&quot;, &quot;unrar&quot;], check=True)
+        subprocess.run([&quot;unrar&quot;, &quot;x&quot;, &quot;-o+&quot;, ARCHIVE, &quot;/content/raw/&quot;], check=True, stdout=subprocess.DEVNULL)
+    else:
+        shutil.unpack_archive(ARCHIVE, &quot;/content/raw&quot;)
+    SRC = &quot;/content/raw&quot;
+
+assert SRC is not None, &quot;המאגר לא נמצא: הרץ את אפשרות א&#x27; או מלא את ARCHIVE&quot;</code></pre></div>
+
+<h3>שלב 2: איתור התיקיות, דגימה וחלוקה</h3>
+<p>מבנה התיקיות משתנה מעותק לעותק של המאגר, ולכן הקוד מחפש את <span class="en">Negative</span> ו-<span class="en">Positive</span> בכל עומק.</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>def find_class_dir(root, name):
+    for dirpath, dirnames, _ in os.walk(root):
+        for d in dirnames:
+            if d.lower() == name.lower():
+                return os.path.join(dirpath, d)
+    raise FileNotFoundError(f&quot;לא נמצאה תיקייה בשם {name} תחת {root}&quot;)
+
+EXTS = (&quot;.jpg&quot;, &quot;.jpeg&quot;, &quot;.png&quot;)
+src_dirs = {c: find_class_dir(SRC, c) for c in CLASS_NAMES}
+for c, d in src_dirs.items():
+    n = len([f for f in os.listdir(d) if f.lower().endswith(EXTS)])
+    print(f&quot;{c}: {n} תמונות ב-{d}&quot;)</code></pre></div>
+<p>מתוך 20,000 התמונות בכל מחלקה דוגמים 2,000 באקראי, ומחלקים אותן 70/15/15 ל-<span class="en">train</span>, <span class="en">val</span> ו-<span class="en">test</span>.</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>DATA = &quot;/content/data&quot; if os.path.isdir(&quot;/content&quot;) else &quot;data&quot;
+shutil.rmtree(DATA, ignore_errors=True)
+
+for c, d in src_dirs.items():
+    files = sorted(f for f in os.listdir(d) if f.lower().endswith(EXTS))
+    chosen = random.sample(files, min(PER_CLASS, len(files)))
+    n_tr = int(len(chosen) * SPLIT[0]); n_va = int(len(chosen) * SPLIT[1])
+    parts = {&quot;train&quot;: chosen[:n_tr], &quot;val&quot;: chosen[n_tr:n_tr + n_va], &quot;test&quot;: chosen[n_tr + n_va:]}
+    for split, fs in parts.items():
+        out = os.path.join(DATA, split, c)
+        os.makedirs(out, exist_ok=True)
+        for f in fs:
+            shutil.copy(os.path.join(d, f), os.path.join(out, f))
+    print(c, {k: len(v) for k, v in parts.items()})</code></pre></div>
+<div class="why"><b>למה רק 2,000?</b> כך האימון לוקח דקות ולא שעה, והדיוק כמעט לא משתנה. ה-<code>random.seed(42)</code> מבטיח שהדגימה תצא זהה בכל הרצה, וזה חשוב כשמשווים תוצאות בין תלמידים.</div>
+
+<h3>שלב 3: טעינה ל-tf.data עם augmentation</h3>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>def load(split, shuffle):
+    return keras.utils.image_dataset_from_directory(
+        os.path.join(DATA, split), labels=&quot;inferred&quot;, label_mode=&quot;binary&quot;,
+        class_names=CLASS_NAMES, image_size=(IMG_SIZE, IMG_SIZE),
+        batch_size=BATCH, shuffle=shuffle, seed=SEED)
+
+train_ds, val_ds, test_ds = load(&quot;train&quot;, True), load(&quot;val&quot;, False), load(&quot;test&quot;, False)
+
+augment = keras.Sequential([
+    layers.RandomFlip(&quot;horizontal_and_vertical&quot;),
+    layers.RandomRotation(0.1),
+    layers.RandomContrast(0.2),
+], name=&quot;augment&quot;)
+
+AUTOTUNE = tf.data.AUTOTUNE
+train_ds = train_ds.map(lambda x, y: (augment(x, training=True), y), num_parallel_calls=AUTOTUNE).prefetch(AUTOTUNE)
+val_ds = val_ds.prefetch(AUTOTUNE)
+test_ds = test_ds.prefetch(AUTOTUNE)</code></pre></div>
+<div class="why"><b>למה ה-<span class="en">augmentation</span> בצינור הנתונים ולא בתוך המודל?</b> כך הוא פועל רק בזמן אימון, והמודל שמיוצא לטלפון נשאר נקי מהשכבות האלה. אחרת שכבות אקראיות עלולות לסבך את ההמרה ל-<span class="en">tflite</span>.</div>
+<p>תא קצר להצגת דוגמאות. כדאי להסתכל על התמונות לפני שמאמנים:</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>plt.figure(figsize=(10, 5))
+imgs, labels = next(iter(load(&quot;train&quot;, True)))
+for i in range(10):
+    plt.subplot(2, 5, i + 1)
+    plt.imshow(imgs[i].numpy().astype(&quot;uint8&quot;))
+    plt.title(CLASS_NAMES[int(labels[i][0])]); plt.axis(&quot;off&quot;)
+plt.tight_layout(); plt.show()</code></pre></div>
+
+<h3>שלב 4: בניית המודל ואימון</h3>
+<p>לוקחים את <span class="en">MobileNetV2</span>, שכבר אומן על <span class="en">ImageNet</span>, ומקפיאים אותו. מעליו שמים שכבת <code>Dense(1, sigmoid)</code> אחת, ורק היא לומדת. זה <span class="en">transfer learning</span>.</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>base = keras.applications.MobileNetV2(input_shape=(IMG_SIZE, IMG_SIZE, 3), include_top=False, weights=WEIGHTS)
+base.trainable = False
+
+inputs = keras.Input(shape=(IMG_SIZE, IMG_SIZE, 3), name=&quot;image&quot;)
+x = layers.Rescaling(1 / 127.5, offset=-1, name=&quot;normalize&quot;)(inputs)
+x = base(x, training=False)
+x = layers.GlobalAveragePooling2D()(x)
+x = layers.Dropout(0.2)(x)
+outputs = layers.Dense(1, activation=&quot;sigmoid&quot;, name=&quot;p_crack&quot;)(x)
+model = keras.Model(inputs, outputs, name=&quot;crack_classifier&quot;)
+
+model.compile(optimizer=keras.optimizers.Adam(1e-3),
+              loss=&quot;binary_crossentropy&quot;,
+              metrics=[&quot;accuracy&quot;, keras.metrics.AUC(name=&quot;auc&quot;)])
+model.summary()</code></pre></div>
+<div class="why"><b>הנקודה החשובה בתא:</b> השכבה <code>Rescaling(1/127.5, offset=-1)</code> ממירה ערכים של 0–255 לטווח שבין 1- ל-1, שבו <span class="en">MobileNetV2</span> מצפה לקבל את הקלט. מכיוון שהיא נמצאת <b>בתוך</b> המודל, באנדרואיד לא צריך לנרמל: שולחים את ערכי הפיקסלים כמו שהם.</div>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>history = model.fit(train_ds, validation_data=val_ds, epochs=EPOCHS,
+                    callbacks=[keras.callbacks.EarlyStopping(patience=2, restore_best_weights=True)])
+
+plt.figure(figsize=(10, 4))
+for i, m in enumerate([&quot;loss&quot;, &quot;accuracy&quot;]):
+    plt.subplot(1, 2, i + 1)
+    plt.plot(history.history[m], label=&quot;train&quot;); plt.plot(history.history[&quot;val_&quot; + m], label=&quot;val&quot;)
+    plt.title(m); plt.xlabel(&quot;epoch&quot;); plt.legend()
+plt.tight_layout(); plt.show()</code></pre></div>
+
+<h3>שלב 5: הערכה ובחירת threshold</h3>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>from sklearn.metrics import confusion_matrix, classification_report
+
+y_true = np.concatenate([y.numpy().ravel() for _, y in test_ds]).astype(int)
+p = model.predict(test_ds, verbose=0).ravel()
+y_pred = (p &gt;= 0.5).astype(int)
+
+print(classification_report(y_true, y_pred, target_names=CLASS_NAMES, digits=3, zero_division=0))
+print(&quot;Confusion matrix (rows=true, cols=pred):&quot;)
+print(confusion_matrix(y_true, y_pred))</code></pre></div>
+<p>הטבלה הבאה מראה את ההתנגשות בין שני דברים: ככל שה-<span class="en">threshold</span> גבוה יותר, האפליקציה עונה על פחות תמונות (<span class="en">coverage</span>), אבל התשובות שהיא כן נותנת מדויקות יותר.</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>def threshold_table(p, y_true, thresholds=(0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 0.99)):
+    conf = np.maximum(p, 1 - p)
+    pred = (p &gt;= 0.5).astype(int)
+    print(f&quot;{&#x27;threshold&#x27;:&gt;9} | {&#x27;coverage&#x27;:&gt;8} | {&#x27;accuracy (answered)&#x27;:&gt;19} | {&#x27;uncertain&#x27;:&gt;9}&quot;)
+    for t in thresholds:
+        ans = conf &gt;= t
+        acc = f&quot;{(pred[ans] == y_true[ans]).mean():.1%}&quot; if ans.any() else &quot;-&quot;
+        print(f&quot;{t:&gt;9.2f} | {ans.mean():&gt;8.1%} | {acc:&gt;19} | {(~ans).sum():&gt;9d}&quot;)
+
+threshold_table(p, y_true)</code></pre></div>
+<p>הצגת הטעויות. לרוב זה החלק הכי מעניין לדיון בכיתה:</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code># הטעויות - שווה להסתכל עליהן עם התלמידים
+test_files = sorted(glob.glob(os.path.join(DATA, &quot;test&quot;, &quot;*&quot;, &quot;*&quot;)))
+wrong = np.where(y_pred != y_true)[0][:10]
+if len(wrong):
+    plt.figure(figsize=(12, 3))
+    for k, i in enumerate(wrong):
+        plt.subplot(1, len(wrong), k + 1)
+        plt.imshow(plt.imread(test_files[i]))
+        plt.title(f&quot;true={CLASS_NAMES[y_true[i]][:3]}\np={p[i]:.2f}&quot;, fontsize=9); plt.axis(&quot;off&quot;)
+    plt.tight_layout(); plt.show()
+else:
+    print(&quot;אין טעויות ב-test. זה סימן לכך שה-test קל מדי (ראה את המגבלה בשלב 2), ולא הוכחה שהמודל מושלם.&quot;)</code></pre></div>
+
+<h3>שלב 6: ייצוא ל-TFLite</h3>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>SAVED = &quot;saved_model_export&quot;
+model.export(SAVED, verbose=False)
+
+converter = tf.lite.TFLiteConverter.from_saved_model(SAVED)
+tflite_model = converter.convert()
+
+with open(&quot;crack_classifier.tflite&quot;, &quot;wb&quot;) as f:
+    f.write(tflite_model)
+with open(&quot;labels.txt&quot;, &quot;w&quot;) as f:
+    f.write(&quot;\n&quot;.join(CLASS_NAMES) + &quot;\n&quot;)
+print(f&quot;crack_classifier.tflite: {len(tflite_model) / 1e6:.2f} MB&quot;)</code></pre></div>
+<div class="why"><b>למה בלי <span class="en">quantization</span>?</b> עם <code>Optimize.DEFAULT</code> הקובץ קטן פי 4 (כ-2.5MB במקום כ-9MB), אבל השכבה <code>FULLY_CONNECTED</code> יוצאת בגרסת אופרטור 12. הספרייה <code>tensorflow-lite:2.13.0</code> באנדרואיד מכירה רק עד גרסה 10, והאפליקציה קורסת עם השגיאה <code>Didn't find op for builtin opcode 'FULLY_CONNECTED' version '12'</code>. בלי <span class="en">quantization</span> כל האופרטורים נשארים בגרסה 1.</div>
+<p>בדיקה שהמודל המומר נותן את אותן תשובות כמו מודל ה-<span class="en">Keras</span>:</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>try:
+    from ai_edge_litert.interpreter import Interpreter   # LiteRT, השם החדש של TFLite
+except ImportError:
+    Interpreter = tf.lite.Interpreter
+interp = Interpreter(model_path=&quot;crack_classifier.tflite&quot;)
+interp.allocate_tensors()
+inp, out = interp.get_input_details()[0], interp.get_output_details()[0]
+print(&quot;input :&quot;, inp[&quot;shape&quot;], inp[&quot;dtype&quot;])
+print(&quot;output:&quot;, out[&quot;shape&quot;], out[&quot;dtype&quot;])
+
+imgs, _ = next(iter(test_ds))
+diffs = []
+for i in range(min(8, imgs.shape[0])):
+    x = imgs[i:i + 1].numpy().astype(np.float32)
+    interp.set_tensor(inp[&quot;index&quot;], x); interp.invoke()
+    p_lite = float(interp.get_tensor(out[&quot;index&quot;])[0][0])
+    p_keras = float(model(x, training=False)[0][0])
+    diffs.append(abs(p_lite - p_keras))
+print(f&quot;הפרש מקסימלי בין Keras ל-TFLite: {max(diffs):.4f}  (צפוי: מתחת ל-0.02)&quot;)</code></pre></div>
+
+<h3>שלב 7: בדיקה על תמונות מהשטח</h3>
+<p>ה-<span class="en">ZIP</span> של המאגר שוקל כ-2.5GB. כפתור ההעלאה של <span class="en">Colab</span> נתקע על קבצים בגודל כזה, ולכן מעלים אותו קודם ל-<span class="en">Google Drive</span>, לתיקייה <span class="en">My Drive</span>, ומחברים את <span class="en">Drive</span> למחברת.</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>from google.colab import drive
+drive.mount(&quot;/content/drive&quot;)
+
+FIELD_ZIP = &quot;/content/drive/MyDrive/Metric_aLab_ConcreteCracks_Dataset.zip&quot;
+assert os.path.exists(FIELD_ZIP), &quot;הקובץ לא נמצא ב-My Drive: בדוק את השם&quot;
+
+FIELD_ROOT = &quot;/content/field&quot;
+shutil.rmtree(FIELD_ROOT, ignore_errors=True)
+shutil.unpack_archive(FIELD_ZIP, FIELD_ROOT)
+
+for dirpath, dirnames, filenames in os.walk(FIELD_ROOT):
+    n = sum(f.lower().endswith(EXTS) for f in filenames)
+    if n:
+        print(f&quot;{n:4d}  {dirpath}&quot;)</code></pre></div>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>FIELD_MAP = {&quot;cracked&quot;: 1, &quot;non_cracked&quot;: 0}
+
+xs, ys = [], []
+for folder, label in FIELD_MAP.items():
+    d = find_class_dir(FIELD_ROOT, folder)
+    fs = [f for f in glob.glob(os.path.join(d, &quot;**&quot;, &quot;*&quot;), recursive=True) if f.lower().endswith(EXTS)]
+    print(f&quot;{folder}: {len(fs)} תמונות&quot;)
+    for f in fs:
+        img = keras.utils.load_img(f, target_size=(IMG_SIZE, IMG_SIZE))
+        xs.append(keras.utils.img_to_array(img)); ys.append(label)
+
+assert xs, &quot;לא נמצאו תמונות: בדוק את הפלט של התא הקודם&quot;
+xs, ys = np.stack(xs), np.array(ys)
+p_field = model.predict(xs, batch_size=BATCH, verbose=0).ravel()
+print(f&quot;דיוק בשטח (threshold 0.5): {((p_field &gt;= 0.5) == ys).mean():.1%} על {len(ys)} תמונות&quot;)
+threshold_table(p_field, ys)</code></pre></div>
+<div class="why"><b>שתי טעויות נפוצות כאן:</b> (1) לכתוב את הנתיב אחרי <code>#</code>. זו הערה, התא רץ בלי שגיאה ולא מדפיס כלום. (2) לתת נתיב מהמחשב המקומי (<code>C:\Users\...</code>). <span class="en">Colab</span> רץ בשרת של <span class="en">Google</span> ואין לו גישה למחשב שלך.</div>
+
+<h3>שלב 8: הורדת הקבצים</h3>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>try:
+    from google.colab import files
+    files.download(&quot;crack_classifier.tflite&quot;)
+    files.download(&quot;labels.txt&quot;)
+except ImportError:
+    print(&quot;לא ב-Colab: הקבצים נמצאים בתיקייה הנוכחית&quot;)</code></pre></div>
+<p>אם בתיקיית ההורדות כבר היה קובץ באותו שם, הדפדפן ישמור את הקובץ החדש כ-<code>crack_classifier (1).tflite</code>. <b>משנים את השם בחזרה</b> ל-<code>crack_classifier.tflite</code> לפני שמעתיקים אותו לפרויקט.</p>
+</section>
+
+<section id="results">
+<h2><span class="n">5</span>פרשנות התוצאות</h2>
+<p>התוצאות מהאימון שהמדריך הזה מבוסס עליו:</p>
+<div class="stats">
+<div class="stat"><div class="v">99.7%</div><div class="l">דיוק על ה-<span class="en">test</span> (שלב 5)</div></div>
+<div class="stat"><div class="v">73.3%</div><div class="l">דיוק על 476 תמונות שטח (שלב 7)</div></div>
+<div class="stat"><div class="v">79.4%</div><div class="l">שטח עם <span class="en">threshold</span> של 0.95, על 70% מהתמונות</div></div>
+</div>
+<table>
+<thead><tr><th>threshold</th><th>coverage (test)</th><th>accuracy (test)</th><th>coverage (שטח)</th><th>accuracy (שטח)</th></tr></thead>
+<tbody>
+<tr><td class="num">0.50</td><td class="num">100.0%</td><td class="num">99.7%</td><td class="num">100.0%</td><td class="num">73.3%</td></tr>
+<tr><td class="num">0.80</td><td class="num">99.8%</td><td class="num">99.8%</td><td class="num">87.0%</td><td class="num">75.4%</td></tr>
+<tr><td class="num">0.90</td><td class="num">99.2%</td><td class="num">99.8%</td><td class="num">79.6%</td><td class="num">76.8%</td></tr>
+<tr><td class="num">0.95</td><td class="num">98.0%</td><td class="num">99.8%</td><td class="num">70.4%</td><td class="num">79.4%</td></tr>
+<tr><td class="num">0.99</td><td class="num">94.3%</td><td class="num">100.0%</td><td class="num">29.4%</td><td class="num">76.4%</td></tr>
+</tbody>
+</table>
+<p><b>שלוש מסקנות:</b></p>
+<ol>
+<li><b>דיוק גבוה על ה-<span class="en">test</span> לא מבטיח שהמודל עובד במציאות.</b> הפער של 26 נקודות נובע מהדליפה שתוארה בפרק 2, ומהשוני בין חיתוכים קרובים לתמונות שטח שמראות קיר שלם.</li>
+<li><b>ה-<span class="en">threshold</span> לא פותר את הבעיה.</b> ב-0.99 הדיוק בשטח אפילו יורד. כלומר, הרבה מהטעויות נעשות בביטחון של 99% ומעלה. על תמונות ששונות ממה שהמודל ראה באימון (<span class="en">out-of-distribution</span>), הביטחון שהמודל מדווח לא אומר כמעט כלום על הסיכוי שהוא צודק.</li>
+<li><b>בחירת ה-<span class="en">threshold</span> לאפליקציה:</b> 0.90 הוא פשרה סבירה. האפליקציה עונה על כ-80% מתמונות השטח, ובתשובות שהיא כן נותנת הדיוק כ-77%. הוא לא הופך את המודל לאמין, ולכן האפליקציה מציגה גם הסתייגות.</li>
+</ol>
+<div class="note"><b>אם רוצים לשפר את המודל בהמשך:</b> <span class="en">tiling</span>, כלומר חיתוך כל תמונת שטח לאריחים, סיווג של כל אריח וסימון "סדוק" אם אחד מהם סדוק, עוזר כשהטעויות הן סדקים שהמודל פספס. <span class="en">fine-tuning</span> על חלק מתמונות השטח עוזר כשהטעויות הן משטחים תקינים שסווגו כסדוקים. המדריך הזה לא נכנס לשניהם.</div>
+</section>
+
+<section id="studio">
+<h2><span class="n">6</span>הקמת הפרויקט ב-Android Studio</h2>
+<p>דף ההנחיות של קהילת אנדרואיד מייבא את המודל באמצעות <span class="en">ML Model Binding</span>: <span class="en">New → Other → TensorFlow Lite Model</span>, שמייצר מחלקה אוטומטית. בגרסאות האחרונות של <span class="en">Android Studio</span> המחלקה הזו לא תמיד נוצרת או לא מזוהה בקוד. לכן המדריך משתמש בדרך יציבה יותר: מכניסים את קובץ המודל לתיקיית <code>assets</code> ומריצים אותו ישירות עם <code>Interpreter</code>.</p>
+
+<h3>6.1 פרויקט חדש</h3>
+<p><span class="en">New Project → Empty Views Activity</span>. שם: <code>CrackClassifier</code>. שפה: <span class="en">Java</span>. ה-<span class="en">package</span> יהיה <code>com.example.crackclassifier</code>, וכל הקוד בהמשך בנוי עליו.</p>
+
+<h3>6.2 תיקיית assets והמודל</h3>
+<ol>
+<li>קליק ימני על <span class="en">app → New → Folder → Assets Folder → Finish</span>.</li>
+<li>גוררים את <code>crack_classifier.tflite</code> לתיקייה <code>assets</code>, ובחלון שנפתח בוחרים <span class="en">Copy</span>. השם צריך להיות בדיוק <code>crack_classifier.tflite</code>, בלי "(1)".</li>
+</ol>
+
+<h3>6.3 Dependencies</h3>
+<p>בקובץ <code>build.gradle.kts (Module :app)</code>, בבלוק <code>dependencies</code>: מוחקים כל שורה שמכילה <code>tensorflow</code> או <code>litert</code>, כולל <code>implementation(libs.litert.api)</code>, ומוסיפים:</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>implementation("org.tensorflow:tensorflow-lite:2.13.0")
+implementation("org.tensorflow:tensorflow-lite-support:0.4.3")
+implementation("org.tensorflow:tensorflow-lite-metadata:0.4.3")</code></pre></div>
+<div class="why"><b>שימו לב לגרסה:</b> כל שורה חייבת להסתיים במספר גרסה. שורה בלי גרסה, למשל שורה שאשף כלשהו הוסיף, גורמת לשגיאה <code>Could not resolve org.tensorflow:tensorflow-lite-support:</code>. הנקודתיים בסוף ההודעה, בלי שום דבר אחריהן, הן הרמז.</div>
+
+<h3>6.4 gradle.properties</h3>
+<p>בקובץ <code>gradle.properties</code> של הפרויקט (תחת <span class="en">Gradle Scripts</span>) מוסיפים שורה:</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>android.uniquePackageNames=false</code></pre></div>
+<div class="why"><b>למה?</b> בגרסאות האחרונות של <span class="en">Android Studio</span> יש התנגשות בין שמות החבילות של ספריות <span class="en">tflite</span> לשמות החבילות של ספריות <span class="en">litert</span>. בלי השורה הזו ה-<span class="en">build</span> נכשל בשלב <code>processDebugMainManifest</code>, עם השגיאה <code>Manifest merger failed</code>.</div>
+<p>אחרי שני השינויים: <span class="en">Sync Now</span>, ואז <span class="en">Build → Rebuild Project</span>.</p>
+</section>
+
+<section id="code">
+<h2><span class="n">7</span>קוד האפליקציה</h2>
+
+<h3>7.1 activity_main.xml</h3>
+<p>כפתור לבחירת תמונה, תצוגת התמונה, שורת תוצאה, אחוזי ביטחון ושורת הסתייגות. ל-<span class="en">layout</span> נשאר <code>android:id="@+id/main"</code>, כי קוד ה-<span class="en">EdgeToEdge</span> שבתבנית משתמש בו.</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:id=&quot;@+id/main&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot;
+    android:gravity=&quot;center_horizontal&quot;
+    android:padding=&quot;16dp&quot;
+    android:layoutDirection=&quot;rtl&quot;&gt;
+
+    &lt;Button
+        android:id=&quot;@+id/btnGallery&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;בחירת תמונה מהגלריה&quot; /&gt;
+
+    &lt;ImageView
+        android:id=&quot;@+id/ivImage&quot;
+        android:layout_width=&quot;280dp&quot;
+        android:layout_height=&quot;280dp&quot;
+        android:layout_marginTop=&quot;16dp&quot;
+        android:scaleType=&quot;centerCrop&quot;
+        android:background=&quot;#EEEEEE&quot;
+        android:contentDescription=&quot;התמונה שנבחרה&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tvResults&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginTop=&quot;16dp&quot;
+        android:textSize=&quot;26sp&quot;
+        android:textStyle=&quot;bold&quot;
+        android:text=&quot;—&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/tvConfidence&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginTop=&quot;8dp&quot;
+        android:textSize=&quot;18sp&quot; /&gt;
+
+    &lt;TextView
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_marginTop=&quot;24dp&quot;
+        android:gravity=&quot;center&quot;
+        android:textSize=&quot;13sp&quot;
+        android:textColor=&quot;#777777&quot;
+        android:text=&quot;כלי עזר לימודי בלבד - לא תחליף לבדיקה של מהנדס&quot; /&gt;
+
+&lt;/LinearLayout&gt;</code></pre></div>
+
+<h3>7.2 ImageClassifier.java</h3>
+<p>יוצרים מחלקה חדשה: קליק ימני על <code>com.example.crackclassifier</code> (לא על <span class="en">test</span> ולא על <span class="en">androidTest</span>), <span class="en">New → Java Class → ImageClassifier</span>.</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>package com.example.crackclassifier;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+
+import org.tensorflow.lite.Interpreter;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+// גרסה ללא ML Model Binding: טוענת את המודל ישירות מתיקיית assets
+// ומריצה אותו עם Interpreter. לא תלויה במחלקה CrackClassifier שנוצרת אוטומטית.
+public class ImageClassifier {
+
+    // אותו סדר כמו ב-labels.txt: שורה 1 = Negative (תקין), שורה 2 = Positive (סדוק)
+    private String[] classes = {&quot;תקין&quot;, &quot;סדוק&quot;};
+
+    // מתחת לרמת הביטחון הזו האפליקציה לא מכריעה ומחזירה &quot;לא בטוח&quot;
+    private static final float THRESHOLD = 0.90f;
+    private static final String MODEL_FILE = &quot;crack_classifier.tflite&quot;;
+
+    private Context context;
+    private int imageSize = 224;
+    private String[] result = new String[2];
+
+    public ImageClassifier(Context context) {
+        this.context = context;
+    }
+
+    // קורא את קובץ המודל מ-assets לתוך ByteBuffer
+    private ByteBuffer loadModel() throws IOException {
+        InputStream in = context.getAssets().open(MODEL_FILE);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] chunk = new byte[16384];
+        int n;
+        while ((n = in.read(chunk)) != -1) {
+            out.write(chunk, 0, n);
+        }
+        in.close();
+        byte[] bytes = out.toByteArray();
+        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
+        buffer.order(ByteOrder.nativeOrder());
+        buffer.put(bytes);
+        buffer.rewind();
+        return buffer;
+    }
+
+    public String[] classifyimage(Bitmap bitmap) {
+        // convert to a fixed size bitmap (224*224 pixels). true = החלקה (bilinear), כמו באימון
+        Bitmap image = Bitmap.createScaledBitmap(bitmap, imageSize, imageSize, true);
+
+        try {
+            Interpreter interpreter = new Interpreter(loadModel());
+
+            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3);
+            byteBuffer.order(ByteOrder.nativeOrder());
+
+            int[] intValues = new int[imageSize * imageSize];
+            image.getPixels(intValues, 0, imageSize, 0, 0, imageSize, imageSize);
+
+            // לא מחלקים ב-255: המודל מנרמל בעצמו ומצפה לערכים 0-255
+            int pixel = 0;
+            for (int i = 0; i &lt; imageSize; i++) {
+                for (int j = 0; j &lt; imageSize; j++) {
+                    int val = intValues[pixel++];
+                    byteBuffer.putFloat((val &gt;&gt; 16) &amp; 0xFF); // Red
+                    byteBuffer.putFloat((val &gt;&gt; 8) &amp; 0xFF);  // Green
+                    byteBuffer.putFloat(val &amp; 0xFF);         // Blue
+                }
+            }
+            byteBuffer.rewind();
+
+            // הפלט: מערך [1][1] - ההסתברות לסדק (sigmoid)
+            float[][] output = new float[1][1];
+            interpreter.run(byteBuffer, output);
+            interpreter.close();
+
+            float pCrack = output[0][0];
+            float[] confidences = {1 - pCrack, pCrack};
+
+            int maxPos = (pCrack &gt;= 0.5f) ? 1 : 0;
+            float maxConfidence = confidences[maxPos];
+
+            if (maxConfidence &gt;= THRESHOLD) {
+                result[0] = classes[maxPos];
+            } else {
+                result[0] = &quot;לא בטוח - נסו לצלם מקרוב יותר&quot;;
+            }
+
+            String confLevels = &quot;&quot;;
+            for (int i = 0; i &lt; classes.length; i++) {
+                confLevels += String.format(&quot;%s: %.1f%%\n&quot;, classes[i], confidences[i] * 100);
+            }
+            result[1] = confLevels;
+
+        } catch (IOException e) {
+            result[0] = &quot;שגיאה בטעינת המודל&quot;;
+            result[1] = e.getMessage();
+        }
+        return result;
+    }
+}</code></pre></div>
+<p><b>שלושה הבדלים מדף ההנחיות של הקהילה, וכולם נובעים מהחוזה שבפרק 1:</b></p>
+<ol>
+<li><b>אין חלוקה ב-255.</b> המודל מנרמל בעצמו. אם מחלקים, המודל מקבל תמונה כמעט שחורה ומחזיר תשובות שגויות, <b>בלי שום הודעת שגיאה</b>. זו התקלה שהכי קשה לאתר.</li>
+<li><b>פלט אחד ולא שניים.</b> מודל של <span class="en">Teachable Machine</span> מחזיר הסתברות לכל מחלקה (<span class="en">softmax</span>). המודל שלנו מחזיר רק את <code>p</code>, ההסתברות לסדק (<span class="en">sigmoid</span>), ומשלימים ממנו <code>1 − p</code>.</li>
+<li><b>threshold.</b> מתחת ל-0.90 התוצאה היא "לא בטוח".</li>
+</ol>
+<p>שתי הערות על הקוד: <code>createScaledBitmap(..., true)</code> מקטין את התמונה בהחלקה (<span class="en">bilinear</span>), כמו שהוקטנו התמונות באימון. הפונקציה <code>loadModel()</code> קוראת את הקובץ כולו לזיכרון, ולכן היא עובדת גם אם <span class="en">Android</span> דחס את הקובץ בתוך ה-<span class="en">APK</span>.</p>
+
+<h3>7.3 MainActivity.java</h3>
+<p>בנוי לפי דף ההנחיות: <code>ActivityResultCallback&lt;Uri&gt;</code>, <code>GetContent</code> לבחירה מהגלריה, ו-<code>onActivityResult</code> שמעביר את התמונה ל-<code>ImageClassifier</code>.</p>
+<div class="codebox"><button class="copy" type="button">העתקה</button><pre><code>package com.example.crackclassifier;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import java.io.FileNotFoundException;
+
+public class MainActivity extends AppCompatActivity implements ActivityResultCallback&lt;Uri&gt; {
+
+    private Button btnGallery;
+    private ImageView ivImage;
+    private TextView tvResults, tvConfidence;
+
+    private ActivityResultLauncher&lt;String&gt; contentLauncher;
+    private ImageClassifier imageClassifier;
+    private Bitmap bitmap;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -&gt; {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        btnGallery = findViewById(R.id.btnGallery);
+        ivImage = findViewById(R.id.ivImage);
+        tvResults = findViewById(R.id.tvResults);
+        tvConfidence = findViewById(R.id.tvConfidence);
+
+        btnGallery.setOnClickListener(this::getGalleryPhoto);
+        contentLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), this);
+        imageClassifier = new ImageClassifier(this);
+    }
+
+    private void getGalleryPhoto(View view) {
+        contentLauncher.launch(&quot;image/*&quot;);
+    }
+
+    @Override
+    public void onActivityResult(Uri result) {
+        if (result != null) {
+            ivImage.setImageURI(result); // display image
+            try {
+                // get bitmap from uri
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(result));
+
+                // get classification results from the ImageClassifier
+                String[] clasified = imageClassifier.classifyimage(bitmap);
+                tvResults.setText(clasified[0]);    // chosen category / &quot;לא בטוח&quot;
+                tvConfidence.setText(clasified[1]); // confidence levels
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+}</code></pre></div>
+</section>
+
+<section id="run">
+<h2><span class="n">8</span>הרצה באמולטור</h2>
+<ol>
+<li>בוחרים את המכשיר בסרגל העליון (למשל <span class="en">Pixel 8</span>) ולוחצים <span class="en">Run ▶</span>.</li>
+<li>בגלריה של אמולטור חדש אין תמונות. גוררים מהמחשב לחלון האמולטור כמה תמונות מ-<span class="en">Positive</span>, כמה מ-<span class="en">Negative</span> וכמה מתמונות השטח.</li>
+<li>באפליקציה לוחצים "בחירת תמונה מהגלריה" ובוחרים תמונה.</li>
+</ol>
+<p><b>מה צפוי:</b> חיתוכים מהמאגר מקבלים תשובה ברורה בביטחון של מעל 95%. בתמונות שטח מופיע לפעמים "לא בטוח", ולפעמים תשובה שגויה בביטחון גבוה, בדיוק כמו בטבלה של פרק 5.</p>
+</section>
+
+<section id="trouble">
+<h2><span class="n">9</span>פתרון תקלות</h2>
+<table class="stack trouble">
+<thead><tr><th>תקלה</th><th>סיבה ופתרון</th></tr></thead>
+<tbody>
+<tr><td>הכפתור להעלאת קבצים ב-<span class="en">Colab</span> נתקע על 0%</td><td>הקובץ גדול מדי להעלאה דרך הדפדפן. מעלים אותו ל-<span class="en">Google Drive</span> ומשתמשים ב-<code>drive.mount</code> (שלב 7).</td></tr>
+<tr><td>תא בשלב 7 רץ ולא מדפיס כלום</td><td>הנתיב נכתב בתוך הערה, או שהמשתנה עדיין <code>None</code>. משתמשים בגרסת ה-<span class="en">Drive</span> של התא.</td></tr>
+<tr><td><code>NameError: model</code> או <code>SAVED</code> ב-<span class="en">Colab</span></td><td>ה-<span class="en">runtime</span> אותחל והמודל נמחק מהזיכרון. מריצים מחדש את שלבים 1–6.</td></tr>
+<tr><td><code>Could not resolve ...tensorflow-lite-support:</code></td><td>יש ב-<span class="en">Gradle</span> שורת <span class="en">dependency</span> בלי מספר גרסה. מוחקים את כל שורות <span class="en">tensorflow</span> ו-<span class="en">litert</span> ומוסיפים מחדש את שלוש השורות (6.3). אם השגיאה חוזרת, בודקים גם את <code>gradle/libs.versions.toml</code>.</td></tr>
+<tr><td><code>Manifest merger failed with multiple errors</code></td><td>חסרה השורה <code>android.uniquePackageNames=false</code> ב-<code>gradle.properties</code> (6.4). את הפירוט רואים בלשונית <span class="en">Merged Manifest</span> בתחתית <code>AndroidManifest.xml</code>.</td></tr>
+<tr><td>המחלקה שנוצרה אוטומטית נקראת <code>CrackClassifier1</code>, או לא מזוהה בקוד</td><td>זו בעיה של <span class="en">ML Model Binding</span>: השם נוצר משם הקובץ, כולל ה-"(1)". המדריך עוקף את הכלי הזה עם <span class="en">assets</span> ו-<code>Interpreter</code>, ולכן הבעיה לא רלוונטית.</td></tr>
+<tr><td>הודעה "שגיאה בטעינת המודל" באפליקציה</td><td>הקובץ לא נמצא ב-<code>assets</code>, או שהשם שלו לא בדיוק <code>crack_classifier.tflite</code>.</td></tr>
+<tr><td><code>Didn't find op for builtin opcode 'FULLY_CONNECTED' version '12'</code></td><td>יוצא מודל עם <span class="en">quantization</span>. מייצאים מחדש בלי <code>converter.optimizations</code> (שלב 6).</td></tr>
+<tr><td>האפליקציה מחזירה כמעט תמיד אותה תשובה</td><td>כנראה שיש חלוקה ב-255 בקוד, או שסדר הצבעים שונה. בודקים את הלולאה ב-<code>ImageClassifier</code>.</td></tr>
+<tr><td><code>Pixel 8 is already running as process ...</code></td><td>האמולטור כבר רץ. בוחרים אותו ברשימת המכשירים ולוחצים <span class="en">Run</span>. אם הוא תקוע: <span class="en">Device Manager → Stop → Cold Boot</span>. ואם גם זה לא עוזר, סוגרים את <code>qemu-system-x86_64.exe</code> במנהל המשימות.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="teach">
+<h2><span class="n">10</span>הערות להנחיית מורים</h2>
+<ul>
+<li><b>הרגע החשוב בפרויקט הוא שלב 7, לא שלב 5.</b> כדאי לתת לתלמידים לחזות מה יהיה הדיוק בשטח לפני שהם מריצים את התא. הפער בין 99.7% ל-73.3% מלמד על הכללה ועל דליפת נתונים יותר מכל הסבר.</li>
+<li><b>ה-<span class="en">threshold</span> הוא החלטה הנדסית ולא פרמטר טכני.</b> אפשר לבקש מהתלמידים להצדיק בכתב את הערך שבחרו, לפי הטבלה: כמה תמונות האפליקציה מוכנה להשאיר בלי תשובה, ובשביל כמה דיוק.</li>
+<li><b>החוזה בין המודל לאפליקציה הוא נקודת התורפה.</b> חלוקה ב-255, סדר צבעים או גודל תמונה שגוי לא יוצרים שגיאת קומפילציה, רק תשובות שגויות. זו הזדמנות לדבר על בדיקות ועל תיעוד של ממשקים.</li>
+<li><b>ההבדל בין המדריך לדף ההנחיות של הקהילה</b> (מודל של <span class="en">Teachable Machine</span> עם <span class="en">softmax</span> ונרמול ל-0–1, לעומת מודל עצמי עם <span class="en">sigmoid</span> ונרמול פנימי) הוא דוגמה טובה לכך שהקוד באפליקציה תלוי במודל שבנינו.</li>
+<li><b>הסתייגות באפליקציה:</b> מודל שמדייק ב-77% בשטח לא מתאים להחלטות בטיחות. השורה "כלי עזר לימודי בלבד" בממשק היא חלק מהתוצר ולא קישוט.</li>
+</ul>
+</section>
+
+</main>
+
+<footer>
+קבצים נלווים: <code>crack_classifier_training.ipynb</code> (מחברת האימון המלאה), <code>ImageClassifier.java</code>, <code>MainActivity.java</code>, <code>activity_main.xml</code>. המספרים בפרק 5 לקוחים מהרצה אחת. בהרצה חוזרת הם ישתנו מעט.
+</footer>
+
+<script>
+{
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.parentElement.querySelector('code').textContent;
+      try {
+        navigator.clipboard.writeText(code).then(function () {
+          btn.textContent = 'הועתק';
+          setTimeout(function () { btn.textContent = 'העתקה'; }, 1500);
+        }, function () { btn.textContent = 'סמנו והעתיקו ידנית'; });
+      } catch (e) { btn.textContent = 'סמנו והעתיקו ידנית'; }
+    });
+  });
+}
+</script>
+</body>
+</html>
